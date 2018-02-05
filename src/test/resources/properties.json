@@ -1,0 +1,33 @@
+{
+    "org": {
+        "ghotibeaun": {
+            "json": {
+                "factory": "org.ghotibeaun.json.JSONFactoryImpl",
+                "parser": "org.ghotibeaun.json.parser.JSONParserImpl",
+                "serializer": "org.ghotibeaun.json.serializer.JSONSerializerImpl",
+                "object": "org.ghotibeaun.json.factory.JSONObjectImpl",
+                "array": "org.ghotibeaun.json.factory.JSONArrayImpl",
+                "value": {
+                    "object": "org.ghotibeaun.json.factory.JSONObjectValueImpl",
+                    "array": "org.ghotibeaun.json.factory.JSONArrayValueImpl",
+                    "boolean": "org.ghotibeaun.json.factory.JSONBooleanValueImpl",
+                    "date": "org.ghotibeaun.json.factory.JSONDateValueImpl",
+                    "null": "org.ghotibeaun.json.factory.JSONNullValueImpl",
+                    "number": "org.ghotibeaun.json.factory.JSONNumberValueImpl",
+                    "string": "org.ghotibeaun.json.factory.JSONStringValueImpl"
+                },
+                "date": {
+                    "format": "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+                },
+                "inputstream": {
+                    "charset": "UTF-8"
+                },
+                "jsonpath": {
+                    "": "org.ghotibeaun.json.jsonpath.JSONPathImpl",
+                    "jsonprovider": "org.ghotibeaun.json.jsonpath.JSONLibProvider",
+                    "mappingprovider": "org.ghotibeaun.json.jsonpath.JSONLibMappingProvider"
+                }
+            }
+        }
+    }
+}
