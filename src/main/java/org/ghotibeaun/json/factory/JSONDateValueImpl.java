@@ -7,6 +7,11 @@ import org.ghotibeaun.json.JSONValueType;
 
 class JSONDateValueImpl extends AbstractJSONValue<Date> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 3450708256376075217L;
+
     public JSONDateValueImpl() {
         super();
     }

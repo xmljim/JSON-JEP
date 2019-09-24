@@ -3,10 +3,10 @@ package org.ghotibeaun.json.factory;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ghotibeaun.json.JSONArray;
+import org.ghotibeaun.json.JSONFactory;
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
@@ -46,16 +46,17 @@ public final class NodeFactory {
         return new JSONArrayImpl();
     }
 
-    public static JSONObject newJSONObject(Map<String, Object> map) {
+    public static JSONObject newJSONObject(Map<String, ?> map) {
         final JSONObject obj = newJSONObject();
-        final Set<Entry<String, Object>> entries = map.entrySet();
 
-        for (final Entry<String, Object> entry : entries) {
-            final String key = entry.getKey();
-            final JSONValue<?> value = createFromObject(entry.getValue());
-            obj.put(key, value);
+        final Set<String> keys  = map.keySet();
+
+        for (final String key : keys) {
+            final Object entry = map.get(key);
+
+            final JSONValue<?> value = createFromObject(entry);
+            obj.put(key,  value);
         }
-
         return obj;
 
     }
@@ -198,13 +199,19 @@ public final class NodeFactory {
             v = newJSONObjectValue((JSONObject)o);
         } else if (o instanceof JSONArray) {
             v = newJSONArrayValue((JSONArray)o);
+        } else {
+            v = newStringValue(o.toString());
         }
 
         return v;
 
     }
 
-    @SuppressWarnings("unchecked")
+    public static JSONNode parse(String data) {
+        return JSONFactory.newFactory().newParser().parse(data);
+    }
+
+    @SuppressWarnings({ "unchecked", "unused" })
     private static Class<JSONNode> createNodeClass(JSONValueType type) {
         Class<JSONNode> clazz = null;
 
@@ -229,89 +236,89 @@ public final class NodeFactory {
         return clazz;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "unused" })
     private static Class<JSONValue<?>> createValueClass(JSONValueType type) {
 
 
         Class<JSONValue<?>> clazz = null;
 
         switch (type) {
-        case ARRAY:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_ARRAY));
+            case ARRAY:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_ARRAY));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_ARRAY, e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_ARRAY, e);
+                }
 
-            break;
-        case BOOLEAN:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_BOOLEAN));
+                break;
+            case BOOLEAN:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_BOOLEAN));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_BOOLEAN,
-                        e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_BOOLEAN,
+                            e);
+                }
 
-            break;
-        case DATE:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_DATE));
+                break;
+            case DATE:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_DATE));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_DATE, e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_DATE, e);
+                }
 
-            break;
-        case NULL:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NULL));
+                break;
+            case NULL:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NULL));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NULL, e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NULL, e);
+                }
 
-            break;
-        case NUMBER:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NUMBER));
+                break;
+            case NUMBER:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NUMBER));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NUMBER,
-                        e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NUMBER,
+                            e);
+                }
 
-            break;
-        case OBJECT:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_OBJECT));
+                break;
+            case OBJECT:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_OBJECT));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_OBJECT,
-                        e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_OBJECT,
+                            e);
+                }
 
-            break;
-        case STRING:
-            try {
-                clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_STRING));
+                break;
+            case STRING:
+                try {
+                    clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_STRING));
 
-            } catch (final ClassNotFoundException e) {
-                throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_STRING,
-                        e);
-            }
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_STRING,
+                            e);
+                }
 
-            break;
-        default:
-            break;
+                break;
+            default:
+                break;
 
         }
 

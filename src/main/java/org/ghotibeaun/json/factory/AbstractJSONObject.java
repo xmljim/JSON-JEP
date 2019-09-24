@@ -1,5 +1,8 @@
 package org.ghotibeaun.json.factory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
@@ -8,6 +11,11 @@ import org.ghotibeaun.json.NullObject;
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
 class AbstractJSONObject extends AbstractMapNode implements JSONObject {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     public AbstractJSONObject() {
         super();
@@ -168,6 +176,18 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
         return null;
     }
 
+    @Override
+    public <V> List<V> valueList() {
+        final List<V> list = new ArrayList<>();
 
+        for (final JSONValue<?> item : values()) {
+            @SuppressWarnings("unchecked")
+            final
+            JSONValue<V> cast = (JSONValue<V>)item;
+            list.add(cast.getValue());
+        }
+
+        return list;
+    }
 
 }

@@ -4,6 +4,11 @@ import org.ghotibeaun.json.JSONValueType;
 
 class JSONNumberValueImpl extends AbstractJSONValue<Number> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6941765393356792258L;
+
     public JSONNumberValueImpl() {
         // TODO Auto-generated constructor stub
     }

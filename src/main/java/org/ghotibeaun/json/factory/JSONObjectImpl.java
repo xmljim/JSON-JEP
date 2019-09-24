@@ -4,7 +4,17 @@ import java.util.Map.Entry;
 
 import org.ghotibeaun.json.JSONValue;
 
+/**
+ * Concrete implementation of the JSONObject interface
+ * @author Jim Earley
+ *
+ */
 class JSONObjectImpl extends AbstractJSONObject {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8276241950493713931L;
 
     public JSONObjectImpl() {
         super();

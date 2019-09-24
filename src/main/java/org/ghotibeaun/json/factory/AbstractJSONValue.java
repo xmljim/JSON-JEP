@@ -5,6 +5,10 @@ import org.ghotibeaun.json.JSONValueType;
 
 abstract class AbstractJSONValue<T> implements JSONValue<T> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -3400969671857411584L;
     private T _value;
     private final String hint = null;
 

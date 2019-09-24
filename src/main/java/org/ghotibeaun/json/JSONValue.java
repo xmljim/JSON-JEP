@@ -1,6 +1,8 @@
 package org.ghotibeaun.json;
 
-public interface JSONValue<T> {
+import java.io.Serializable;
+
+public interface JSONValue<T> extends Serializable {
     T getValue();
 
     @Override

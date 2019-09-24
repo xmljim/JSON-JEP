@@ -4,12 +4,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONListNode;
+import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 
 abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode, Iterable<JSONValue<?>> {
 
-    private final List<JSONValue<?>> jsonList = new ArrayList<JSONValue<?>>();
+    /**
+     *
+     */
+    private static final long serialVersionUID = -8439023075355492351L;
+    private final List<JSONValue<?>> jsonList = new ArrayList<>();
 
     public AbstractListNode() {
         super();
@@ -74,6 +80,23 @@ abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode
     public JSONValue<?> getValue() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public List<Object> getList() {
+        final List<Object> theList = new ArrayList<>();
+
+        for (final JSONValue<?> val : getValues()) {
+            if (val.isPrimitive()) {
+                theList.add(val.getValue());
+            } else if (val.isArray()) {
+                theList.add(((JSONArray)val.getValue()).getList());
+            } else {
+                theList.add(((JSONObject)val.getValue()).getMap());
+            }
+        }
+
+        return theList;
     }
 
 }

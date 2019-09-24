@@ -16,14 +16,14 @@ public class TestJEPParser {
         System.out.println("String Data Test");
         final String data = "{\"format\": \"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"isTrue\": false}";
         final JSONEventParserImpl impl = new JSONEventParserImpl();
-        
+
 
 
         final double start = System.nanoTime();
         impl.parse(data, ParserSettings.newSettings(new TestHandler()));
         final double end = System.nanoTime();
 
-        
+
 
 
         final double time = ((end-start) * .000000001f);
@@ -58,7 +58,7 @@ public class TestJEPParser {
         System.out.println("Data Size: " + dataSize + " bytes");
         System.out.println("----------------------");
     }
-    
+
     @Test
     public void testParseFileJSONEventHandler() throws IOException {
         System.out.println("File Test - All Sets");
@@ -67,7 +67,7 @@ public class TestJEPParser {
         final Long dataSize = (Long)Files.getAttribute(p, "size");
 
         final File f = new File(System.getProperty("user.dir"), filePath);
-        
+
         final JSONEventParserImpl impl = new JSONEventParserImpl();
 
         final double start = System.nanoTime();
@@ -75,23 +75,23 @@ public class TestJEPParser {
         final double end = System.nanoTime();
         final double time = ((end-start) * .000000001f);
         System.out.println(time);
-        
+
         final double mbSec = ((dataSize/time)/Math.pow(2,20));
         System.out.println("MB/sec: " + (mbSec ));
         System.out.println("GB/hr: " + ((mbSec * 3600)/Math.pow(2, 10)));
         System.out.println("Data Size: " + dataSize + " bytes");
         System.out.println("----------------------");
     }
-    
+
     @Test
     public void testParsePathJSONEventHandler() throws IOException {
         System.out.println("Path Test - US Reps");
         final Path p = Paths.get("src/test/resources/us-reps.json");
         final Long dataSize = (Long)Files.getAttribute(p, "size");
-        
+
         final JSONEventParserImpl impl = new JSONEventParserImpl();
 
-        
+
         //final ParserSettings settings = new ParserSettings(ParserConfiguration.newConfiguration(new ConsoleEventHandler()));
         final ParserSettings settings = ParserSettings.newSettings(new TestHandler()).setBlockSize(16);
         settings.setUseStrict(false);
@@ -100,7 +100,7 @@ public class TestJEPParser {
         final double end = System.nanoTime();
         final double time = ((end-start) * .000000001f);
         System.out.println(time);
-        
+
         final double mbSec = ((dataSize/time)/Math.pow(2,20));
         System.out.println("MB/sec: " + (mbSec ));
         System.out.println("GB/hr: " + ((mbSec * 3600)/Math.pow(2, 10)));

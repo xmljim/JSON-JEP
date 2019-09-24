@@ -31,6 +31,14 @@ public interface JSONObject extends JSONMapNode {
      */
     void put(String key, boolean b);
 
+    default void put(String key, JSONNode node) {
+        if (node.isArray()) {
+            put(key, node.asJSONArray());
+        } else {
+            put(key, node.asJSONObject());
+        }
+    }
+
     /**
      * Adds or replaces a {@linkplain JSONArray} value
      *

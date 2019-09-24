@@ -4,6 +4,11 @@ import org.ghotibeaun.json.JSONValueType;
 
 class JSONBooleanValueImpl extends AbstractJSONValue<Boolean> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 6281209128022770226L;
+
     public JSONBooleanValueImpl() {
         super();
     }

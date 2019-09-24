@@ -21,19 +21,19 @@ import org.ghotibeaun.json.parser.jep.ParserConfiguration;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
 
 class JSONParserImpl implements JSONParser {
-    
+
     public JSONParserImpl() {
         // TODO Auto-generated constructor stub
     }
-    
+
     @Override
     public JSONNode parse(InputStream inputStream) throws JSONParserException {
         return parse(inputStream, FactorySettings.getSetting(FactorySettings.JSON_INPUTSTREAM_CHARSET));
     }
-    
+
     @Override
     public JSONNode parse(InputStream inputStream, String charSet) throws JSONParserException {
-        
+
         final NativeEventHandler handler = new NativeEventHandler();
         final ParserSettings settings = new ParserSettings(ParserConfiguration.newConfiguration(handler));
         settings.setCharSet(charSet);
@@ -41,10 +41,10 @@ class JSONParserImpl implements JSONParser {
         final EventParser parser = EventParser.newEventParser();
         parser.parse(inputStream, settings);
 
-        
+
         return handler.getResult();
     }
-    
+
     @Override
     public JSONNode parse(URL url) throws JSONParserException {
         try {
@@ -56,13 +56,18 @@ class JSONParserImpl implements JSONParser {
             throw new JSONParserException(e.getMessage(), e);
         }
     }
-    
+
     @Override
     public JSONNode parse(String data) throws JSONParserException {
         final StringReader reader = new StringReader(data);
-        return parse(reader);
+        if (data.charAt(0) == '{') {
+            return parseMap(reader);
+        } else {
+            return parseList(reader);
+        }
+
     }
-    
+
     @Override
     public JSONNode parse(Reader reader) throws JSONParserException {
         final Tokenizer t = new Tokenizer(reader);
@@ -70,7 +75,23 @@ class JSONParserImpl implements JSONParser {
         final JSONObject o = NodeFactory.newJSONObject(map);
         return o;
     }
-    
+
+    private JSONNode parseMap(Reader reader) throws JSONParserException {
+
+
+        final Tokenizer t = new Tokenizer(reader);
+        final TokenMap map = new TokenMap(t);
+        final JSONObject o = NodeFactory.newJSONObject(map);
+        return o;
+    }
+
+    private JSONNode parseList(Reader reader) throws JSONParserException {
+        final Tokenizer t = new Tokenizer(reader);
+        final TokenList map = new TokenList(t);
+        final JSONArray o = NodeFactory.newJSONArray(map);
+        return o;
+    }
+
     @Override
     public JSONNode parse(File file) throws JSONParserException {
         try {
@@ -80,25 +101,25 @@ class JSONParserImpl implements JSONParser {
             return o;
         } catch (final FileNotFoundException e) {
             throw new JSONParserException(e.getMessage(), e);
-            
+
         } catch (final IOException e) {
             throw new JSONParserException(e.getMessage(), e);
         }
     }
-    
+
     @Override
     public JSONNode parse(Path filePath) throws JSONParserException {
         return parse(filePath.toFile());
     }
-    
+
     @Override
     public JSONObject newJSONObject() {
         return NodeFactory.newJSONObject();
     }
-    
+
     @Override
     public JSONArray newJSONArray() {
         return NodeFactory.newJSONArray();
     }
-    
+
 }

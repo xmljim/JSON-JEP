@@ -26,4 +26,12 @@ public interface JSONListNode extends JSONNode, Iterable<JSONValue<?>> {
     int size();
 
     List<JSONValue<?>> getValues();
+
+    <V> List<V> toList();
+
+    public default boolean isNull(int index) {
+        return this.get(index).getType() == JSONValueType.NULL;
+    }
+
+    List<Object> getList();
 }

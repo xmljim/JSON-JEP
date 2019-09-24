@@ -18,6 +18,14 @@ public interface JSONArray extends JSONListNode {
 
     void add(JSONObject obj);
 
+    default void add(JSONNode node) {
+        if (node.isArray()) {
+            add(node.asJSONArray());
+        } else {
+            add(node.asJSONObject());
+        }
+    }
+
     String getString(int index) throws JSONInvalidValueTypeException;
 
     Number getNumber(int index) throws JSONInvalidValueTypeException;
@@ -33,4 +41,6 @@ public interface JSONArray extends JSONListNode {
     JSONObject getJSONObject(int index) throws JSONInvalidValueTypeException;
 
     JSONValueType getValueType(int index);
+
+
 }

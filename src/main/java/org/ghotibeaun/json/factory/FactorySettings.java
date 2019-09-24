@@ -106,6 +106,12 @@ public class FactorySettings extends Properties {
      */
     public static final String JSON_DATE_FORMAT = "org.ghotibeaun.json.date.format";
 
+    /**
+     * Key for the XML Serializer
+     */
+    public static final String XML_SERIALIZER = "org.ghotibeaun.json.xmlserializer";
+
+
     private static FactorySettings instance = null;
     private Properties defaults;
     private boolean useDefaultSettings;

@@ -1,6 +1,7 @@
 package org.ghotibeaun.json.parser;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -198,6 +199,15 @@ public class TestJSONObject implements JSONObject {
 
     @Override
     public String prettyPrint(int indent) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    /* (non-Javadoc)
+     * @see org.ghotibeaun.json.JSONMapNode#valueList()
+     */
+    @Override
+    public <V> List<V> valueList() {
         // TODO Auto-generated method stub
         return null;
     }

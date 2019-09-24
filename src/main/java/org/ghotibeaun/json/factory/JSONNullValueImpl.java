@@ -5,6 +5,11 @@ import org.ghotibeaun.json.NullObject;
 
 class JSONNullValueImpl extends AbstractJSONValue<NullObject> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 343392039089034698L;
+
     @Override
     public JSONValueType getType() {
         return JSONValueType.NULL;

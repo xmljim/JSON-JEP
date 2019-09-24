@@ -6,13 +6,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONMapNode;
+import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
 abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
 
-    private final Map<String, JSONValue<?>> jsonMap = new LinkedHashMap<String, JSONValue<?>>();
+    /**
+     *
+     */
+    private static final long serialVersionUID = -5979494985961207537L;
+    private final Map<String, JSONValue<?>> jsonMap = new LinkedHashMap<>();
 
     public AbstractMapNode() {
         // no-op
@@ -79,9 +85,17 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
 
     @Override
     public Map<String, Object> getMap() {
-        final Map<String, Object> map = new LinkedHashMap<String, Object>();
+        final Map<String, Object> map = new LinkedHashMap<>();
         for (final Entry<String, JSONValue<?>> element : elements()) {
-            map.put(element.getKey(), element.getValue().getValue());
+            if (element.getValue().isPrimitive()) {
+                map.put(element.getKey(), element.getValue().getValue());
+            } else if (element.getValue().isArray()) {
+                final JSONArray val = (JSONArray) element.getValue().getValue();
+                map.put(element.getKey(), val.getList());
+            } else {
+                final JSONObject val = (JSONObject) element.getValue().getValue();
+                map.put(element.getKey(), val.getMap());
+            }
         }
 
         return map;
@@ -113,5 +127,7 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
         // TODO Auto-generated method stub
         return null;
     }
+
+
 
 }

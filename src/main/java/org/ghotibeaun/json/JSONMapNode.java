@@ -1,6 +1,7 @@
 package org.ghotibeaun.json;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -73,6 +74,8 @@ public interface JSONMapNode extends JSONNode {
      */
     Collection<JSONValue<?>> values();
 
+    <V> List<V> valueList();
+
     Iterable<String> keys();
 
     /**
@@ -125,4 +128,9 @@ public interface JSONMapNode extends JSONNode {
      * @return The entry's value
      */
     JSONValue<?> remove(String key);
+
+
+    public default boolean isNull(String key) {
+        return (this.containsKey(key) == false) || (this.get(key).getType() == JSONValueType.NULL);
+    }
 }

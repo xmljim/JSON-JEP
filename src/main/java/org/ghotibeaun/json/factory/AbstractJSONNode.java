@@ -4,6 +4,11 @@ import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONValue;
 
 abstract class AbstractJSONNode implements JSONNode {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     public AbstractJSONNode() {
 
     }

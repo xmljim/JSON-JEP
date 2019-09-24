@@ -8,6 +8,11 @@ import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
 abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, Iterable<JSONValue<?>> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
+
     public AbstractJSONArray() {
         super();
     }

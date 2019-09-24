@@ -5,6 +5,11 @@ import org.ghotibeaun.json.JSONValueType;
 
 class JSONArrayValueImpl extends AbstractJSONValue<JSONArray> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = -4412270827824841485L;
+
     public JSONArrayValueImpl() {
         super();
     }
