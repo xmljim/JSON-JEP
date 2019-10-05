@@ -34,7 +34,7 @@ class JSONStringValueImpl extends AbstractJSONValue<String> {
 
     @Override
     public String toString() {
-        return "\"" + getValue() + "\"";
+        return "\"" + getValue().replaceAll("\"", "\\\\\"") + "\"";
     }
 
     @Override
@@ -46,4 +46,6 @@ class JSONStringValueImpl extends AbstractJSONValue<String> {
     public String prettyPrint(int indent) {
         return toString();
     }
+
+
 }
