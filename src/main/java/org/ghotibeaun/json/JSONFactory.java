@@ -69,4 +69,6 @@ public abstract class JSONFactory {
      * @return the {@link JSONSerializer}
      */
     public abstract JSONSerializer newSerializer() throws JSONSerializationException;
+
+
 }

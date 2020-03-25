@@ -2,6 +2,12 @@ package org.ghotibeaun.json;
 
 import java.io.Serializable;
 
+import org.ghotibeaun.json.jsonpath.JSONPath;
+import org.ghotibeaun.json.jsonpath.JSONPathFactory;
+
+import com.jayway.jsonpath.Criteria;
+import com.jayway.jsonpath.Option;
+
 /**
  * Base interface for JSON entities
  * @author Jim Earley
@@ -37,7 +43,7 @@ public interface JSONNode extends Serializable {
     }
 
     /**
-     * Interrogate ifthe JSONNode is a JSONObject
+     * Interrogate if the JSONNode is a JSONObject
      * @return true if it is a JSONObject; false otherwise
      */
     public default boolean isObject() {
@@ -58,6 +64,61 @@ public interface JSONNode extends Serializable {
      */
     public default JSONArray asJSONArray() {
         return (JSONArray)this;
+    }
+
+    /**
+     * Select a value from the JSONNode using a JSON-Path expression.
+     * <p>
+     * This is a wrapper around the {@linkplain JSONPath} API
+     * </p>
+     * @param jsonPath the JSON-Path expression
+     * @return A JSONArray of values.
+     */
+    public default JSONArray select(String jsonPath) {
+        return JSONPathFactory.compile(jsonPath).select(this);
+    }
+
+    /**
+     * Select a value from the JSONNode using a JSON-Path expression.
+     * <p>
+     * This is a wrapper around the {@linkplain JSONPath} API
+     * </p>
+     * @param jsonPath the JSON-Path expression
+     * @param options One or more options to implement on the JSONPath query
+     * @return A JSONArray of values
+     */
+    public default JSONArray select(String jsonPath, Option...options) {
+        return JSONPathFactory.compile(jsonPath, options).select(this);
+    }
+
+    /**
+     * Select a value from the JSONNode using a JSON-Path expression.
+     * <p>
+     * This is a wrapper around the {@linkplain JSONPath} API
+     * </p>
+     * @param jsonPath the JSON-Path expression
+     * @param options One or more options to implement on the JSONPath query
+     * @return A JSONArray of values
+     */
+    public default JSONArray select(String jsonPath, Criteria criteria, Option...options) {
+        return JSONPathFactory.compile(jsonPath, criteria, options).select(this);
+    }
+
+    /**
+     * Select a single value from a JSONPath expression
+     * @param jsonPath the JSONPath expression
+     * @return the typed value (or null). For primitive Java types, users should take care to understand the data
+     */
+    public default <T> T selectValue(String jsonPath) {
+        return JSONPathFactory.compile(jsonPath).selectValue(this);
+    }
+
+    public default <T> T selectValue(String jsonPath, Option...options) {
+        return JSONPathFactory.compile(jsonPath, options).selectValue(this);
+    }
+
+    public default <T> T selectValue(String jsonPath, Criteria criteria, Option...options) {
+        return JSONPathFactory.compile(jsonPath, criteria, options).selectValue(this);
     }
 
 

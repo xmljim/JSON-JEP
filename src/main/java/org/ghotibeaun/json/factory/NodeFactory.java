@@ -1,5 +1,6 @@
 package org.ghotibeaun.json.factory;
 
+import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -204,6 +205,19 @@ public final class NodeFactory {
         }
 
         return v;
+
+    }
+
+    public static JSONValue<?> createFromObject(Object source, Type target) {
+        try {
+            final Object castedObject = Class.forName(target.getTypeName()).cast(source);
+            return createFromObject(castedObject);
+        } catch (final ClassNotFoundException e) {
+            throw new JSONValueNotFoundException(target.getTypeName(), e);
+        }
+
+
+
 
     }
 

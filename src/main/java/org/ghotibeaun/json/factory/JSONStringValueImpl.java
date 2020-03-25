@@ -35,6 +35,7 @@ class JSONStringValueImpl extends AbstractJSONValue<String> {
     @Override
     public String toString() {
         return "\"" + getValue().replaceAll("\"", "\\\\\"") + "\"";
+
     }
 
     @Override

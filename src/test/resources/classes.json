@@ -1,0 +1,353 @@
+{
+    "classes": [
+        {
+            "type": "vertex",
+            "name": "BaseRlmEntity",
+            "superclass": "V",
+            "abstract": true,
+            "properties": [
+                {
+                    "name": "guid",
+                    "type": "STRING",
+                    "create": "UUID"
+                },
+                {
+                    "name": "hash",
+                    "type": "STRING",
+                    "create": "HASH"
+                }
+            ],
+            "indexes": [
+                {
+                    "name": "guid_hash_index",
+                    "type": "NOTUNIQUE",
+                    "fields": [
+                        "guid"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "vertex",
+            "name": "BaseRlmAccountEntity",
+            "superclass": "BaseRlmEntity",
+            "abstract": true,
+            "properties": [
+                {
+                    "name": "accountId",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "accountKey",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "visitCd",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "institutionCd",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "entityCd",
+                    "type": "STRING",
+                    "create": "PARAM"
+                }
+            ],
+            "indexes": [
+                {
+                    "name": "accountKey_index",
+                    "type": "NOTUNIQUE_HASH_INDEX",
+                    "fields": [
+                        "accountKey"
+                    ]
+                },
+                {
+                    "name": "accountComponents_index",
+                    "type": "NOTUNIQUE_HASH_INDEX",
+                    "fields": [
+                        "accountId",
+                        "visitCd",
+                        "institutionCd",
+                        "entityCd"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "vertex",
+            "name": "PatientAccount",
+            "repositoryEntity": "BALANCE",
+            "superclass": "BaseRlmAccountEntity",
+            "abstract": false,
+            "properties": [
+                {
+                    "name": "firstName",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "lastName",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "birthDate",
+                    "type": "DATE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "mrn",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "ssn",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "startingBalance",
+                    "type": "DOUBLE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "admitDate",
+                    "type": "DATE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "dischargeDate",
+                    "type": "DATE",
+                    "create": "PARAM"
+                }
+            ],
+            "indexes": [
+            ]
+        },
+        {
+            "name": "PatientAccountAnnotation",
+            "superclass": "BaseRlmAccountEntity",
+            "abstract": false,
+            "repositoryEntity": "ANNOTATION",
+            "type": "vertex",
+            "properties": [
+                {
+                    "name": "createDate",
+                    "type": "DATE",
+                    "create": "GENERATE"
+                },
+                {
+                    "name": "amount",
+                    "type": "DOUBLE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "signedAmount",
+                    "type": "DOUBLE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "newBalance",
+                    "type": "DOUBLE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "amountType",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "comment",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "effectiveDate",
+                    "type": "DATE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "type",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "userName",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "sequenceNumber",
+                    "type": "INTEGER",
+                    "create": "INCREMENT"
+                }
+            ],
+            "indexes": [
+                {
+                    "name": "annotationSequence_index",
+                    "type": "NOTUNIQUE_HASH_INDEX",
+                    "fields": [
+                        "sequenceNumber"
+                    ]
+                },
+                {
+                    "name": "effectiveDate_index",
+                    "type": "NOTUNIQUE",
+                    "fields": [
+                        "effectiveDate"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "AnnotationAttachment",
+            "superclass": "BaseRlmEntity",
+            "repositoryEntity": "ATTACHMENT",
+            "abstract": false,
+            "type": "vertex",
+            "properties": [
+                {
+                    "name": "name",
+                    "type": "STRING",
+                    "create": "FILENAME"
+                },
+                {
+                    "name": "size",
+                    "type": "LONG",
+                    "create": "FILESIZE"
+                },
+                {
+                    "name": "mimeType",
+                    "type": "STRING",
+                    "create": "MIMETYPE"
+                },
+                {
+                    "name": "content",
+                    "type": "BINARY",
+                    "create": "CONTENT"
+                }
+            ],
+            "indexes": [
+            ]
+        },
+        {
+            "name": "RCPPackage",
+            "superclass": "BaseRlmEntity",
+            "repositoryEntity": "PACKAGE",
+            "abstract": false,
+            "type": "vertex",
+            "properties": [
+                {
+                    "name": "packageId",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "system",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "deliveryDate",
+                    "type": "DATE",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "processedDate",
+                    "type": "DATE",
+                    "create": "GENERATE"
+                },
+                {
+                    "name": "status",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "recordCount",
+                    "type": "INTEGER",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "errorCount",
+                    "type": "INTEGER",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "errorLog",
+                    "type": "STRING",
+                    "create": "PARAM"
+                },
+                {
+                    "name": "data",
+                    "type": "BINARY",
+                    "create": "CONTENT"
+                },
+                {
+                    "name": "fileName",
+                    "type": "STRING",
+                    "create": "FILENAME"
+                },
+                {
+                    "name": "fileSize",
+                    "type": "LONG",
+                    "create": "FILESIZE"
+                },
+                {
+                    "name": "mimetype",
+                    "type": "STRING",
+                    "create": "MIMETYPE"
+                }
+            ],
+            "indexes": [
+                {
+                    "name": "rcpPackage_index",
+                    "type": "NOTUNIQUE_HASH_INDEX",
+                    "fields": [
+                        "packageId",
+                        "system",
+                        "deliveryDate"
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "edge",
+            "name": "HasAttachment",
+            "repositoryEntity": "ANNOTATION_ATTACHMENT",
+            "superclass": "E",
+            "abstract": false,
+            "properties": [
+            ],
+            "indexes": [
+            ]
+        },
+        {
+            "type": "edge",
+            "name": "HasAnnotation",
+            "repositoryEntity": "BALANCE_ANNOTATION",
+            "superclass": "E",
+            "abstract": false,
+            "properties": [
+            ],
+            "indexes": [
+            ]
+        },
+        {
+            "type": "edge",
+            "name": "HasPackage",
+            "repositoryEntity": "ANNOTATION_PACKAGE",
+            "superclass": "E",
+            "abstract": false,
+            "properties": [
+            ],
+            "indexes": [
+            ]
+        }
+    ]
+}

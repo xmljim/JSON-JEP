@@ -23,30 +23,49 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
 
     @Override
     public void put(String key, Number n) {
+        if (n == null) {
+            putNull(key);
+            return;
+        }
+
         final JSONValue<Number> value = NodeFactory.newNumberValue(n);
         put(key, value);
     }
 
     @Override
     public void put(String key, String s) {
+        if (s == null) {
+            putNull(key);
+            return;
+        }
+
         final JSONValue<String> value = NodeFactory.newStringValue(s);
         put(key, value);
     }
 
     @Override
     public void put(String key, boolean b) {
+
         final JSONValue<Boolean> value = NodeFactory.newBooleanValue(b);
         put(key, value);
     }
 
     @Override
     public void put(String key, JSONArray a) {
+        if (a == null) {
+            putNull(key);
+            return;
+        }
         final JSONValue<JSONArray> value = NodeFactory.newJSONArrayValue(a);
         put(key, value);
     }
 
     @Override
     public void put(String key, JSONObject o) {
+        if (o == null) {
+            putNull(key);
+            return;
+        }
         final JSONValue<JSONObject> value = NodeFactory.newJSONObjectValue(o);
         put(key, value);
     }

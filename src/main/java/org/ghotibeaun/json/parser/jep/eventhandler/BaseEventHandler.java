@@ -19,15 +19,15 @@ public abstract class BaseEventHandler extends EventHandler {
     private boolean awaitingKey = false;
     private Object lastValue = null;
     private String lastKey = null;
-    
+
     public BaseEventHandler() {
-        
+
     }
-    
+
     public JSONValueType getDocumentType() {
         return documentType;
     }
-    
+
     @Override
     public void handleEvent(JSONEvent event) throws JSONEventParserException {
         switch (event.getEventType()) {
@@ -67,7 +67,7 @@ public abstract class BaseEventHandler extends EventHandler {
                 objectStack.push(JSONValueType.BOOLEAN);
                 break;
             case BOOLEAN_END:
-                valueBoolean(handleValue(event, JSONValueType.BOOLEAN), Boolean.getBoolean(getDataValue(event)));
+                valueBoolean(handleValue(event, JSONValueType.BOOLEAN), Boolean.parseBoolean(getDataValue(event)));
                 break;
             case NULL_START:
                 objectStack.push(JSONValueType.NULL);
@@ -89,16 +89,16 @@ public abstract class BaseEventHandler extends EventHandler {
                 setKeyBit(false);
                 awaitingKey = false;
             default:
-                
+
         }
-        
+
     }
-    
-    
+
+
     private String getKeyValue() {
         return objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
     }
-    
+
 
 
     private String handleValue(JSONEvent event, JSONValueType type) {
@@ -106,20 +106,20 @@ public abstract class BaseEventHandler extends EventHandler {
         if (popped != type) {
             throwError(event, "JSON Stack Error: Expected value type " + type + ", but saw " + popped);
         }
-        
+
         awaitingKey = true;
         setKeyBit(true);
         return getKeyValue();
     }
 
     private void handleString(JSONEvent event, String data) {
-        
+
         if (isKey()) {
             keyStack.push(data);
             awaitingKey = false;
             setKeyBit(false);
             newKey(data);
-            
+
         } else {
             final JSONValueType popped = objectStack.pop();
             if (popped != JSONValueType.STRING) {
@@ -131,22 +131,22 @@ public abstract class BaseEventHandler extends EventHandler {
                 final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
                 this.valueString(key, data);
                 lastValue = data;
-                
+
             } catch (final Exception e) {
                 System.err.println("ERRROR at token: " + data + "; lastSuccces {key: " + lastKey + ", value: " + lastValue.toString() + "}");
                 e.printStackTrace();
                 throw new RuntimeException(data, e);
 
             }
-            
+
             awaitingKey = true;
             setKeyBit(true);
         }
     }
-    
+
     private void handleNumber(JSONEvent event, String data) {
         final String key = handleValue(event, JSONValueType.NUMBER);
-        
+
         if (data.contains(".")) {
             final BigDecimal bd = new BigDecimal(data);
             valueBigDecimal(key, bd);
@@ -177,7 +177,7 @@ public abstract class BaseEventHandler extends EventHandler {
         return (getKeyBit() && awaitingKey &&
                 ((objectStack.peekFirst() != null) && (objectStack.peekFirst() == JSONValueType.OBJECT)));
     }
-    
+
     private void setKeyBit(boolean bool) {
         this.keyBit = bool;
     }
@@ -189,6 +189,6 @@ public abstract class BaseEventHandler extends EventHandler {
     private void throwError(JSONEvent event, String message) {
         throw new JSONEventParserException(event.getLineNumber(), event.getColumn(), message);
     }
-    
-    
+
+
 }

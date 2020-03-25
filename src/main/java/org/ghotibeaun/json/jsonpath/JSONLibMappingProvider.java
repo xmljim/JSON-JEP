@@ -10,6 +10,7 @@ import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
+import org.ghotibeaun.json.factory.NodeFactory;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.TypeRef;
@@ -43,14 +44,15 @@ public class JSONLibMappingProvider implements MappingProvider {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public <T> T map(Object source, TypeRef<T> targetType, Configuration configuration) {
-        // TODO Auto-generated method stub
-        return null;
+        final JSONValue<?> result = NodeFactory.createFromObject(source, targetType.getType());
+        return (T)result.getValue();
     }
 
     private Object mapObjectToObject(Object source) {
-        final Map<String,Object> mapped = new HashMap<String, Object>();
+        final Map<String,Object> mapped = new HashMap<>();
 
         final JSONObject obj = (JSONObject)source;
         for (final Entry<String, JSONValue<?>> o : obj.elements()) {
@@ -61,7 +63,7 @@ public class JSONLibMappingProvider implements MappingProvider {
     }
 
     private Object mapArrayToObject(Object source) {
-        final List<Object> mapped = new ArrayList<Object>();
+        final List<Object> mapped = new ArrayList<>();
 
         final JSONArray arr = (JSONArray)source;
 

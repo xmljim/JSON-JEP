@@ -76,4 +76,9 @@ public interface JSONObject extends JSONMapNode {
 
     String getString(String key);
 
+    @SuppressWarnings("unchecked")
+    default <T> T getValue(String key) {
+        return (T) get(key).getValue();
+    }
+
 }
