@@ -20,10 +20,13 @@ public interface JSONListNode extends JSONNode, Iterable<JSONValue<?>> {
 
     JSONValue<?> remove(int index);
 
-
     void clear();
 
     int size();
+    
+    default boolean isEmpty() {
+        return size() == 0;
+    }
 
     List<JSONValue<?>> getValues();
 
@@ -34,4 +37,20 @@ public interface JSONListNode extends JSONNode, Iterable<JSONValue<?>> {
     }
 
     List<Object> getList();
+    
+    public default JSONValue<?> getLast() {
+        if (size() > 0) {
+            return get(size() - 1);
+        } else {
+            return null;
+        }
+    }
+    
+    public default JSONValue<?> getFirst() {
+        if (size() > 0) {
+            return get(0);
+        } else {
+            return null;
+        }
+    }
 }

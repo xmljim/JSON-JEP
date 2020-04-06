@@ -44,6 +44,10 @@ public interface JSONEventHandler extends Configurable {
     void valueInt(String key, Integer value);
     
     void valueBigDecimal(String key, BigDecimal value);
+        
+    void valueDouble(String key, Double value);
+    
+    void valueFloat(String key, Float value);
     
     void valueBoolean(String key, boolean value);
     

@@ -2,6 +2,11 @@ package org.ghotibeaun.json;
 
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
+/**
+ * Interface holding an array of {@linkplain JSONValue} objects
+ * @author jearley
+ *
+ */
 public interface JSONArray extends JSONListNode {
 
     /**
@@ -118,6 +123,33 @@ public interface JSONArray extends JSONListNode {
     default <T> T getValue(int index) {
         return (T) get(index).getValue();
     }
+    
+    /**
+     * Return the last value in the array
+     * @param <T> The value type
+     * @return the last value in the array, or null if the array is empty
+     */
+    @SuppressWarnings("unchecked")
+    default <T> T getLastValue() {
+        if (getLast() != null) {
+            return (T) getLast().getValue();
+        } else {
+            return null;
+        }
+    }
 
 
+    /**
+     * Return the first value in the array
+     * @param <T> the value type
+     * @return the first value in the array, or null if the array is empty
+     */
+    @SuppressWarnings("unchecked")
+    default <T> T getFirstValue() {
+        if (getFirst() != null) {
+            return (T) getFirst().getValue();
+        } else {
+            return null;
+        }
+    }
 }

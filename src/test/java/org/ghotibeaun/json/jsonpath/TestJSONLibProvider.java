@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
+import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.parser.ParserFactory;
 import org.junit.Assert;
 import org.junit.Test;
@@ -19,39 +20,6 @@ import com.jayway.jsonpath.spi.mapper.MappingProvider;
 
 public class TestJSONLibProvider {
 
-    @Test
-    public void test() {
-        final Configuration.Defaults defaults = new Configuration.Defaults() {
-
-            @Override
-            public Set<Option> options() {
-                return EnumSet.noneOf(Option.class);
-            }
-
-            @Override
-            public MappingProvider mappingProvider() {
-                return new JSONLibMappingProvider();
-            }
-
-            @Override
-            public JsonProvider jsonProvider() {
-                return new JSONLibProvider();
-            }
-        };
-
-        Configuration.setDefaults(defaults);
-        final Configuration conf = Configuration.defaultConfiguration();
-        conf.addOptions(Option.DEFAULT_PATH_LEAF_TO_NULL);
-        conf.addOptions(Option.ALWAYS_RETURN_LIST);
-
-        final JSONArray authors =
-                JsonPath.using(conf).parse(getClass().getResourceAsStream("/books.json")).read("$..book[?(@.isbn)]");
-
-        //System.out.println(authors.prettyPrint());
-
-        //final byte[] b = "{".getBytes();
-        //System.out.println(b[0]);
-    }
 
     @Test
     public void testJSONNodeJsonPathToArray() {
@@ -74,7 +42,7 @@ public class TestJSONLibProvider {
         System.out.println(title);
         System.out.println(price.doubleValue());
 
-        final double doublePrice = ((Number)node.selectValue("$..book[2].price")).doubleValue();
+        final double doublePrice = node.selectValue("$..book[2].price");
         System.out.println(doublePrice);
 
         final JSONNode values = node.select("$.store.book[?(@.category=='fiction')]");
@@ -101,7 +69,7 @@ public class TestJSONLibProvider {
     public void usRepTest() {
         final JSONNode node = ParserFactory.getParser().parse(getClass().getResourceAsStream("/us-reps.json"));
 
-        final JSONArray dems = node.select("$.objects[?(@.party=='Democrat' && @.state=='MA')]");
+        final JSONArray dems = node.select("$.objects[?(@.party=='Democrat')]");
         final JSONArray gop = node.select("$.objects[?(@.party=='Republican')]");
 
         System.out.println(dems.size());
@@ -109,7 +77,12 @@ public class TestJSONLibProvider {
 
         System.out.println(gop.select("$.*[?(@.state=='CO')].person.sortname").prettyPrint());
 
-
+        JSONArray polisArray = dems.select("$.*[?(@.person.lastname=='Polis')]");
+        System.out.println(polisArray.prettyPrint());
+       
+        
+        JSONObject jaredPolis = dems.selectValue("$.*[?(@.person.lastname=='Polis')]");
+        System.out.println(jaredPolis.prettyPrint());
     }
 
 }

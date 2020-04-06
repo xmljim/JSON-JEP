@@ -1,0 +1,39 @@
+{
+    "headerRow" : false,
+    "separator" : ",",
+    "enclosure" : "\"",
+    "dateFormat" : "yyyy-MM-dd",
+    "columns" : [
+        {
+            "columnName" : "date",
+            "nullable" : true,
+            "type" : "DATE"
+        },
+        {
+            "columnName" : "county",
+            "nullable" : true,
+            "type" : "STRING"
+        },
+        {
+            "columnName" : "state",
+            "nullable" : true,
+            "type" : "STRING"        
+        },
+        {
+            "columnName" : "fips",
+            "nullable" : true,
+            "type" : "STRING"        
+        },
+        {
+            "columnName" : "cases",
+            "nullable" : true,
+            "type" : "NUMBER"        
+        },
+        {
+            "columnName" : "deaths",
+            "nullable" : true,
+            "type" : "NUMBER"        
+        }        
+    ]
+    
+}

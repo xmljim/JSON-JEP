@@ -11,12 +11,15 @@ import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.factory.NodeFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.mapper.MappingProvider;
 
-public class JSONLibMappingProvider implements MappingProvider {
+class JSONLibMappingProvider implements MappingProvider {
+    private static final Logger LOGGER = LoggerFactory.getLogger(JSONLibMappingProvider.class);
 
     public JSONLibMappingProvider() {
         // TODO Auto-generated constructor stub
@@ -47,11 +50,15 @@ public class JSONLibMappingProvider implements MappingProvider {
     @SuppressWarnings("unchecked")
     @Override
     public <T> T map(Object source, TypeRef<T> targetType, Configuration configuration) {
+        LOGGER.debug("In map: {}, [Target Type: {}]", source.toString(), targetType.getClass().getName());
+        
         final JSONValue<?> result = NodeFactory.createFromObject(source, targetType.getType());
+        LOGGER.debug("  - returns: {}", result.getValue().toString());
         return (T)result.getValue();
     }
 
     private Object mapObjectToObject(Object source) {
+        LOGGER.debug("In mapToObject: {}", source.toString());
         final Map<String,Object> mapped = new HashMap<>();
 
         final JSONObject obj = (JSONObject)source;
@@ -86,8 +93,6 @@ public class JSONLibMappingProvider implements MappingProvider {
         } else {
             return val.getValue();
         }
-
-
     }
 
 }

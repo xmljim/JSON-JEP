@@ -63,7 +63,13 @@ public abstract class EventHandler implements JSONEventHandler {
 
     @Override
     public abstract void valueBigDecimal(String key, BigDecimal value);
-
+    
+    @Override
+    public abstract void valueDouble(String key, Double value);
+    
+    @Override
+    public abstract void valueFloat(String key, Float value);
+    
     @Override
     public abstract void valueBoolean(String key, boolean value);
 

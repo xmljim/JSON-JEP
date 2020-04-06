@@ -1,9 +1,14 @@
 package org.ghotibeaun.json;
 
+import java.io.File;
+import java.io.OutputStream;
 import java.io.Serializable;
+import java.io.Writer;
+import java.nio.file.Path;
 
 import org.ghotibeaun.json.jsonpath.JSONPath;
 import org.ghotibeaun.json.jsonpath.JSONPathFactory;
+import org.ghotibeaun.json.serializer.SerializationFactory;
 
 import com.jayway.jsonpath.Criteria;
 import com.jayway.jsonpath.Option;
@@ -120,6 +125,37 @@ public interface JSONNode extends Serializable {
     public default <T> T selectValue(String jsonPath, Criteria criteria, Option...options) {
         return JSONPathFactory.compile(jsonPath, criteria, options).selectValue(this);
     }
+    
+    public default void write(OutputStream out) {
+        write(out, false);
+    }
+    
+    public default void write(Path outputPath) {
+        write(outputPath, false);
+    }
+    
+    public default void write(Writer writer) {
+        write(writer, false);
+    }
+    
+    public default void write(File file) {
+        write(file, false);
+    }
+    
+    public default void write(OutputStream out, boolean prettyPrint) {
+        SerializationFactory.getSerializer().write(out, this, prettyPrint);
+    }
+    
+    public default void write(Path outputPath, boolean prettyPrint) {
+        SerializationFactory.getSerializer().write(outputPath, this, prettyPrint);;
+    }
+    
+    public default void write(File outputFile, boolean prettyPrint) {
+        SerializationFactory.getSerializer().write(outputFile, this, prettyPrint);
+    }
 
+    public default void write(Writer writer, boolean prettyPrint) {
+        SerializationFactory.getSerializer().write(writer, this, prettyPrint);
+    }
 
 }

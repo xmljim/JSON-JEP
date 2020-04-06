@@ -108,6 +108,18 @@ public class ConsoleEventHandler extends EventHandler {
     }
     
     @Override
+    public void valueDouble(String key, Double value) {
+        print("VALUE: key=" + key + "; value=" + value.toString(), true);
+        
+    }
+    
+    @Override
+    public void valueFloat(String key, Float value) {
+        print("VALUE: key=" + key + "; value=" + value.toString(), true);
+        
+    }
+    
+    @Override
     public void valueBoolean(String key, boolean value) {
         print("VALUE: key=" + key + "; value=" + value, true);
 

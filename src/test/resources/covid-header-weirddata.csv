@@ -1,0 +1,23 @@
+date,county,state,fips,cases,deaths
+2020-03-01,Sonoma,California,06097,1,0
+2020-03-01,Hillsborough,Florida,12057,1,0
+2020-03-01,Manatee,Florida,12081,1,0
+2020-03-01,Cook,Illinois,17031,3,0
+2020-03-01,Suffolk,Massachusetts,25025,1,0
+2020-03-01,Douglas,Nebraska,31055,13,0
+2020-03-01,New York City,New York,,1,0
+2020-03-01,Washington,Oregon,41067,2,0
+2020-03-01,Unknown,Rhode Island,,2,0
+2020-03-01,Bexar,Texas,48029,11,0
+2020-03-01,Salt Lake,Utah,49035,1,0
+2020-03-01,King,Washington,53033,11,3
+2020-03-01,Snohomish,Washington,53061,2,0
+2020-03-01,Spokane,Washington,53063,4,0
+2020-03-01,Dane,Wisconsin,55025,1,0
+2020-03-02,Maricopa,Arizona,04013,1,0
+2020-03-02,Alameda,California,06001,1,0
+2020-03-02,Humboldt,California,06023,1,0
+2020-03-02,Los Angeles,California,06037,1,0
+2020-03-02,Marin,California,06041,1,0
+2020-03-02,Napa,California,06055,1,0
+2020-03-02,Orange,California,06059,1,0

@@ -1,0 +1,54 @@
+date,county,state,fips,cases,deaths
+2020-02-08,Dane,Wisconsin,55025,1,0
+2020-02-09,Maricopa,Arizona,04013,1,0
+2020-02-09,Los Angeles,California,06037,1,0
+2020-02-09,Orange,California,06059,1,0
+2020-02-09,San Francisco,California,06075,2,0
+2020-02-09,Santa Clara,California,06085,2,0
+2020-02-09,Cook,Illinois,17031,2,0
+2020-02-09,Suffolk,Massachusetts,25025,1,0
+2020-02-09,Snohomish,Washington,53061,1,0
+2020-02-09,Dane,Wisconsin,55025,1,0
+2020-02-10,Maricopa,Arizona,04013,1,0
+2020-02-10,Los Angeles,California,06037,1,0
+2020-02-10,Orange,California,06059,1,0
+2020-02-10,San Diego,California,06073,1,0
+2020-02-10,San Francisco,California,06075,2,0
+2020-02-10,Santa Clara,California,06085,2,0
+2020-02-10,Cook,Illinois,17031,2,0
+2020-02-10,Suffolk,Massachusetts,25025,1,0
+2020-02-10,Snohomish,Washington,53061,1,0
+2020-02-10,Dane,Wisconsin,55025,1,0
+2020-02-11,Maricopa,Arizona,04013,1,0
+2020-02-11,Los Angeles,California,06037,1,0
+2020-02-11,Orange,California,06059,1,0
+2020-02-11,San Diego,California,06073,1,0
+2020-02-11,San Francisco,California,06075,2,0
+2020-02-11,Santa Clara,California,06085,2,0
+2020-02-11,Cook,Illinois,17031,2,0
+2020-02-11,Suffolk,Massachusetts,25025,1,0
+2020-02-11,Snohomish,Washington,53061,1,0
+2020-02-11,Dane,Wisconsin,55025,1,0
+2020-02-12,Maricopa,Arizona,04013,1,0
+2020-02-12,Los Angeles,California,06037,1,0
+2020-02-12,Orange,California,06059,1,0
+2020-02-12,San Diego,California,06073,1,0
+2020-02-12,San Francisco,California,06075,2,0
+2020-02-12,Santa Clara,California,06085,2,0
+2020-02-12,Cook,Illinois,17031,2,0
+2020-02-12,Suffolk,Massachusetts,25025,1,0
+2020-02-12,Bexar,Texas,48029,1,0
+2020-02-12,Snohomish,Washington,53061,1,0
+2020-02-12,Dane,Wisconsin,55025,1,0
+2020-02-13,Maricopa,Arizona,04013,1,0
+2020-02-13,Los Angeles,California,06037,1,0
+2020-02-13,Orange,California,06059,1,0
+2020-02-13,San Diego,California,06073,1,0
+2020-02-13,San Francisco,California,06075,2,0
+2020-02-13,Santa Clara,California,06085,2,0
+2020-02-13,Cook,Illinois,17031,2,0
+2020-02-13,Suffolk,Massachusetts,25025,1,0
+2020-02-13,Bexar,Texas,48029,2,0
+2020-02-13,Snohomish,Washington,53061,1,0
+2020-02-13,Dane,Wisconsin,55025,1,0
+2020-02-14,Maricopa,Arizona,04013,1,0

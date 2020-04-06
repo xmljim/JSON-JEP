@@ -159,7 +159,22 @@ public class TestHandler extends BaseEventHandler {
         appendToCurrent(key, NodeFactory.newNumberValue(value));
         final long e = System.nanoTime();
         totalAssemblyTime += (e-s);
-
+    }
+    
+    @Override
+    public void valueDouble(String key, Double value) {
+        final long s = System.nanoTime();
+        appendToCurrent(key, NodeFactory.newNumberValue(value));
+        final long e = System.nanoTime();
+        totalAssemblyTime += (e-s);        
+    }
+    
+    @Override
+    public void valueFloat(String key, Float value) {
+        final long s = System.nanoTime();
+        appendToCurrent(key, NodeFactory.newNumberValue(value));
+        final long e = System.nanoTime();
+        totalAssemblyTime += (e-s);        
     }
 
     @Override

@@ -19,7 +19,7 @@ import org.ghotibeaun.json.factory.NodeFactory;
 import com.jayway.jsonpath.InvalidJsonException;
 import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
 
-public class JSONLibProvider extends AbstractJsonProvider {
+class JSONLibProvider extends AbstractJsonProvider {
     
     @Override
     public Object getArrayIndex(Object obj, int idx) {

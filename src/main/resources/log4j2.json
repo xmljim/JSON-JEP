@@ -1,48 +1,25 @@
-{"configuration": {
-    "status": "error",
-    "name": "RoutingTest",
-    "packages": "org.apache.logging.log4j.test",
-    "properties": {"property": {
-        "name": "filename",
-        "value": "target/rolling1/rollingtest-$${sd:type}.log"
-    }},
-    "ThresholdFilter": {"level": "debug"},
-    "appenders": {
-        "Console": {
-            "name": "STDOUT",
-            "PatternLayout": {"pattern": "%m%n"},
-            "ThresholdFilter": {"level": "debug"}
+{
+    "configuration": {
+        "status": "debug",
+        "name": "JSONConfigDemo",
+        "ThresholdFilter": {
+            "level": "debug"
         },
-        "Routing": {
-            "name": "Routing",
-            "Routes": {
-                "pattern": "$${sd:type}",
-                "Route": [
-                    {"RollingFile": {
-                        "name": "Rolling-${sd:type}",
-                        "fileName": "${filename}",
-                        "filePattern": "target/rolling1/test1-${sd:type}.%i.log.gz",
-                        "PatternLayout": {"pattern": "%d %p %c{1.} [%t] %m%n"},
-                        "SizeBasedTriggeringPolicy": {"size": "500"}
-                    }},
-                    {
-                        "AppenderRef": "STDOUT",
-                        "key": "Audit"
-                    }
-                ]
+        "appenders": {
+            "Console": {
+                "name": "STDOUT",
+                "PatternLayout": {
+                    "pattern": "%d [%t] %-5p %c - %m%n"
+                }
+            }
+        },
+        "loggers": {
+            "root": {
+                "level": "debug",
+                "AppenderRef": {
+                    "ref": "STDOUT"
+                }
             }
         }
-    },
-    "loggers": {
-        "logger": {
-            "name": "EventLogger",
-            "level": "info",
-            "additivity": "false",
-            "AppenderRef": {"ref": "Routing"}
-        },
-        "root": {
-            "level": "error",
-            "AppenderRef": {"ref": "STDOUT"}
-        }
     }
-}}
+}

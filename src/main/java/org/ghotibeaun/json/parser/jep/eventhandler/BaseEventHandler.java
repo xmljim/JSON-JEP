@@ -148,11 +148,38 @@ public abstract class BaseEventHandler extends EventHandler {
         final String key = handleValue(event, JSONValueType.NUMBER);
 
         if (data.contains(".")) {
-            final BigDecimal bd = new BigDecimal(data);
-            valueBigDecimal(key, bd);
+        	
+        	switch (getParserSettings().getUseFloatingPointType()) {
+        	    case BIG_DECIMAL:
+        	        final BigDecimal bd = new BigDecimal(data);
+                    valueBigDecimal(key, bd);
+                    break;
+        	    case DOUBLE:
+        	        final Double d = new Double(data);
+        	        valueDouble(key, d);
+        	        break;
+        	    case FLOAT:
+        	        final Float f = new Float(data);
+        	        valueFloat(key, f);
+        	        break;
+        	}
+
         } else {
-            final BigInteger bi = new BigInteger(data);
-            valueLong(key, bi.longValue());
+            switch (getParserSettings().getUseNonFloatingPointType()) {
+                case BIG_INTEGER:
+                    final BigInteger bi = new BigInteger(data);
+                    valueLong(key, bi.longValue());
+                    break;
+                case INTEGER:
+                    final Integer i = new Integer(data);
+                    valueInt(key, i.intValue());
+                    break;
+                case LONG:
+                    final Long l = new Long(data);
+                    valueLong(key, l);
+                    break;
+            }
+            
         }
     }
 

@@ -5,6 +5,8 @@ import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.exception.JSONSerializationException;
 import org.ghotibeaun.json.factory.FactorySettings;
 import org.ghotibeaun.json.parser.JSONParser;
+import org.ghotibeaun.json.parser.csv.CSVSettings;
+import org.ghotibeaun.json.parser.csv.JSONCSVParser;
 import org.ghotibeaun.json.serializer.JSONSerializer;
 
 /**
@@ -69,6 +71,10 @@ public abstract class JSONFactory {
      * @return the {@link JSONSerializer}
      */
     public abstract JSONSerializer newSerializer() throws JSONSerializationException;
+    
+    public abstract JSONCSVParser newCsvParser(CSVSettings settings);
+    
+    public abstract JSONCSVParser newCsvParser();
 
 
 }

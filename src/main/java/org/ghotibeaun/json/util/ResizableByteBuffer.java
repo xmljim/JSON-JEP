@@ -1,7 +1,12 @@
 package org.ghotibeaun.json.util;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper class that mimics similar behavior in a ByteBuffer.
@@ -9,6 +14,7 @@ import java.util.Arrays;
  *
  */
 public class ResizableByteBuffer {
+    private static Logger LOGGER = LoggerFactory.getLogger(ResizableByteBuffer.class);
 
     private static final int DEFAULT_CAPACITY = 10;
 
@@ -42,6 +48,37 @@ public class ResizableByteBuffer {
      */
     public ResizableByteBuffer(byte[] initialByteArray) {
         add(initialByteArray);
+    }
+    
+    public static ResizableByteBuffer fromStream(InputStream inputStream) {
+        ResizableByteBuffer buffer = new ResizableByteBuffer();
+        byte[] bytes = new byte[DEFAULT_CAPACITY];
+        try {
+            inputStream.read(bytes);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        buffer.add(bytes);
+        return buffer;
+    }
+    
+    public static ResizableByteBuffer fromStream(InputStream inputStream, int allocateSize) {
+        ResizableByteBuffer buffer = new ResizableByteBuffer(DEFAULT_CAPACITY);
+        byte[] bytes = new byte[allocateSize];
+        try {
+            int result = inputStream.read(bytes);
+            LOGGER.debug("Byte Count: {}", result);
+            if (result != -1) {
+                buffer.add(bytes);
+                buffer.trim();
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return buffer;
     }
     
     /**
@@ -81,8 +118,17 @@ public class ResizableByteBuffer {
         if (position >= (size - 1)) {
             return 0x0;
         } else {
-            return byteArray[position++];
+            position++;
+            return byteArray[position];
         }
+    }
+    
+    /**
+     * Return the full size of the buffer
+     * @return the full size of the buffer;
+     */
+    public int size() {
+        return size;
     }
     
     /**

@@ -1,48 +1,26 @@
-{"configuration": {
-    "status": "debug",
-    "name": "RoutingTest",
-    "packages": "org.ghotibeaun.json",
-    "properties": {"property": {
-        "name": "filename",
-        "value": "target/rolling1/rollingtest-$${sd:type}.log"
-    }},
-    "ThresholdFilter": {"level": "trace"},
-    "appenders": {
-        "Console": {
-            "name": "STDOUT",
-            "PatternLayout": {"pattern": "%m%n"},
-            "ThresholdFilter": {"level": "trace"}
+{
+    "configuration": {
+        "status": "error",
+        "name": "JSONConfigDemo",
+        "packages": "org.ghotibeaun.json",
+        "ThresholdFilter": {
+            "level": "debug"
         },
-        "Routing": {
-            "name": "Routing",
-            "Routes": {
-                "pattern": "$${sd:type}",
-                "Route": [
-                    {"RollingFile": {
-                        "name": "Rolling-${sd:type}",
-                        "fileName": "${filename}",
-                        "filePattern": "target/rolling1/test1-${sd:type}.%i.log.gz",
-                        "PatternLayout": {"pattern": "%d %p %c{1.} [%t] %m%n"},
-                        "SizeBasedTriggeringPolicy": {"size": "500"}
-                    }},
-                    {
-                        "AppenderRef": "STDOUT",
-                        "key": "Audit"
-                    }
-                ]
+        "appenders": {
+            "Console": {
+                "name": "STDOUT",
+                "PatternLayout": {
+                    "pattern": "%d [%t] %-5p %c - %m%n"
+                }
+            }
+        },
+        "loggers": {
+            "root": {
+                "level": "debug",
+                "AppenderRef": {
+                    "ref": "STDOUT"
+                }
             }
         }
-    },
-    "loggers": {
-        "logger": {
-            "name": "EventLogger",
-            "level": "trace",
-            "additivity": "false",
-            "AppenderRef": {"ref": "Routing"}
-        },
-        "root": {
-            "level": "trace",
-            "AppenderRef": {"ref": "STDOUT"}
-        }
     }
-}}
+}

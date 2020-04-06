@@ -1,0 +1,6 @@
+{
+    "headerRow" : true,
+    "separator" : ",",
+    "enclosure" : "\"",
+    "dateFormat" : "yyyy-MM-dd",
+}

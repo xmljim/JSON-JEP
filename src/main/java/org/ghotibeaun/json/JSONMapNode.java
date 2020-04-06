@@ -130,6 +130,11 @@ public interface JSONMapNode extends JSONNode {
     JSONValue<?> remove(String key);
 
 
+    /**
+     * Returns if the specified key is null, or doesn't exist
+     * @param key the value key
+     * @return true if the value for the key is null, or if the key doesn't exist
+     */
     public default boolean isNull(String key) {
         return (this.containsKey(key) == false) || (this.get(key).getType() == JSONValueType.NULL);
     }

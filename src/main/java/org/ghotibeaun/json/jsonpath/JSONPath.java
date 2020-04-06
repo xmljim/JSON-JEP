@@ -69,14 +69,14 @@ public interface JSONPath {
 
     /**
      * Parses a JSON InputStream and returns a list of JSON values
-     * @param jsonInputString the JSON InputStream
+     * @param jsonInputStream the JSON InputStream
      * @return a JSONArray of values. Values can be any valid JSON type including JSONArray or JSONObject instances
      */
     JSONArray evaluate(InputStream jsonInputStream);
 
     /**
      * Parses a JSON InputStream and returns a list of JSON values
-     * @param jsonInputString the JSON InputStream
+     * @param jsonInputStream the JSON InputStream
      * @return a single value. If the JSONPath returns more than one result, then it returns only the first value;
      * If no values are returned than it returns null; When using primitive types (e.g., String, Boolean), take care
      * to understand the data, especially with any autoboxed values (double, boolean, int, etc.).
