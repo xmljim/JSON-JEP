@@ -37,6 +37,14 @@ public interface JSONValue<T> extends Serializable {
     boolean isArray();
 
     /**
+     * Returns whether the value is a {@link JSONObject} instance
+     * @return true if the value is a JSONObject
+     */
+    default boolean isObject() {
+        return !isPrimitive() && !isArray();
+    }
+
+    /**
      * Set the value
      * @param value the value
      */

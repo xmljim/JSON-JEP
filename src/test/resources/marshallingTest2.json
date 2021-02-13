@@ -1,0 +1,14 @@
+{
+    "stringValue": "This is a String value",
+    "booleanValue": true,
+    "nullValue": null,
+    "numberValue": 12345678909,
+    "doubleValue": 3.1415927,
+    "primitiveArray" : ["a", "b", "c", "d", "e", "f"],
+    "simpleObject" : {"firstName": "Jim", "lastName": "Earley"},
+    "complexArray" : [
+        {"team" : "Colorado Rockies", "league": "NL"},
+        {"team" : "Boston Red Sox", "league": "AL"},
+        {"team" : "New York Yankees", "league": "NL"}
+    ]
+}

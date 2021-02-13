@@ -13,9 +13,11 @@ import java.nio.file.Path;
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
+import org.ghotibeaun.json.exception.JSONMarshallingException;
 import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.factory.FactorySettings;
 import org.ghotibeaun.json.factory.NodeFactory;
+import org.ghotibeaun.json.marshalling.MarshallingFactory;
 import org.ghotibeaun.json.parser.jep.EventParser;
 import org.ghotibeaun.json.parser.jep.ParserConfiguration;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
@@ -121,5 +123,70 @@ class JSONParserImpl implements JSONParser {
     public JSONArray newJSONArray() {
         return NodeFactory.newJSONArray();
     }
+
+    @Override
+    public <T> T parse(InputStream inputStream, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(inputStream).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+    @Override
+    public <T> T parse(InputStream inputStream, String charSet, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(inputStream, charSet).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+    @Override
+    public <T> T parse(URL url, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(url).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+    @Override
+    public <T> T parse(String data, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(data).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+    @Override
+    public <T> T parse(Reader reader, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(reader).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+    @Override
+    public <T> T parse(File file, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(file).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+    @Override
+    public <T> T parse(Path filePath, Class<T> targetClass) throws JSONParserException {
+        try {
+            return MarshallingFactory.getJSONMarshaller().marshall(targetClass, parse(filePath).asJSONObject());
+        } catch (JSONParserException | JSONMarshallingException e) {
+            throw new JSONParserException(e);
+        }
+    }
+
+
 
 }

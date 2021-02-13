@@ -19,7 +19,19 @@ class JSONNumberValueImpl extends AbstractJSONValue<Number> {
 
     @Override
     public JSONValueType getType() {
-        return JSONValueType.NUMBER;
+        final String typeName = getValue().getClass().getTypeName();
+
+        if (typeName.toUpperCase().contains("INT")) {
+            return JSONValueType.INTEGER;
+        } else if (typeName.toUpperCase().contains("LONG")) {
+            return JSONValueType.LONG;
+        } else if (typeName.toUpperCase().contains("DOUBLE")) {
+            return JSONValueType.DOUBLE;
+        } else if (typeName.toUpperCase().contains("FLOAT")) {
+            return JSONValueType.FLOAT;
+        } else {
+            return JSONValueType.NUMBER;
+        }
     }
 
     @Override

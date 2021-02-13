@@ -5,9 +5,7 @@
  */
 package org.ghotibeaun.json;
 
-import static org.junit.Assert.*;
-
-import org.junit.Test;
+import static org.junit.Assert.fail;
 
 /**
  * @author Jim Earley
@@ -15,7 +13,7 @@ import org.junit.Test;
  */
 public class BooleanDefectTest {
 
-    @Test
+
     public void test() {
         fail("Not yet implemented");
     }

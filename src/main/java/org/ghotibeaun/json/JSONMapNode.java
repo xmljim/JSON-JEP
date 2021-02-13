@@ -36,6 +36,8 @@ public interface JSONMapNode extends JSONNode {
      */
     void put(String key, Object value);
 
+    void put(String key, Object...value);
+
     /**
      *
      * @param map A map of Key-JSONValue pairs
@@ -136,6 +138,6 @@ public interface JSONMapNode extends JSONNode {
      * @return true if the value for the key is null, or if the key doesn't exist
      */
     public default boolean isNull(String key) {
-        return (this.containsKey(key) == false) || (this.get(key).getType() == JSONValueType.NULL);
+        return this.containsKey(key) == false || this.get(key).getType() == JSONValueType.NULL;
     }
 }

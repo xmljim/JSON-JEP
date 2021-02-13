@@ -1,5 +1,6 @@
 package org.ghotibeaun.json.factory;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -38,6 +39,12 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
         }
         put(key, v);
 
+    }
+
+    @Override
+    public void put(String key, Object... values) {
+
+        put(key, Arrays.asList(values));
     }
 
     @Override

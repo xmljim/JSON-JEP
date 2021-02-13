@@ -19,20 +19,21 @@ import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.exception.JSONParserException;
 
 class JSONCSVParserImpl implements JSONCSVParser {
-    
-    private CSVSettings settings;
-    
+
+    private final CSVSettings settings;
+
     protected JSONCSVParserImpl(CSVSettings settings) {
         this.settings = settings;
     }
-    
+
+    @Override
     public CSVSettings getCSVSettings() {
-        return this.settings;
+        return settings;
     }
 
     @Override
     public JSONNode parse(InputStream inputStream) throws JSONParserException {
-        CSVParser parser = new CSVParser(getCSVSettings());
+        final CSVParser parser = new CSVParser(getCSVSettings());
         return parser.process(inputStream);
     }
 
@@ -45,7 +46,7 @@ class JSONCSVParserImpl implements JSONCSVParser {
     public JSONNode parse(URL url) throws JSONParserException {
         try (InputStream inputStream = url.openStream()) {
             return parse(inputStream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new JSONParserException(e);
         }
     }
@@ -54,31 +55,31 @@ class JSONCSVParserImpl implements JSONCSVParser {
     public JSONNode parse(String data) throws JSONParserException {
         try (ByteArrayInputStream bais = new ByteArrayInputStream(data.getBytes());) {
             return parse(bais);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new JSONParserException(e);
         }
     }
 
     @Override
     public JSONNode parse(Reader reader) throws JSONParserException {
-        JSONNode result = null;
-        
-        char[] charBuffer = new char[8 * 1024];
-        StringBuilder builder = new StringBuilder();
+        final JSONNode result = null;
+
+        final char[] charBuffer = new char[8 * 1024];
+        final StringBuilder builder = new StringBuilder();
         int numCharsRead;
         try {
             while ((numCharsRead = reader.read(charBuffer, 0, charBuffer.length)) != -1) {
                 builder.append(charBuffer, 0, numCharsRead);
             }
-            
+
             try (InputStream targetStream = new ByteArrayInputStream(builder.toString().getBytes(StandardCharsets.UTF_8));) {
                 return parse(targetStream);
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         return result;
     }
 
@@ -86,9 +87,9 @@ class JSONCSVParserImpl implements JSONCSVParser {
     public JSONNode parse(File file) throws JSONParserException {
         try (FileInputStream fis = new FileInputStream(file)) {
             return parse(fis);
-        } catch (FileNotFoundException e) {
+        } catch (final FileNotFoundException e) {
             throw new JSONParserException(e);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new JSONParserException(e);
         } 
     }
@@ -97,7 +98,7 @@ class JSONCSVParserImpl implements JSONCSVParser {
     public JSONNode parse(Path filePath) throws JSONParserException {
         try (InputStream inputStream = Files.newInputStream(filePath, StandardOpenOption.READ)) {
             return parse(inputStream);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new JSONParserException(e);
         }
     }
@@ -111,6 +112,43 @@ class JSONCSVParserImpl implements JSONCSVParser {
     public JSONArray newJSONArray() {
         throw new JSONParserException("Parser Requires CSV Data to be processed");
     }
+
+    @Override
+    public <T> T parse(InputStream inputStream, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+    @Override
+    public <T> T parse(InputStream inputStream, String charSet, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+    @Override
+    public <T> T parse(URL url, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+    @Override
+    public <T> T parse(String data, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+    @Override
+    public <T> T parse(Reader reader, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+    @Override
+    public <T> T parse(File file, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+    @Override
+    public <T> T parse(Path filePath, Class<T> targetClass) throws JSONParserException {
+        throw new JSONParserException("Not supported with CSV");
+    }
+
+
 
 
 }

@@ -112,7 +112,7 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
     public Number getNumber(String key) {
         Number value = null;
         if (containsKey(key)) {
-            if (get(key).getType() == JSONValueType.NUMBER) {
+            if (get(key).getType().isNumeric()) {
                 final JSONValue<Number> v = (JSONValue<Number>)get(key);
                 value = v.getValue();
             }
@@ -153,7 +153,7 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
         if (containsKey(key)) {
             if (get(key).getType() == JSONValueType.BOOLEAN) {
                 final JSONValue<Boolean> v = (JSONValue<Boolean>)get(key);
-                value = v.getValue().booleanValue();
+                value = v.getValue();
             } else {
                 throw new JSONInvalidValueTypeException(JSONInvalidValueTypeException.getMessage(JSONValueType.BOOLEAN, get(key).getType()));
             }
@@ -208,5 +208,7 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
 
         return list;
     }
+
+
 
 }

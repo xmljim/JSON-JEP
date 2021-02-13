@@ -18,7 +18,7 @@ import com.jayway.jsonpath.Option;
  * @author Jim Earley
  *
  */
-public interface JSONNode extends Serializable {
+public interface JSONNode extends Serializable, Comparable<JSONNode> {
 
     /**
      * Return as a JSON String
@@ -44,7 +44,7 @@ public interface JSONNode extends Serializable {
      * @return true if it is a JSONArray; false otherwise
      */
     public default boolean isArray() {
-        return (this instanceof JSONArray);
+        return this instanceof JSONArray;
     }
 
     /**
@@ -52,7 +52,7 @@ public interface JSONNode extends Serializable {
      * @return true if it is a JSONObject; false otherwise
      */
     public default boolean isObject() {
-        return (this instanceof JSONObject);
+        return this instanceof JSONObject;
     }
 
     /**
@@ -125,31 +125,31 @@ public interface JSONNode extends Serializable {
     public default <T> T selectValue(String jsonPath, Criteria criteria, Option...options) {
         return JSONPathFactory.compile(jsonPath, criteria, options).selectValue(this);
     }
-    
+
     public default void write(OutputStream out) {
         write(out, false);
     }
-    
+
     public default void write(Path outputPath) {
         write(outputPath, false);
     }
-    
+
     public default void write(Writer writer) {
         write(writer, false);
     }
-    
+
     public default void write(File file) {
         write(file, false);
     }
-    
+
     public default void write(OutputStream out, boolean prettyPrint) {
         SerializationFactory.getSerializer().write(out, this, prettyPrint);
     }
-    
+
     public default void write(Path outputPath, boolean prettyPrint) {
-        SerializationFactory.getSerializer().write(outputPath, this, prettyPrint);;
+        SerializationFactory.getSerializer().write(outputPath, this, prettyPrint);
     }
-    
+
     public default void write(File outputFile, boolean prettyPrint) {
         SerializationFactory.getSerializer().write(outputFile, this, prettyPrint);
     }

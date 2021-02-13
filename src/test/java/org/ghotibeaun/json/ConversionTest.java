@@ -10,7 +10,6 @@ import java.util.Map;
 
 import org.ghotibeaun.json.parser.JSONParser;
 import org.ghotibeaun.json.parser.ParserFactory;
-import org.junit.Test;
 
 /**
  * @author Jim Earley
@@ -18,7 +17,7 @@ import org.junit.Test;
  */
 public class ConversionTest {
 
-    @Test
+
     public void test() {
         final JSONParser factory = ParserFactory.getParser();
         final JSONNode node = factory.parse(Paths.get("c:\\code\\account-data.json"));

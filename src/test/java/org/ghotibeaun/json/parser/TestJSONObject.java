@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.ghotibeaun.json.JSONArray;
+import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
@@ -210,6 +211,18 @@ public class TestJSONObject implements JSONObject {
     public <V> List<V> valueList() {
         // TODO Auto-generated method stub
         return null;
+    }
+
+    @Override
+    public void put(String key, Object... value) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public int compareTo(JSONNode arg0) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
+import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.factory.NodeFactory;
 import org.ghotibeaun.json.parser.ParserFactory;
 
@@ -23,7 +24,7 @@ class JSONPathImpl implements JSONPath {
     protected JSONPathImpl(String jsonPath, Option...options) {
         initConfiguration(options);
         this.jsonPath = jsonPath;
-        this.criteria = null;
+        criteria = null;
     }
 
     protected JSONPathImpl(String jsonPath, Criteria criteria, Option...options) {
@@ -94,7 +95,16 @@ class JSONPathImpl implements JSONPath {
             return JsonPath.using(configuration).parse(context).read(getJsonPath(), Filter.filter(getCriteria()));
 
         } else {
-            return JsonPath.using(configuration).parse(context).read(getJsonPath());
+            final Object o = JsonPath.using(configuration).parse(context).read(getJsonPath());
+            final JSONValue<?> val = NodeFactory.createFromObject(o);
+
+            if (!val.isArray()) {
+                final JSONArray array = NodeFactory.newJSONArray();
+                array.add(val);
+                return array;
+            } else {
+                return (JSONArray)val.getValue();
+            }
         }
     }
 

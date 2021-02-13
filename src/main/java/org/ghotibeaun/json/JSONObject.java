@@ -1,5 +1,8 @@
 package org.ghotibeaun.json;
 
+import org.ghotibeaun.json.exception.JSONMarshallingException;
+import org.ghotibeaun.json.marshalling.MarshallingFactory;
+
 public interface JSONObject extends JSONMapNode {
     /**
      * Adds or replaces a number value
@@ -79,6 +82,10 @@ public interface JSONObject extends JSONMapNode {
     @SuppressWarnings("unchecked")
     default <T> T getValue(String key) {
         return (T) get(key).getValue();
+    }
+
+    default <T> T marshal(Class<?> targetClass) throws JSONMarshallingException {
+        return MarshallingFactory.getJSONMarshaller().marshall(targetClass, this);
     }
 
 }
