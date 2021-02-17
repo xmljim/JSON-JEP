@@ -62,7 +62,9 @@ class JSONConverterImpl extends AbstractJSONConverter {
             throw new JSONConversionException("Can specify a ValueConverter or targetClass, but not both");
         }
 
-        if (valueConverter.isPresent()) {
+        if (value == null) {
+            return null;
+        } else if (valueConverter.isPresent()) {
             return (T) valueConverter.get().convertValue(value.getValue());
         } else if (value.isPrimitive()) {
             return (T) value.getValue();

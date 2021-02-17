@@ -75,7 +75,7 @@ public abstract class MemberHandler<M extends Member> {
 
     public JSONValue<?> getJSONValue(Object instance) throws JSONConversionException {
         final Object val = getMemberValue(instance);
-        return Converters.convertValue(val, Optional.empty(), Optional.empty());
+        return Converters.convertToJSONValue(val, Optional.empty(), Optional.empty());
     }
 
 }

@@ -36,7 +36,7 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
 
     @Override
     public void put(String key, Object value) {
-        final JSONValue<?> v = Converters.convertValue(value, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(value);
+        final JSONValue<?> v = Converters.convertToJSONValue(value, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(value);
         if (v == null) {
             throw new JSONInvalidValueTypeException(value.getClass().getName() + " is not a valid value type");
         }
@@ -60,7 +60,7 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
     public void putAllRaw(Map<String, Object> map) {
         final Set<String> keys = map.keySet();
         for (final String key : keys) {
-            final JSONValue<?> v = Converters.convertValue(map.get(key), Optional.empty(), Optional.empty()); //NodeFactory.createFromObject(map.get(key));
+            final JSONValue<?> v = Converters.convertToJSONValue(map.get(key), Optional.empty(), Optional.empty()); //NodeFactory.createFromObject(map.get(key));
             put(key, v);
         }
 

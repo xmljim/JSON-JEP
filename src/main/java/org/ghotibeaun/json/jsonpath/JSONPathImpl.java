@@ -98,7 +98,7 @@ class JSONPathImpl implements JSONPath {
 
         } else {
             final Object o = JsonPath.using(configuration).parse(context).read(getJsonPath());
-            final JSONValue<?> val = Converters.convertValue(o, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(o);
+            final JSONValue<?> val = Converters.convertToJSONValue(o, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(o);
 
             if (!val.isArray()) {
                 final JSONArray array = NodeFactory.newJSONArray();

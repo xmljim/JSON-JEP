@@ -35,7 +35,7 @@ abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode
 
     @Override
     public void insert(int index, Object value) {
-        jsonList.add(index, Converters.convertValue(value, Optional.empty(), Optional.empty()));  //NodeFactory.createFromObject(value));
+        jsonList.add(index, Converters.convertToJSONValue(value, Optional.empty(), Optional.empty()));  //NodeFactory.createFromObject(value));
     }
 
     @Override
@@ -62,7 +62,7 @@ abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode
     @Override
     public void addAll(List<?> list) {
         for (final Object val : list) {
-            final JSONValue<?> value = Converters.convertValue(val, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(val);
+            final JSONValue<?> value = Converters.convertToJSONValue(val, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(val);
             add(value);
         }
 

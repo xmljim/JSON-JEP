@@ -57,7 +57,6 @@ public final class Converters {
     }
 
 
-
     /**
      * Convert an object to a JSONNode
      * @param <T> The source type
@@ -169,7 +168,7 @@ public final class Converters {
     /**
      * @see ClassConverter#convertValue(Object, Optional, Optional)
      */
-    public static JSONValue<?> convertValue(Object value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
+    public static JSONValue<?> convertToJSONValue(Object value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertValue(value, valueConverter, targetClass);
     }
 

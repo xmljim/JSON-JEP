@@ -219,7 +219,9 @@ class ClassConverterImpl extends AbstractClassConverter {
     private JSONValue<?> createJSONValue(Object item, Optional<ValueConverter<?>> converter, Optional<Class<?>> targetClass) throws JSONConversionException {
         Optional<JSONValue<?>> jsonValue = null;
 
-        if (converter.isPresent()) {
+        if (item == null) {
+            jsonValue = createValueFromObject(item);
+        } else if (converter.isPresent()) {
             final Object val = converter.get().convertValue(item);
             jsonValue = createValueFromObject(val);
         } else if (targetClass.isPresent()) {

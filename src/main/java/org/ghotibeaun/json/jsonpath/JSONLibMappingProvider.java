@@ -53,7 +53,7 @@ class JSONLibMappingProvider implements MappingProvider {
     public <T> T map(Object source, TypeRef<T> targetType, Configuration configuration) {
         LOGGER.debug("In map: {}, [Target Type: {}]", source.toString(), targetType.getClass().getName());
 
-        final JSONValue<?> result = Converters.convertValue(source, Optional.empty(), Optional.of((Class<T>)targetType.getType()));//NodeFactory.createFromObject(source, targetType.getType());
+        final JSONValue<?> result = Converters.convertToJSONValue(source, Optional.empty(), Optional.of((Class<T>)targetType.getType()));//NodeFactory.createFromObject(source, targetType.getType());
         LOGGER.debug("  - returns: {}", result.getValue().toString());
         return (T)result.getValue();
     }

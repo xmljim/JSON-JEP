@@ -44,7 +44,7 @@ public abstract class AbstractConverter<T> implements Converter<T> {
     }
 
     public boolean isPrimitive(Object data) {
-        return Converters.convertValue(data, Optional.empty(), Optional.empty()).isPrimitive();
+        return Converters.convertToJSONValue(data, Optional.empty(), Optional.empty()).isPrimitive();
     }
 
 

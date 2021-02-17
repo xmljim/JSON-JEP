@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.NullObject;
+import org.ghotibeaun.json.converters.Converters;
 import org.junit.Test;
 
 public class NodeFactoryTest {
@@ -151,11 +153,11 @@ public class NodeFactoryTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCreateFromObject() {
-        final JSONValue<?> bool = NodeFactory.createFromObject(Boolean.TRUE);
+        final JSONValue<?> bool = Converters.convertToJSONValue(Boolean.TRUE, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(Boolean.TRUE);
         assertTrue(bool.getType() == JSONValueType.BOOLEAN);
         assertTrue(((JSONValue<Boolean>)bool).getValue() == true);
 
-        final JSONValue<?> nul = NodeFactory.createFromObject(null);
+        final JSONValue<?> nul = Converters.convertToJSONValue(null, Optional.empty(), Optional.empty());
         assertTrue(nul.getType() == JSONValueType.NULL);
         assertTrue(((JSONValue<NullObject>)nul).getValue() == null);
     }
