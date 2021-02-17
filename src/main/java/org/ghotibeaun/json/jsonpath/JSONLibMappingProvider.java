@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
-import org.ghotibeaun.json.factory.NodeFactory;
+import org.ghotibeaun.json.converters.Converters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,8 +52,8 @@ class JSONLibMappingProvider implements MappingProvider {
     @Override
     public <T> T map(Object source, TypeRef<T> targetType, Configuration configuration) {
         LOGGER.debug("In map: {}, [Target Type: {}]", source.toString(), targetType.getClass().getName());
-        
-        final JSONValue<?> result = NodeFactory.createFromObject(source, targetType.getType());
+
+        final JSONValue<?> result = Converters.convertValue(source, Optional.empty(), Optional.of((Class<T>)targetType.getType()));//NodeFactory.createFromObject(source, targetType.getType());
         LOGGER.debug("  - returns: {}", result.getValue().toString());
         return (T)result.getValue();
     }

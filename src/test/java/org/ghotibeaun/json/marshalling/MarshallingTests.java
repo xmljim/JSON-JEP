@@ -10,6 +10,8 @@ import java.util.Arrays;
 
 import org.ghotibeaun.json.JSONFactory;
 import org.ghotibeaun.json.JSONObject;
+import org.ghotibeaun.json.converters.Converters;
+import org.ghotibeaun.json.converters.utils.ClassScanner;
 import org.ghotibeaun.json.factory.NodeFactory;
 import org.ghotibeaun.json.marshalling.classes.AbstractMarshallingTest2;
 import org.ghotibeaun.json.marshalling.classes.BasicTestClass;
@@ -35,8 +37,8 @@ public class MarshallingTests {
         basic.put("subclass", subclass);
 
 
-        final BasicTestClass testClass = MarshallingFactory.getJSONMarshaller().marshall(BasicTestClass.class, basic);
-
+        final BasicTestClass testClass = //ConverterFactory.getJSONMarshaller().marshall(BasicTestClass.class, basic);
+                Converters.convertToClass(BasicTestClass.class, basic);
         assertEquals("Hello World", testClass.getMessage());
         assertEquals(4, testClass.getValueSet().size());
         assertTrue(testClass.isRead());
@@ -46,28 +48,45 @@ public class MarshallingTests {
 
     @Test
     public void testParseAndMarshall() {
-        try {
-            final InputStream stream = getClass().getResourceAsStream("/marshallingTest2.json");
-            final InputStream stream2 = getClass().getResourceAsStream("/marshallingTest2.json");
+        try (final InputStream stream = getClass().getResourceAsStream("/marshallingTest2.json");
+                final InputStream stream2 = getClass().getResourceAsStream("/marshallingTest2.json")) {
+
             final JSONFactory factory = JSONFactory.newFactory();
             final JSONParser parser = factory.newParser();
 
-            final AbstractMarshallingTest2 test2 = parser.parse(stream, MarshallingTest2.class);
+            final MarshallingTest2 test2 = parser.parse(stream, MarshallingTest2.class);
+
             final JSONObject json = parser.parse(stream2).asJSONObject();
+
+            final AbstractMarshallingTest2 test3 = Converters.convertToClass(MarshallingTest2.class, json);
 
             assertEquals(json.getString("stringValue"), test2.getStringValue());
             assertEquals(json.getBoolean("booleanValue"), test2.isBooleanValue());
             assertEquals(json.selectValue("$.simpleObject.firstName"), test2.getSimpleObject().getFirstName());
 
-            final MarshallingTest2 cast = (MarshallingTest2)test2;
+            final MarshallingTest2 cast = test2;
             final String jsonPath2 = "$.complexArray[0].team";
             final String firstTeam = json.selectValue(jsonPath2);
 
             assertEquals(firstTeam, cast.getTeams().get(0).getTeam());
+
+            final JSONObject converted = Converters.convertToJSONObject(test2);
+
+            assertTrue(converted.isEquivalent(json));
         } catch (final Exception e) {
             e.printStackTrace();
             fail();
         }
+    }
+
+
+
+
+    @Test
+    public void testScanner() {
+        final ClassScanner scanner = new ClassScanner();
+        scanner.scanClass(MarshallingTest2.class);
+        //System.out.println(scanner);
     }
 
 

@@ -31,7 +31,7 @@ public class JSONParserTest {
     public void testParserClassesTest() throws IOException {
         try (InputStream is = getClass().getResourceAsStream("/classes.json")) {
             final JSONObject ob = ParserFactory.getParser().parse(is).asJSONObject();
-
+            assertNotNull(ob);
         }
     }
 

@@ -13,6 +13,7 @@ import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.NullObject;
+import org.ghotibeaun.json.converters.Converters;
 import org.ghotibeaun.json.exception.JSONTypeNotFoundException;
 import org.ghotibeaun.json.exception.JSONValueNotFoundException;
 
@@ -113,7 +114,7 @@ public final class NodeFactory {
         }
 
         return v;*/
-        return new JSONBooleanValueImpl(Boolean.valueOf(value));
+        return new JSONBooleanValueImpl(value);
     }
 
 
@@ -176,7 +177,14 @@ public final class NodeFactory {
         return new JSONNullValueImpl();
     }
 
+    /**
+     * Creates a JSONValue from an object value;
+     * @param o the value
+     * @return a JSONValue instance
+     * @deprecated Use {@link Converters#convertValue(Object, java.util.Optional, java.util.Optional, org.ghotibeaun.json.converters.options.Options...)}
+     */
     @SuppressWarnings("unchecked")
+    @Deprecated(forRemoval = true, since = "2.0.0" )
     public static JSONValue<?> createFromObject(Object o) {
 
         JSONValue<?> v = null;
@@ -202,12 +210,21 @@ public final class NodeFactory {
             v = newJSONArrayValue((JSONArray)o);
         } else {
             v = newStringValue(o.toString());
+            //Converters.
         }
 
         return v;
 
     }
 
+    /**
+     * Creates a JSONValue from an object value;
+     * @param source the value
+     * @param target the type to cast the value to
+     * @return a JSONValue instance
+     * @deprecated Use {@link Converters#convertValue(Object, java.util.Optional, java.util.Optional, org.ghotibeaun.json.converters.options.Options...)}
+     */
+    @Deprecated(forRemoval = true, since = "2.0.0")
     public static JSONValue<?> createFromObject(Object source, Type target) {
         try {
             final Object castedObject = Class.forName(target.getTypeName()).cast(source);
@@ -215,10 +232,6 @@ public final class NodeFactory {
         } catch (final ClassNotFoundException e) {
             throw new JSONValueNotFoundException(target.getTypeName(), e);
         }
-
-
-
-
     }
 
     public static JSONNode parse(String data) {

@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @param <T> the value type
  */
-public interface JSONValue<T> extends Serializable {
+public interface JSONValue<T> extends Serializable, Comparable<JSONValue<T>> {
     /**
      * Return the value
      * @return the value

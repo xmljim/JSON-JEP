@@ -158,4 +158,28 @@ public interface JSONNode extends Serializable, Comparable<JSONNode> {
         SerializationFactory.getSerializer().write(writer, this, prettyPrint);
     }
 
+    /**
+     * Compares against another JSONNode for equivalence. Equivalance is true if:
+     * <ol>
+     *  <li>Each JSONNode is of the same type</li>
+     *  <li>For JSONObjects:
+     *    <ul>
+     *      <li>Must contain the same keys, though not necessarily in any order</li>
+     *      <li>Each key's value must be equivalent</li>
+     *    </ul>
+     *  </li>
+     *  <li>For JSONArrays:
+     *    <ul>
+     *      <li>List order does matter</li>
+     *      <li>Each value in the list must be equivalent</li>
+     *    </ul>
+     *  </li>
+     * </ol>
+     * @param other The other JSONNode to compare against
+     * @return true if both JSONNodes are equivalent; false otherwise
+     */
+    public default boolean isEquivalent(JSONNode other) {
+        return compareTo(other) == 0;
+    }
+
 }

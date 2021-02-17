@@ -60,14 +60,14 @@ class JSONByteEventProcessor extends BaseEventProcessor{
     private long line = 0;
     private long linePos = 0;
     private BufferedInputStream bis;
-    
+
     private final int byteBlock = 1024;
     private int blockSize = 512;
-    
+
     private boolean documentStarted;
-    
+
     private final ArrayList<Byte> currentToken = new ArrayList<>();
-    
+
     private int arrayLevel = 0;
     private byte[] workingBlock;
     private int blockPosition = 0;
@@ -76,48 +76,48 @@ class JSONByteEventProcessor extends BaseEventProcessor{
 
 
     private int tokenState = TOKEN_STATE_EMPTY;
-    
+
     private final ArrayList<Byte> expectedCharacters = new ArrayList<>();
 
     //private boolean awaitingLf = false;
-    
+
     public JSONByteEventProcessor() {
-        
+
     }
-    
+
     public long getLinePosition() {
         return linePos;
     }
-    
+
     public void setBlockSizeInKB(int number) {
         blockSize = number;
     }
-    
+
     public int getBlockSizeInKB() {
         return blockSize;
     }
-    
+
     public int getBlockSizeInBytes() {
         return byteBlock * blockSize;
     }
-    
+
     public int getNumberOfBlocks() {
         return numberOfBlocks;
     }
-    
+
     @Override
     public void start(InputStream stream) throws JSONEventParserException {
         bis = stream instanceof BufferedInputStream ? (BufferedInputStream)stream : new BufferedInputStream(stream);
         line++;
-        
+
         try {
             int result = buildBlockBuffer();
-            
-            while (!isEOF() && (result > 0)) {
+
+            while (!isEOF() && result > 0) {
                 processBlock(workingBlock, result);
                 result = buildBlockBuffer();
             }
-            
+
             notifyDocumentEnd();
         } catch (final IOException e) {
             throw new JSONEventParserException(e);
@@ -125,28 +125,28 @@ class JSONByteEventProcessor extends BaseEventProcessor{
 
         //System.gc();
     }
-    
+
     private int buildBlockBuffer() throws IOException {
         final int bufferSize = getBlockSizeInBytes();
         workingBlock = new byte[bufferSize];
         return nextBlock(workingBlock);
     }
-    
+
     private void appendToken(byte b) {
-        currentToken.add(Byte.valueOf(b));
+        currentToken.add(b);
 
         incrementPosition(b);
     }
-    
+
     private void processBlock(byte[] buf, int length) {
         for (int i = 0; i < length; i++) {
             blockPosition = i;
             handleByte(buf[i]);
             pos++;
-            
+
         }
     }
-    
+
     private void handleByte(byte b) {
         //this handles the case where we need to peek into the first by of the
         //next subsequent block of bytes to determine
@@ -156,7 +156,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
 
             }
         }
-        
+
         switch (b) {
             case SPACE:
                 handleWhitespace(b);
@@ -188,7 +188,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             case START_ARRAY:
                 handleArrayStart(b);
                 break;
-                
+
             case END_ARRAY:
                 handleArrayEnd(b);
                 break;
@@ -221,8 +221,8 @@ class JSONByteEventProcessor extends BaseEventProcessor{
                 handleDefault(b);
         }
     }
-    
-    
+
+
     private void handleArrayStart(byte b) {
         if (!inToken()) {
             notifyArrayStart();
@@ -234,7 +234,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             throw new JSONEventParserException(getLine(), getLinePosition(), message);
         }
     }
-    
+
     private void handleArrayEnd(byte b) {
         if (!inToken()) {
             notifyArrayEnd();
@@ -249,7 +249,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             }
         }
     }
-    
+
     private void handleMapStart(byte b) {
         if (!documentStarted) {
             notifyDocumentStart(ByteBuffer.allocate(1).put(b));
@@ -264,7 +264,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             throw new JSONEventParserException(line, linePos, message);
         }
     }
-    
+
     private void handleMapEnd(byte b) {
         if (!inToken()) {
             notifyMapEnd();
@@ -272,14 +272,14 @@ class JSONByteEventProcessor extends BaseEventProcessor{
         } else if (isStringToken()) {
             appendToken(b);
         } else if (isNullToken() || isBooleanToken() || isNumberToken()) {
-            
+
             doNotify();
             incrementPosition(b);
             notifyMapEnd();
-            
+
         }
     }
-    
+
     private void handleDefault(byte b) {
         if (inToken()) {
             if (isNumberToken()) {
@@ -293,14 +293,14 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             throw new JSONEventParserException(line, linePos, message);
         }
     }
-    
+
     private void handleNumber(byte b) {
         if (!inToken()) {
             notifyNumberTokenStart();
             appendToken(b);
         } else if (isStringToken() || isNumberToken()) {
             appendToken(b);
-        } else if ((b == e) && isBooleanToken()) {
+        } else if (b == e && isBooleanToken()) {
             appendToken(b);
         } else {
             final String message = "Unexpected character (" + (char)b + ") found parsing " + getTokenState();
@@ -310,7 +310,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
 
     private void handleNull(byte b) {
         if (!inToken()) {
-            
+
             notifyNullTokenStart();
             appendToken(b);
         } else if (isStringToken()) {
@@ -370,7 +370,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             notifyStringTokenStart();
             tokenState = TOKEN_STATE_STRING;
             incrementPosition(b);
-            
+
         } else if (isStringToken()) {
             if (previousByte == BACKSLASH) {
                 appendToken(b);
@@ -380,9 +380,9 @@ class JSONByteEventProcessor extends BaseEventProcessor{
                 //technically it could be a valid instance since there's no accounting
                 //for how the JSON data is formatted between tokens/entities.
                 setExpectedBytes(SPACE, COMMA, COLON, END_ARRAY, END_MAP, TAB, CR, LF);
-                
+
                 final byte next = nextByte();
-                
+
                 if (next != NULL) {
                     if (checkExpected(next)) {
 
@@ -403,13 +403,13 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             throw new JSONEventParserException(line, linePos, message);
         }
     }
-    
+
     private void setExpectedBytes(byte...bt) {
         for (final byte expected : bt) {
-            expectedCharacters.add(Byte.valueOf(expected));
+            expectedCharacters.add(expected);
         }
     }
-    
+
     private boolean checkExpected(byte currentByte) {
         boolean isExpected = false;
         for (final Byte expected : expectedCharacters) {
@@ -418,14 +418,14 @@ class JSONByteEventProcessor extends BaseEventProcessor{
                 break;
             }
         }
-        
+
         // we can clear the expected cache now that we've check it to avoid
         // other bytes to evaluate against it
         expectedCharacters.clear();
 
         return isExpected;
     }
-    
+
     private void handleWhitespace(byte b) {
         if (isNonEssentialWhitespace()) {
             //ignore this whitespace
@@ -439,23 +439,23 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             incrementPosition(b);
         }
     }
-    
+
     private void handleCarriageReturn(byte b) {
         incrementPosition(b);
         if (isStringToken()) {
             //include in the string
-            currentToken.add(Byte.valueOf(b));
+            currentToken.add(b);
         }
     }
-    
+
     private void handleLineFeed(byte b) {
         line++;
         linePos = 0;
         handleCarriageReturn(b);
     }
-    
+
     private void doNotify() {
-        
+
         if (!documentStarted) {
             final byte startByte = toByteArray()[0];
             documentStarted = true;
@@ -480,7 +480,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             }
             return;
         }
-        
+
         if (isBooleanToken()) {
             if (validateBooleanValue()) {
                 notifyBooleanTokenEnd(ByteBuffer.wrap(toByteArray()));
@@ -488,7 +488,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
             } else {
                 final String message = "Invalid boolean value detected. Was expecting value 'true' or 'false', but found value '" + new String(toByteArray()) + "'.";
                 throw new JSONEventParserException(line, linePos, message);
-                
+
             }
             return;
         }
@@ -502,10 +502,10 @@ class JSONByteEventProcessor extends BaseEventProcessor{
     private boolean validateNullValue() {
         boolean isNull = false;
         final byte[] nullTokenTest = toByteArray();
-        
+
         if (nullTokenTest.length == NULLVAL.length) {
             int i = 0;
-            
+
             for (final byte element : NULLVAL) {
                 if (element == nullTokenTest[i]) {
                     isNull = true;
@@ -523,7 +523,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
         }
         return isNull;
     }
-    
+
     private boolean validateBooleanValue() {
         boolean isBoolean = false;
         final byte[] booleanTokenTest = toByteArray();
@@ -544,53 +544,53 @@ class JSONByteEventProcessor extends BaseEventProcessor{
 
         return isBoolean;
     }
-    
+
     private byte[] toByteArray() {
         final byte[] output = new byte[currentToken.size()];
         int i = 0;
         for (final Byte by : currentToken) {
-            output[i] = by.byteValue();
+            output[i] = by;
             i++;
         }
-        
+
         return output;
     }
-    
+
     private void incrementPosition(byte b) {
         linePos++;
-        if ((b != NULL) || (b != TAB) || (b != SPACE)) {
-            previousByte = new Byte(b).byteValue();
+        if (b != NULL || b != TAB || b != SPACE) {
+            previousByte = b;
         }
-        
+
     }
-    
+
     private void resetTokens() {
         currentToken.clear();
         expectedCharacters.clear();
         tokenState = TOKEN_STATE_EMPTY;
-        
+
     }
-    
+
     private boolean isNonEssentialWhitespace() {
         return !documentStarted || !inToken();
     }
-    
+
     private boolean inToken() {
-        return documentStarted && (isStringToken() | isNullToken() | isNumberToken() | isBooleanToken());
+        return documentStarted && isStringToken() | isNullToken() | isNumberToken() | isBooleanToken();
     }
-    
+
     public boolean isEOF() {
         return eof;
     }
-    
+
     public long getPosition() {
         return pos;
     }
-    
+
     public long getLine() {
         return line;
     }
-    
+
     private String getTokenState() {
         String state = null;
         switch (tokenState) {
@@ -610,30 +610,30 @@ class JSONByteEventProcessor extends BaseEventProcessor{
                 state = "String";
                 break;
         }
-        
+
         return state;
     }
-    
+
     public boolean isStringToken() {
         return tokenState == TOKEN_STATE_STRING;
     }
-    
+
     public boolean isNumberToken() {
         return tokenState == TOKEN_STATE_NUMBER;
     }
-    
+
     public boolean isNullToken() {
         return tokenState == TOKEN_STATE_NULL;
     }
-    
+
     public boolean isBooleanToken() {
         return tokenState == TOKEN_STATE_BOOLEAN;
     }
-    
+
     private int nextBlock(byte[] buf) throws IOException {
         blockPosition = 0;
         numberOfBlocks++;
-        
+
         final int bytes = bis.read(buf);
         if (bytes == -1) {
             eof = true;
@@ -641,9 +641,9 @@ class JSONByteEventProcessor extends BaseEventProcessor{
 
         return bytes;
     }
-    
+
     private byte nextByte() {
-        if (blockPosition < (getBlockSizeInBytes() - 1)) {
+        if (blockPosition < getBlockSizeInBytes() - 1) {
             return workingBlock[blockPosition + 1];
         } else {
             return 0x0;
@@ -653,7 +653,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
     private void notifyDocumentStart(ByteBuffer c) {
         documentStarted = true;
         fireDocumentStartEvent(ByteBuffer.allocate(1).put(c));
-        
+
     }
 
     private void notifyDocumentEnd() {
@@ -664,31 +664,31 @@ class JSONByteEventProcessor extends BaseEventProcessor{
     private void notifyStringTokenStart() {
         tokenState = TOKEN_STATE_STRING;
         fireStringStartEvent();
-        
+
     }
 
     private void notifyStringTokenEnd(ByteBuffer tokenValue) {
         tokenState = TOKEN_STATE_EMPTY;
         fireStringEndEvent(tokenValue);
-        
+
     }
 
     private void notifyBooleanTokenStart() {
         tokenState = TOKEN_STATE_BOOLEAN;
         fireBooleanStartEvent();
-        
+
     }
 
     private void notifyBooleanTokenEnd(ByteBuffer tokenValue) {
         tokenState = TOKEN_STATE_EMPTY;
         fireBooleanEndEvent(tokenValue);
-        
+
     }
 
     private void notifyNumberTokenStart() {
         tokenState = TOKEN_STATE_NUMBER;
         fireNumberStartEvent();
-        
+
     }
 
     private void notifyNumberTokenEnd(ByteBuffer tokenValue) {
@@ -709,7 +709,7 @@ class JSONByteEventProcessor extends BaseEventProcessor{
     private void notifyMapStart() {
         tokenState = TOKEN_STATE_EMPTY;
         fireMapStartEvent();
-        
+
     }
 
     private void notifyMapEnd() {
@@ -732,11 +732,11 @@ class JSONByteEventProcessor extends BaseEventProcessor{
     private void notifyEntityEnd() {
         tokenState = TOKEN_STATE_EMPTY;
         fireEntityEndEvent();
-        
+
     }
 
-    
-    
-    
-    
+
+
+
+
 }

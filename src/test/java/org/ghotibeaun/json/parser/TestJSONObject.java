@@ -1,6 +1,7 @@
 package org.ghotibeaun.json.parser;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -223,6 +224,12 @@ public class TestJSONObject implements JSONObject {
     public int compareTo(JSONNode arg0) {
         // TODO Auto-generated method stub
         return 0;
+    }
+
+    @Override
+    public Iterator<String> keySet() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

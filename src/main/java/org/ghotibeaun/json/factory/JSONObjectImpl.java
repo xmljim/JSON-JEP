@@ -30,7 +30,7 @@ class JSONObjectImpl extends AbstractJSONObject {
             final String key = entry.getKey();
             final String value = entry.getValue().toString();
             builder.append("\"" + key + "\"").append(":").append(value);
-            if (pos < (size - 1)) {
+            if (pos < size - 1) {
                 builder.append(",");
             }
             pos++;
@@ -54,7 +54,7 @@ class JSONObjectImpl extends AbstractJSONObject {
     @Override
     public String prettyPrint(int indent) {
         final StringBuilder startStopIndent = new StringBuilder();
-        for (int a = 0; a < ((indent * 4)); a++) {
+        for (int a = 0; a < indent * 4; a++) {
             startStopIndent.append(" ");
         }
         final StringBuilder builder = new StringBuilder();
@@ -69,7 +69,7 @@ class JSONObjectImpl extends AbstractJSONObject {
             final String value = entry.getValue().prettyPrint(indent + 1);
             builder.append(startStopIndent.toString());
             builder.append(indentString).append("\"" + key + "\"").append(": ").append(value);
-            if (pos < (size - 1)) {
+            if (pos < size - 1) {
                 builder.append(",");
             }
 
@@ -81,4 +81,8 @@ class JSONObjectImpl extends AbstractJSONObject {
 
         return builder.toString();
     }
+
+
+
+
 }

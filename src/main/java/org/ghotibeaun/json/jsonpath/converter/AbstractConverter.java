@@ -5,10 +5,12 @@
  */
 package org.ghotibeaun.json.jsonpath.converter;
 
+import java.util.Optional;
+
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
-import org.ghotibeaun.json.factory.NodeFactory;
+import org.ghotibeaun.json.converters.Converters;
 
 /**
  * @author Jim Earley
@@ -42,7 +44,7 @@ public abstract class AbstractConverter<T> implements Converter<T> {
     }
 
     public boolean isPrimitive(Object data) {
-        return NodeFactory.createFromObject(data).isPrimitive();
+        return Converters.convertValue(data, Optional.empty(), Optional.empty()).isPrimitive();
     }
 
 

@@ -220,4 +220,13 @@ public class FactorySettings extends Properties {
         return getInstance().useDefaultSettings;
     }
 
+    static class FactoryCache {
+        //private final Map<String, Class<?>> cache = new HashMap<>();
+
+        public FactoryCache() {
+
+        }
+
+
+    }
 }

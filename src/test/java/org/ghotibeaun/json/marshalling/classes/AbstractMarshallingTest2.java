@@ -20,6 +20,7 @@ public abstract class AbstractMarshallingTest2 {
         return stringValue;
     }
 
+    //@JSONValueConverter(converter = StringJSONValueConverter.class, args= {"Value Converter Wrapper test: %s"})
     public void setStringValue(String stringValue) {
         this.stringValue = stringValue;
     }

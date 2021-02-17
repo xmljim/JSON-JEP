@@ -2,12 +2,12 @@ package org.ghotibeaun.json.marshalling.classes;
 
 import java.util.List;
 
-import org.ghotibeaun.json.marshalling.JSONMapping;
+import org.ghotibeaun.json.converters.annotation.JSONElement;
 
 public class BasicTestClass {
     private String message;
     private boolean read;
-    @JSONMapping(setterMethod = "setFoo", key = "length")
+    @JSONElement(setterMethod = "setFoo", key = "length")
     private Long count;
     private List<String> valueSet;
     //@JSONTargetClass(TestSubclassImpl.class)

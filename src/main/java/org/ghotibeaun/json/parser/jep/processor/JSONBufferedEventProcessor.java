@@ -83,7 +83,7 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
     private final ByteSequence nullSequence = ByteSequence.startsWith(n).followedBy(u).followedBy(l).followedBy(l);
     private final ByteSequence trueSequence = ByteSequence.startsWith(t).followedBy(r).followedBy(u).followedBy(e);
     private final ByteSequence falseSequence = ByteSequence.startsWith(f).followedBy(a).followedBy(l).followedBy(s).followedBy(e);
-    
+
     private BufferedInputStream bis;
     private final  ResizableByteBuffer token = new ResizableByteBuffer();
 
@@ -91,9 +91,8 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
     private int lineNumber;
     private int column;
     private boolean documentStarted = false;
-    private long blockCount;
     private boolean escapeFlag = false;
-    
+
 
 
     public JSONBufferedEventProcessor() {
@@ -110,20 +109,20 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
             } else {
                 bis = new BufferedInputStream(stream);
             }
-            
+
             ByteBuffer block = readBlock();
-            
+
             while (block != null) {
                 processBlock(block);
                 block = readBlock();
             }
-            
+
         } catch (final IOException e) {
             throw new JSONEventParserException(e);
         }
     }
-    
-    
+
+
     private void notifyStringTokenStart() {
         setTokenState(TOKEN_STATE_STRING);
         fireStringStartEvent(lineNumber, column);
@@ -183,14 +182,14 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
     public int getColumn() {
         return column;
     }
-    
+
     private void processBlock(ByteBuffer block) throws IOException {
         if (block != null) {
             while (block.hasRemaining()) {
                 final byte b = block.get();
                 handleByte(b);
             }
-            
+
             //processBlock(readBlock());
         } else {
             fireDocumentEndEvent(lineNumber, column); //TODO: reached the end;
@@ -219,8 +218,8 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
         } else {
             handleString(b);
         }
-        
-        
+
+
     }
 
     private boolean isWhitespace(byte b) {
@@ -241,7 +240,7 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
                 if (inToken() && !inStringToken()) {
                     notifyEndToken();
                 }
-                
+
                 incrementLine();
                 break;
             case TAB | CR:
@@ -250,9 +249,9 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
                 //CR will be followed by LF, so line increment will dealt with there.
         }
     }
-    
+
     private boolean isNumeric(byte byt) {
-        return (hasByte(byt, numberRange) && (!inToken() || inNumberToken()));
+        return hasByte(byt, numberRange) && (!inToken() || inNumberToken());
     }
 
     private void handleNumeric(byte byt) {
@@ -266,53 +265,48 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
             appendToken(byt);
             return;
         }
-        
+
         if (inNumberToken()) {
             if (ByteRange.startWith(e).andAdd(E).contains(byt) && hasByte(b, token.toByteBuffer())) {
                 throwError("Number exception, cannot have two exponent symbols in the same number");
             }
 
-            if ((byt == DECIMAL) && hasByte(byt, token.toByteBuffer())) {
+            if (byt == DECIMAL && hasByte(byt, token.toByteBuffer())) {
                 throwError("Number exception: cannot have two decimal symbols in the same number");
             }
 
             appendToken(byt);
         }
     }
-    
+
     private boolean isBoolean(byte byt) {
         // final boolean isBool = (hasByte(byt, booleanRange) && ((!inToken() && ((byt == t) || (byt == f)) )|| inBooleanToken()));
-        
-        final boolean hasByte = hasByte(byt, booleanRange);
-        final boolean isNotToken = !inToken();
-        final boolean bOrT = (byt == t) || (byt == f);
-        final boolean inBoolean = inBooleanToken();
-        return (hasByte(byt, booleanRange) && ((!inToken() && ((byt == t) || (byt == f)) )|| inBooleanToken()));
+        return hasByte(byt, booleanRange) && (!inToken() && (byt == t || byt == f)|| inBooleanToken());
     }
-    
+
     private void handleBoolean(byte byt) {
         if (!inToken()) {
             notifyBooleanTokenStart();
         }
 
         appendToken(byt);
-        
+
     }
 
     private boolean isNull(byte byt) {
-        return (hasByte(byt, nullRange) && ((!inToken() && (byt == n) )|| inNullToken()));
+        return hasByte(byt, nullRange) && (!inToken() && byt == n|| inNullToken());
     }
-    
+
     private void handleNull(byte byt) {
         if (!inToken()) {
             notifyNullTokenStart();
         }
-        
+
         appendToken(byt);
     }
 
     private boolean isDelimiter(byte byt) {
-        return (hasByte(byt, delimiterRange) && !inStringToken());
+        return hasByte(byt, delimiterRange) && !inStringToken();
     }
 
     private void handleDelimiter(byte byt) {
@@ -326,13 +320,13 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
 
         incrementColumn();
     }
-    
+
     private boolean isContainer(byte byt) {
-        return (hasByte(byt, containerRange));
+        return hasByte(byt, containerRange);
     }
-    
+
     private void handleContainer(byte byt) {
-        
+
         if (inStringToken()) {
             appendToken(byt);
         } else {
@@ -365,36 +359,34 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
                 case END_MAP:
                     fireMapEndEvent(lineNumber, column);
             }
-            
+
             incrementColumn();
-            
+
         }
     }
-    
+
     private boolean isSpecialCharacter(byte byt) {
-        return (inStringToken() && escapeRange.contains(byt));
+        return inStringToken() && escapeRange.contains(byt);
     }
 
     private void handleSpecialCharacters(byte byt) {
         if (escapeFlag) {
             appendToken(byt);
             escapeFlag = false;
-        } else {
-            if (byt == BACKSLASH) {
-                appendToken(byt);
-                escapeFlag = true;
-            } else if (byt == QUOTE) {
-                incrementColumn();
-                notifyStringTokenEnd(token.toByteBuffer());
-            } else if (byt == SOLIDUS) {
-                if (getProcessorSettings().getUseStrict() ) {
-                    throwError("Per ECMA-404 specification, solidus ('/') must be escaped");
-                } else {
-                    appendToken(byt);
-                }
+        } else if (byt == BACKSLASH) {
+            appendToken(byt);
+            escapeFlag = true;
+        } else if (byt == QUOTE) {
+            incrementColumn();
+            notifyStringTokenEnd(token.toByteBuffer());
+        } else if (byt == SOLIDUS) {
+            if (getProcessorSettings().getUseStrict() ) {
+                throwError("Per ECMA-404 specification, solidus ('/') must be escaped");
             } else {
                 appendToken(byt);
             }
+        } else {
+            appendToken(byt);
         }
     }
 
@@ -410,13 +402,13 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
                 throwError("Unexpected character found outside of String value " + (char)byt);
             }
         }
-        
+
         if (isSpecialCharacter(byt) || escapeFlag) {
             handleSpecialCharacters(byt);
         } else {
             appendToken(byt);
         }
-        
+
     }
 
     private void notifyEndToken() {
@@ -434,7 +426,7 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
                 notifyStringTokenEnd(token.toByteBuffer());
                 break;
         }
-        
+
         resetToken();
     }
 
@@ -466,12 +458,11 @@ class JSONBufferedEventProcessor extends BaseEventProcessor {
     }
 
     private ByteBuffer readBlock() throws IOException {
-        blockCount++;
         final byte[] byteBuffer = new byte[getProcessorSettings().getBlockSizeBytes()];
         final int readResult = getStream().read(byteBuffer);
 
         ByteBuffer buffer = null;
-        
+
         if (readResult != -1) {
             //read the byte array into a ByteBuffer for better handling of the array
             //and only allocate what was read

@@ -24,8 +24,6 @@ public abstract class Converters {
         // TODO Auto-generated constructor stub
     }
 
-
-
     public static Converter<?> getConverter(Class<?> castClass) {
         Converter<?> converter = null;
         if (isPrimitive(castClass)) {
@@ -46,7 +44,7 @@ public abstract class Converters {
     }
 
     private static boolean isPrimitive(Class<?> castClass) {
-        return (isNumeric(castClass) || isString(castClass) || isBoolean(castClass));
+        return isNumeric(castClass) || isString(castClass) || isBoolean(castClass);
     }
 
     private static boolean isNumeric(Class<?> castClass) {
@@ -61,18 +59,22 @@ public abstract class Converters {
         return castClass.getSuperclass().equals(String.class);
     }
 
+    @SuppressWarnings("unused")
     private static boolean isList(Class<?> castClass) {
         return implementsInterface(castClass.getInterfaces(), List.class);
     }
 
+    @SuppressWarnings("unused")
     private static boolean isMap(Class<?> castClass) {
         return implementsInterface(castClass.getInterfaces(), Map.class);
     }
 
+    @SuppressWarnings("unused")
     private static boolean isJSONArray(Class<?> castClass) {
         return castClass.equals(JSONArray.class);
     }
 
+    @SuppressWarnings("unused")
     private static boolean isJSONObject(Class<?> castClass) {
         return castClass.equals(JSONObject.class);
     }

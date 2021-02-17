@@ -1,5 +1,7 @@
 package org.ghotibeaun.json;
 
+import org.ghotibeaun.json.converters.utils.ClassUtils;
+import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.exception.JSONSerializationException;
@@ -43,8 +45,8 @@ public abstract class JSONFactory {
         try {
             final Class<JSONFactory> clazz = (Class<JSONFactory>) JSONFactory.class.getClassLoader()
                     .loadClass(FactorySettings.getSetting(FactorySettings.JSON_FACTORY));
-            impl = clazz.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            impl = ClassUtils.createInstance(clazz);
+        } catch (ClassNotFoundException | JSONConversionException e) {
             throw new JSONFactoryException(e);
         }
 
@@ -71,9 +73,9 @@ public abstract class JSONFactory {
      * @return the {@link JSONSerializer}
      */
     public abstract JSONSerializer newSerializer() throws JSONSerializationException;
-    
+
     public abstract JSONCSVParser newCsvParser(CSVSettings settings);
-    
+
     public abstract JSONCSVParser newCsvParser();
 
 

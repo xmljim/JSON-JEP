@@ -3,11 +3,13 @@ package org.ghotibeaun.json.factory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONListNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
+import org.ghotibeaun.json.converters.Converters;
 
 abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode, Iterable<JSONValue<?>> {
 
@@ -33,7 +35,7 @@ abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode
 
     @Override
     public void insert(int index, Object value) {
-        jsonList.add(index, NodeFactory.createFromObject(value));
+        jsonList.add(index, Converters.convertValue(value, Optional.empty(), Optional.empty()));  //NodeFactory.createFromObject(value));
     }
 
     @Override
@@ -60,7 +62,7 @@ abstract class AbstractListNode extends AbstractJSONNode implements JSONListNode
     @Override
     public void addAll(List<?> list) {
         for (final Object val : list) {
-            final JSONValue<?> value = NodeFactory.createFromObject(val);
+            final JSONValue<?> value = Converters.convertValue(val, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(val);
             add(value);
         }
 
