@@ -126,34 +126,70 @@ public interface JSONNode extends Serializable, Comparable<JSONNode> {
         return JSONPathFactory.compile(jsonPath, criteria, options).selectValue(this);
     }
 
+    /**
+     * Write the current node to an OutputStream
+     * @param out the OutputStream
+     */
     public default void write(OutputStream out) {
         write(out, false);
     }
 
+    /**
+     * Write the current node to a Path
+     * @param outputPath the Path
+     */
     public default void write(Path outputPath) {
         write(outputPath, false);
     }
 
+    /**
+     * Write the current node to a Writer
+     * @param writer the Writer
+     */
     public default void write(Writer writer) {
         write(writer, false);
     }
 
+    /**
+     * Write the current node to a File
+     * @param file the File
+     */
     public default void write(File file) {
         write(file, false);
     }
 
+    /**
+     * Write the current node with optional pretty printing
+     * @param out the OutputStream
+     * @param prettyPrint true if pretty printing is enabled; false otherwise
+     */
     public default void write(OutputStream out, boolean prettyPrint) {
         SerializationFactory.getSerializer().write(out, this, prettyPrint);
     }
 
+    /**
+     * Write the current node with optional pretty printing
+     * @param out the Path
+     * @param prettyPrint true if pretty printing is enabled; false otherwise
+     */
     public default void write(Path outputPath, boolean prettyPrint) {
         SerializationFactory.getSerializer().write(outputPath, this, prettyPrint);
     }
 
+    /**
+     * Write the current node with optional pretty printing
+     * @param out the File
+     * @param prettyPrint true if pretty printing is enabled; false otherwise
+     */
     public default void write(File outputFile, boolean prettyPrint) {
         SerializationFactory.getSerializer().write(outputFile, this, prettyPrint);
     }
 
+    /**
+     * Write the current node with optional pretty printing
+     * @param out the Writer
+     * @param prettyPrint true if pretty printing is enabled; false otherwise
+     */
     public default void write(Writer writer, boolean prettyPrint) {
         SerializationFactory.getSerializer().write(writer, this, prettyPrint);
     }

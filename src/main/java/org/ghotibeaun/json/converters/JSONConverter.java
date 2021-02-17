@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
+import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
 
@@ -28,7 +29,12 @@ public interface JSONConverter extends Converter {
      * @return a List of values
      * @throws JSONConversionException thrown when an error occurs during conversion
      */
+    @Deprecated
     <T> List<T> convertToList(Class<T> targetItemClass, JSONArray array, Optional<ValueConverter<?>> valueConverter) throws JSONConversionException;
 
+
+    <T> List<T> convertToList(JSONArray array, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass) throws JSONConversionException;
+
+    <T> T convertValue(JSONValue<?> value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass) throws JSONConversionException;
 
 }

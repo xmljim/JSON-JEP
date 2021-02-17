@@ -1,6 +1,5 @@
 package org.ghotibeaun.json;
 
-import org.ghotibeaun.json.converters.utils.ClassUtils;
 import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONParserException;
@@ -38,19 +37,22 @@ public abstract class JSONFactory {
      *
      * @return a new factory
      */
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public static JSONFactory newFactory() throws JSONFactoryException {
-        JSONFactory impl = null;
+        //JSONFactory impl = null;
 
         try {
+            /*
             final Class<JSONFactory> clazz = (Class<JSONFactory>) JSONFactory.class.getClassLoader()
-                    .loadClass(FactorySettings.getSetting(FactorySettings.JSON_FACTORY));
+                    .loadClass(FactorySettings.getSetting(FactorySettings.JSON_FACTORY_CLASS));
             impl = ClassUtils.createInstance(clazz);
-        } catch (ClassNotFoundException | JSONConversionException e) {
+             */
+            return FactorySettings.createFactoryClass(FactorySettings.JSON_FACTORY_CLASS);
+        } catch (final JSONConversionException e) {
             throw new JSONFactoryException(e);
         }
 
-        return impl;
+
     }
 
     public static JSONFactory newFactory(boolean useDefaultSettings) throws JSONFactoryException {

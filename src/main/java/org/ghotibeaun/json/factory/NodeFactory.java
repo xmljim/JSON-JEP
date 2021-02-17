@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONFactory;
@@ -21,160 +20,81 @@ public final class NodeFactory {
 
 
     public static JSONObject newJSONObject() {
-
-        /*        JSONObject o = null;
-        final Class<JSONNode> clazz = createNodeClass(JSONValueType.OBJECT);
-
-        try {
-            o = (JSONObject) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONTypeNotFoundException("Implementation of JSONObject could not be instantiated", e);
-        }
-
-        return o;*/
-        return new JSONObjectImpl();
+        //return new JSONObjectImpl();
+        return FactorySettings.createFactoryClass(FactorySettings.JSON_OBJECT_CLASS);
     }
 
     public static JSONArray newJSONArray() {
-        /*        JSONArray a = null;
-        final Class<JSONNode> clazz = createNodeClass(JSONValueType.ARRAY);
-        try {
-            a = (JSONArray) clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONTypeNotFoundException("Implementation of JSONArray could not be instantiated", e);
-        }
-
-        return a;*/
-        return new JSONArrayImpl();
+        //return new JSONArrayImpl();
+        return FactorySettings.createFactoryClass(FactorySettings.JSON_ARRAY_CLASS);
     }
 
     public static JSONObject newJSONObject(Map<String, ?> map) {
-        final JSONObject obj = newJSONObject();
-
-        final Set<String> keys  = map.keySet();
-
-        for (final String key : keys) {
-            final Object entry = map.get(key);
-
-            final JSONValue<?> value = createFromObject(entry);
-            obj.put(key,  value);
-        }
-        return obj;
-
+        return Converters.convertToJSONObject(map);
     }
 
     public static JSONArray newJSONArray(List<Object> list) {
-        final JSONArray array = newJSONArray();
-        for (final Object o : list) {
-            array.add(createFromObject(o));
-        }
-        return array;
+        return Converters.convertToJSONArray(list);
     }
 
 
     public static JSONValue<String> newStringValue(String value) {
-        /*        JSONValue<String> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.STRING);
-        try {
-            v = (JSONValue<String>) clazz.newInstance();
-            v.setValue(value);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONValueNotFoundException("Implementation of String Value could not be instantiated", e);
-        }
+        final JSONValue<String> jsonValue = FactorySettings.createFactoryClass(FactorySettings.JSON_VALUE_STRING_CLASS);
+        jsonValue.setValue(value);
+        return jsonValue;
 
-        return v;*/
-        return new JSONStringValueImpl(value);
+        //return new JSONStringValueImpl(value);
     }
 
 
     public static JSONValue<Number> newNumberValue(Number value) {
-        /*        JSONValue<Number> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.NUMBER);
-        try {
-            v = (JSONValue<Number>) clazz.newInstance();
-            v.setValue(value);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONValueNotFoundException("Implementation of Number Value could not be instantiated", e);
-        }
-
-        return v;*/
-        return new JSONNumberValueImpl(value);
+        final JSONValue<Number> jsonValue = FactorySettings.createFactoryClass(FactorySettings.JSON_VALUE_NUMBER_CLASS);
+        jsonValue.setValue(value);
+        return jsonValue;
+        //return new JSONNumberValueImpl(value);
     }
 
 
 
     public static JSONValue<Boolean> newBooleanValue(boolean value) {
-        /*        JSONValue<Boolean> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.BOOLEAN);
-        try {
-            v = (JSONValue<Boolean>) clazz.newInstance();
-            v.setValue(value);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONValueNotFoundException("Implementation of Boolean Value could not be instantiated", e);
-        }
-
-        return v;*/
-        return new JSONBooleanValueImpl(value);
+        final JSONValue<Boolean> jsonValue = FactorySettings.createFactoryClass(FactorySettings.JSON_VALUE_BOOLEAN_CLASS);
+        jsonValue.setValue(value);
+        return jsonValue;
+        //return new JSONBooleanValueImpl(value);
     }
 
-
+    /**
+     * Deprecated
+     * @param value
+     * @return
+     * @deprecated
+     */
+    @Deprecated(forRemoval = true, since = "2.0.0")
     public static JSONValue<Date> newDateValue(Date value) {
-        /*        JSONValue<Date> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.DATE);
-        try {
-            v = (JSONValue<Date>) clazz.newInstance();
-            v.setValue(value);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONValueNotFoundException("Implementation of Date Value could not be instantiated", e);
-        }
 
-        return v;*/
         return new JSONDateValueImpl(value);
     }
 
     public static JSONValue<JSONObject> newJSONObjectValue(JSONObject value) {
-        /*        JSONValue<JSONObject> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.OBJECT);
-        try {
-            v = (JSONValue<JSONObject>) clazz.newInstance();
-            v.setValue(value);
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONValueNotFoundException("Implementation of JSONObject Value could not be instantiated", e);
-        }
-
-        return v;*/
-        return new JSONObjectValueImpl(value);
+        final JSONValue<JSONObject> jsonValue = FactorySettings.createFactoryClass(FactorySettings.JSON_VALUE_OBJECT_CLASS);
+        jsonValue.setValue(value);
+        return jsonValue;
+        //return new JSONObjectValueImpl(value);
     }
 
 
     public static JSONValue<JSONArray> newJSONArrayValue(JSONArray value) {
-        /*        JSONValue<JSONArray> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.ARRAY);
-        try {
-            v = (JSONValue<JSONArray>) clazz.newInstance();
-            v.setValue(value);
-        } catch (InstantiationException | IllegalAccessException e) {
-
-            throw new JSONValueNotFoundException("Implementation of JSONArray Value could not be instantiated", e);
-        }
-
-        return v;*/
-        return new JSONArrayValueImpl(value);
+        final JSONValue<JSONArray> jsonValue = FactorySettings.createFactoryClass(FactorySettings.JSON_VALUE_ARRAY_CLASS);
+        jsonValue.setValue(value);
+        return jsonValue;
+        //return new JSONArrayValueImpl(value);
     }
 
 
     public static JSONValue<NullObject> newJSONNullValue() {
-        /*        JSONValue<NullObject> v = null;
-        final Class<JSONValue<?>> clazz = createValueClass(JSONValueType.NULL);
-        try {
-            v = (JSONValue<NullObject>) clazz.newInstance();
+        return FactorySettings.createFactoryClass(FactorySettings.JSON_VALUE_NULL_CLASS);
 
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new JSONValueNotFoundException("Implementation of Null Value could not be instantiated", e);
-        }
-
-        return v;*/
-        return new JSONNullValueImpl();
+        //return new JSONNullValueImpl();
     }
 
     /**
@@ -245,17 +165,17 @@ public final class NodeFactory {
         if (type == JSONValueType.ARRAY) {
             try {
                 clazz = (Class<JSONNode>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_ARRAY));
+                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_ARRAY_CLASS));
             } catch (final ClassNotFoundException e) {
-                throw new JSONTypeNotFoundException("Type implementation not found for " + FactorySettings.JSON_ARRAY,
+                throw new JSONTypeNotFoundException("Type implementation not found for " + FactorySettings.JSON_ARRAY_CLASS,
                         e);
             }
         } else if (type == JSONValueType.OBJECT) {
             try {
                 clazz = (Class<JSONNode>) NodeFactory.class.getClassLoader()
-                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_OBJECT));
+                        .loadClass(FactorySettings.getSetting(FactorySettings.JSON_OBJECT_CLASS));
             } catch (final ClassNotFoundException e) {
-                throw new JSONTypeNotFoundException("Type implementation not found for " + FactorySettings.JSON_OBJECT,
+                throw new JSONTypeNotFoundException("Type implementation not found for " + FactorySettings.JSON_OBJECT_CLASS,
                         e);
             }
         }
@@ -273,20 +193,20 @@ public final class NodeFactory {
             case ARRAY:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_ARRAY));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_ARRAY_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_ARRAY, e);
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_ARRAY_CLASS, e);
                 }
 
                 break;
             case BOOLEAN:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_BOOLEAN));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_BOOLEAN_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_BOOLEAN,
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_BOOLEAN_CLASS,
                             e);
                 }
 
@@ -294,30 +214,30 @@ public final class NodeFactory {
             case DATE:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_DATE));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_DATE_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_DATE, e);
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_DATE_CLASS, e);
                 }
 
                 break;
             case NULL:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NULL));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NULL_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NULL, e);
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NULL_CLASS, e);
                 }
 
                 break;
             case NUMBER:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NUMBER));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_NUMBER_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NUMBER,
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_NUMBER_CLASS,
                             e);
                 }
 
@@ -325,10 +245,10 @@ public final class NodeFactory {
             case OBJECT:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_OBJECT));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_OBJECT_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_OBJECT,
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_OBJECT_CLASS,
                             e);
                 }
 
@@ -336,10 +256,10 @@ public final class NodeFactory {
             case STRING:
                 try {
                     clazz = (Class<JSONValue<?>>) NodeFactory.class.getClassLoader()
-                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_STRING));
+                            .loadClass(FactorySettings.getSetting(FactorySettings.JSON_VALUE_STRING_CLASS));
 
                 } catch (final ClassNotFoundException e) {
-                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_STRING,
+                    throw new JSONValueNotFoundException("Value type not found for " + FactorySettings.JSON_VALUE_STRING_CLASS,
                             e);
                 }
 

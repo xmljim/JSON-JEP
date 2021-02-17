@@ -1,4 +1,4 @@
-package org.ghotibeaun.json.marshalling.classes;
+package org.ghotibeaun.json.converter.classes;
 
 public class Person {
     private String firstName;

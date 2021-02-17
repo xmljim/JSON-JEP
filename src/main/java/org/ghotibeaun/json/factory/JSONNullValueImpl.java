@@ -10,6 +10,10 @@ class JSONNullValueImpl extends AbstractJSONValue<NullObject> {
      */
     private static final long serialVersionUID = 343392039089034698L;
 
+    public JSONNullValueImpl() {
+
+    }
+
     @Override
     public JSONValueType getType() {
         return JSONValueType.NULL;

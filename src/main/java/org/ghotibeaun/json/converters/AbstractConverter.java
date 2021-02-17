@@ -5,6 +5,11 @@ import java.util.Arrays;
 import org.ghotibeaun.json.converters.options.KeyNameCasing;
 import org.ghotibeaun.json.converters.options.Options;
 
+/**
+ * Base class for all Converters
+ * @author Jim Earley (xml.jim@gmail.com)
+ *
+ */
 public abstract class AbstractConverter implements Converter {
 
     private final ConverterOptions options = new ConverterOptions();

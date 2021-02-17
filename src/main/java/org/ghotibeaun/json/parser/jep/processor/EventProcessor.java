@@ -3,6 +3,7 @@ package org.ghotibeaun.json.parser.jep.processor;
 import java.io.InputStream;
 
 import org.ghotibeaun.json.exception.JSONEventParserException;
+import org.ghotibeaun.json.factory.FactorySettings;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
 import org.ghotibeaun.json.parser.jep.eventprovider.JSONEventProvider;
 
@@ -14,18 +15,19 @@ public abstract class EventProcessor implements JSONEventProcessor {
     private ParserSettings settings;
 
     public EventProcessor() {
-        
+
     }
 
     public static EventProcessor newDefaultProcessor() {
-        return new JSONBufferedEventProcessor();
+        //return new JSONBufferedEventProcessor();
+        return FactorySettings.createFactoryClass(FactorySettings.JSON_EVENT_PROCESSOR_CLASS);
     }
-    
+
     @Override
     public void setParserSettings(ParserSettings settings) {
         this.settings = settings;
-        this.provider = settings.getParserConfiguration().getEventProvider();
-        
+        provider = settings.getParserConfiguration().getEventProvider();
+
     }
 
     @Override
@@ -33,7 +35,7 @@ public abstract class EventProcessor implements JSONEventProcessor {
         // TODO Auto-generated method stub
         return settings;
     }
-    
+
     @Override
     public abstract void start(InputStream stream) throws JSONEventParserException;
 
@@ -46,5 +48,5 @@ public abstract class EventProcessor implements JSONEventProcessor {
     public ParserSettings getProcessorSettings() {
         return settings;
     }
-    
+
 }

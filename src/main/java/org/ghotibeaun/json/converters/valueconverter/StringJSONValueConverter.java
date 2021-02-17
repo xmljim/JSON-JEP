@@ -25,7 +25,7 @@ public class StringJSONValueConverter extends AbstractJSONValueConverter<String>
     }
 
     @Override
-    public <V> String convertValue(V value) throws JSONConversionException {
+    public <V> String getConvertedValue(V value) throws JSONConversionException {
         if (getArgs().length == 0) {
             return value.toString();
         } else {

@@ -29,7 +29,7 @@ public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T>
 
     public <V> String getInvalidMessage(V value) {
         return "INVALID VALUE TYPE CONVERSION: Current value type {" 
-                + value.getClass().getName() + "{ is not supported by this converter. This converter accepts: "
+                + value.getClass().getName() + "} is not supported by this converter. This converter accepts: "
                 + getAcceptedClassList();
     }
 
@@ -54,7 +54,14 @@ public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T>
     }
 
     @Override
-    public abstract <V> T convertValue(V value) throws JSONConversionException;
+    public <V> T convertValue(V value) throws JSONConversionException {
+        if (accept(value)) {
+            return getConvertedValue(value);
+        } else {
+            throw new JSONConversionException(getInvalidMessage(value));
+        }
+    }
 
+    public abstract <V> T getConvertedValue(V value) throws JSONConversionException;
 
 }

@@ -1,4 +1,4 @@
-package org.ghotibeaun.json.marshalling.classes;
+package org.ghotibeaun.json.converter.classes;
 
 import java.util.List;
 

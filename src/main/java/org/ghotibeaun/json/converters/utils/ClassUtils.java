@@ -5,6 +5,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.Optional;
 
+import org.ghotibeaun.json.converters.Converter;
+import org.ghotibeaun.json.converters.options.Options;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
 
@@ -22,6 +24,7 @@ public final class ClassUtils {
 
         if (constructor.isPresent()) {
             try {
+                constructor.get().setAccessible(true);
                 @SuppressWarnings("unchecked")
                 final T instance = (T) constructor.get().newInstance();
                 return instance;
@@ -53,9 +56,9 @@ public final class ClassUtils {
 
     public static ValueConverter<?> createValueConverter(Class<?> classToCreate, String... args) throws JSONConversionException {
         try {
-            System.out.println(args.length);
             Constructor<?> con;
             con = classToCreate.getConstructor(String[].class);
+            con.setAccessible(true);
             return (ValueConverter<?>) con.newInstance((Object)args);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
             throw new JSONConversionException("Error creating class: " + classToCreate + ": " + e.getMessage(), e);
@@ -63,7 +66,15 @@ public final class ClassUtils {
 
     }
 
-
+    public static Converter createConverter(Class<?> converterClass, Options...option) throws JSONConversionException {
+        try {
+            final Constructor<?> constructor = converterClass.getConstructor(Options[].class);
+            constructor.setAccessible(true);
+            return (Converter)constructor.newInstance((Object)option);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new JSONConversionException("Error creating class: " + converterClass + ": " + e.getMessage(), e);
+        }
+    }
 
     private ClassUtils() {
         // TODO Auto-generated constructor stub

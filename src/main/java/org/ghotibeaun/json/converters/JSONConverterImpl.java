@@ -41,10 +41,46 @@ class JSONConverterImpl extends AbstractJSONConverter {
         return instance;
     }
 
+    @Override
+    public <T> List<T> convertToList(JSONArray array, Optional<ValueConverter<?>> valueConverter,
+            Optional<Class<?>> targetClass) throws JSONConversionException {
+        final List<T> newList = new ArrayList<>();
+
+        for (final JSONValue<?> value : array) {
+            newList.add(convertValue(value, valueConverter, targetClass));
+        }
+
+        return newList;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
+    public <T> T convertValue(JSONValue<?> value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass)
+            throws JSONConversionException {
+
+        if (valueConverter.isPresent() && targetClass.isPresent()) {
+            throw new JSONConversionException("Can specify a ValueConverter or targetClass, but not both");
+        }
+
+        if (valueConverter.isPresent()) {
+            return (T) valueConverter.get().convertValue(value.getValue());
+        } else if (value.isPrimitive()) {
+            return (T) value.getValue();
+        } else if (value.isArray()) {
+            return (T) convertToList((JSONArray)value.getValue(), valueConverter, targetClass);
+        } else if (value.isObject()) {
+            return (T) convertToClass(targetClass.orElse(Object.class), (JSONObject)value.getValue());
+        } else {
+            throw new JSONConversionException("Unexpected scenario. Contact Jim Earley -> xml.jim@gmail.com");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    @Deprecated
     public <T> List<T> convertToList(Class<T> targetItemClass, JSONArray array,
             Optional<ValueConverter<?>> valueConverter) throws JSONConversionException {
+
         final List<T> newList = new ArrayList<>();
 
         for (final JSONValue<?> value : array) {

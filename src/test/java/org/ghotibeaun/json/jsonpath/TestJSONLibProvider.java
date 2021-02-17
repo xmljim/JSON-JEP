@@ -1,9 +1,6 @@
 package org.ghotibeaun.json.jsonpath;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-
-import java.util.EnumSet;
-import java.util.Set;
+import static org.junit.Assert.assertEquals;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
@@ -11,13 +8,6 @@ import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.parser.ParserFactory;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.jayway.jsonpath.Configuration;
-import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.Option;
-import com.jayway.jsonpath.spi.json.JsonProvider;
-import com.jayway.jsonpath.spi.mapper.MappingProvider;
-
 public class TestJSONLibProvider {
 
 
@@ -61,8 +51,8 @@ public class TestJSONLibProvider {
         final String person = jsonPath.selectValue(gop);
         final boolean isCurrent = path2.selectValue(gop);
 
-        Assert.assertThat(person, equalTo("Coffman, Mike (Rep.) [R-CO6]"));
-        Assert.assertThat(isCurrent, equalTo(true));
+        assertEquals(person, "Coffman, Mike (Rep.) [R-CO6]");
+        assertEquals(isCurrent, true);
     }
 
     @Test
@@ -77,11 +67,11 @@ public class TestJSONLibProvider {
 
         System.out.println(gop.select("$.*[?(@.state=='CO')].person.sortname").prettyPrint());
 
-        JSONArray polisArray = dems.select("$.*[?(@.person.lastname=='Polis')]");
+        final JSONArray polisArray = dems.select("$.*[?(@.person.lastname=='Polis')]");
         System.out.println(polisArray.prettyPrint());
-       
-        
-        JSONObject jaredPolis = dems.selectValue("$.*[?(@.person.lastname=='Polis')]");
+
+
+        final JSONObject jaredPolis = dems.selectValue("$.*[?(@.person.lastname=='Polis')]");
         System.out.println(jaredPolis.prettyPrint());
     }
 

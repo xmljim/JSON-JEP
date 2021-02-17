@@ -116,6 +116,8 @@ abstract class AbstractJSONObject extends AbstractMapNode implements JSONObject 
             if (get(key).getType().isNumeric()) {
                 final JSONValue<Number> v = (JSONValue<Number>)get(key);
                 value = v.getValue();
+            } else {
+                throw new JSONInvalidValueTypeException("Cannot retrieve value as a number");
             }
         }
 

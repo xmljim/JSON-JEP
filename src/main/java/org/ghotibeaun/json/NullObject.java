@@ -2,6 +2,11 @@ package org.ghotibeaun.json;
 
 import java.io.Serializable;
 
+/**
+ * Tagging class for Null objects
+ * @author Jim Earley (xml.jim@gmail.com)
+ *
+ */
 public class NullObject implements Serializable {
 
     /**

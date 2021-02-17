@@ -5,8 +5,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,14 +22,14 @@ public class NodeFactoryTest {
     public void testNewJSONObject() {
         final JSONObject obj = NodeFactory.newJSONObject();
         assertNotNull(obj);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_OBJECT).equals(obj.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_OBJECT_CLASS).equals(obj.getClass().getName()));
     }
 
     @Test
     public void testNewJSONArray() {
         final JSONArray arr = NodeFactory.newJSONArray();
         assertNotNull(arr);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_ARRAY).equals(arr.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_ARRAY_CLASS).equals(arr.getClass().getName()));
     }
 
     @Test
@@ -43,7 +41,6 @@ public class NodeFactoryTest {
         testMap.put("longKey", 1000L);
         testMap.put("decimalKey", 3.1415927D);
         testMap.put("floatKey", 1.610339887F);
-        testMap.put("dateKey", Calendar.getInstance().getTime());
         testMap.put("nullValue", null);
 
 
@@ -107,14 +104,6 @@ public class NodeFactoryTest {
     }
 
     @Test
-    public void testNewDateValue() {
-        final Date d = Calendar.getInstance().getTime();
-
-        final JSONValue<Date> v = NodeFactory.newDateValue(d);
-        assertTrue(d.getTime() == v.getValue().getTime());
-    }
-
-    @Test
     public void testNewJSONObjectValue() {
         final Map<String, Object> testMap = new HashMap<>();
         testMap.put("stringKey", "StringValue");
@@ -122,7 +111,6 @@ public class NodeFactoryTest {
         testMap.put("longKey", 1000L);
         testMap.put("decimalKey", 3.1415927D);
         testMap.put("floatKey", 1.610339887F);
-        testMap.put("dateKey", Calendar.getInstance().getTime());
         testMap.put("nullValue", null);
 
         final JSONObject o = NodeFactory.newJSONObject(testMap);
