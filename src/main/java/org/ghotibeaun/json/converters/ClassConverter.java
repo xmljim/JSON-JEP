@@ -89,11 +89,41 @@ public interface ClassConverter extends Converter {
     JSONArray convertToJSONArray(List<?> source) throws JSONConversionException;
 
 
+    /**
+     * Convert a List to a JSONArray
+     * @param source the List
+     * @param targetClass the targetClass to cast each item
+     * @return a JSONArray
+     * @throws JSONConversionException thrown if a conversion error occurs
+     */
     JSONArray convertToJSONArray(List<?> source, Class<?> targetClass) throws JSONConversionException;
 
+    /**
+     * Convert a List to a JSONArray
+     * @param source the List
+     * @param valueConverter the ValueConverter to apply to each item
+     * @return a JSONArray
+     * @throws JSONConversionException thrown if a conversion error occurs
+     */
     JSONArray convertToJSONArray(List<?> source, ValueConverter<?> valueConverter) throws JSONConversionException;
 
+    /**
+     * Convert a List to a JSONArray
+     * @param source the List
+     * @param valueConverter an optional ValueConverter. If set, the targetClass parameter must be empty, or a {@link JSONConversionException} will be thrown
+     * @param targetClass an optional {@link Class targetClass}. If set, the ValueConverter parameter must be empty, or a {@link JSONConversionException} will be thrown
+     * @return a JSONArray
+     * @throws JSONConversionException thrown if a conversion error occurs
+     */
     JSONArray convertToJSONArray(List<?> source, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass) throws JSONConversionException;
 
+    /**
+     * Return a JSONValue
+     * @param value the value to convert
+     * @param valueConverter an optional ValueConverter. If set, the targetClass parameter must be empty, or a {@link JSONConversionException} will be thrown
+     * @param targetClass an optional {@link Class targetClass}. If set, the ValueConverter parameter must be empty, or a {@link JSONConversionException} will be thrown
+     * @return a JSONValue
+     * @throws JSONConversionException thrown if a conversion error occurs
+     */
     JSONValue<?> convertValue(Object value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass) throws JSONConversionException;
 }

@@ -229,6 +229,14 @@ class ClassConverterImpl extends AbstractClassConverter {
             } else {
                 throw new JSONConversionException("The value cannot be cast into target class");
             }
+        } else if (item instanceof Map) {
+            @SuppressWarnings("unchecked")
+            final
+            JSONObject val = convertToJSONObject((Map<String, ?>)item);
+            jsonValue = createValueFromObject(val);
+        } else if (item instanceof List) {
+            final JSONArray val = convertToJSONArray((List<?>)item);
+            jsonValue = createValueFromObject(val);
         } else {
             jsonValue = createValueFromObject(item);
         }

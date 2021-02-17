@@ -56,6 +56,11 @@ public interface JSONValue<T> extends Serializable, Comparable<JSONValue<T>> {
      */
     String prettyPrint();
 
+    /**
+     * Pretty print using a specified indent value
+     * @param indent the indent value
+     * @return a pretty-printed JSON structure
+     */
     String prettyPrint(int indent);
 
 

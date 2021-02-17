@@ -15,17 +15,32 @@ import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.utils.ClassUtils;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
+import org.ghotibeaun.json.factory.FactorySettings;
 
 /**
- * @author Jim Earley (jim.earley@fdiinc.com)
+ * Base class for ClassConverters
+ * @author Jim Earley (xml.jim@gmail.com)
  *
  */
 public abstract class AbstractClassConverter extends AbstractConverter implements ClassConverter {
 
+    /**
+     * Returns the ClassConverter implementation. The implementation class is specified using the 
+     * {@link FactorySettings#JSON_CLASS_CONVERTER_CLASS} property
+     * @param option Any converter options to set on the Converter
+     * @return the ClassConverter instance
+     */
     public static ClassConverter getClassConverter(Options...option) {
-        return new ClassConverterImpl(option);
+        //return new ClassConverterImpl(option);
+        final Optional<Class<?>> converterClass = FactorySettings.getFactoryClass(FactorySettings.JSON_CLASS_CONVERTER_CLASS);
+        if (converterClass.isPresent()) {
+            return (ClassConverter)ClassUtils.createConverter(converterClass.get(), option);
+        } else {
+            throw new JSONConversionException("No Class Converter class found");
+        }
     }
     /**
      * Constructor

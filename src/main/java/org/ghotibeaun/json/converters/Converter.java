@@ -12,5 +12,9 @@ package org.ghotibeaun.json.converters;
  */
 public interface Converter {
 
+    /**
+     * Return the ConverterOptions for this converter
+     * @return the ConverterOptions
+     */
     ConverterOptions getConverterOptions();
 }

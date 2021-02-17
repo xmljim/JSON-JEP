@@ -2,12 +2,18 @@ package org.ghotibeaun.json.factory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONFactory;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
+import org.ghotibeaun.json.converters.utils.ClassUtils;
+import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONRuntimeException;
 import org.ghotibeaun.json.parser.JSONParser;
 import org.ghotibeaun.json.serializer.JSONSerializer;
@@ -39,62 +45,72 @@ public class FactorySettings extends Properties {
     /**
      * Key for the {@link JSONFactory} implementation.
      */
-    public static final String JSON_FACTORY = "org.ghotibeaun.json.factory";
+    public static final String JSON_FACTORY_CLASS = "org.ghotibeaun.json.factory";
 
     /**
      * Key for the {@linkplain JSONParser} implementation
      */
-    public static final String JSON_PARSER = "org.ghotibeaun.json.parser";
+    public static final String JSON_PARSER_CLASS = "org.ghotibeaun.json.parser";
+
+    public static final String JSON_EVENT_PARSER_CLASS = "org.ghotibeaun.json.event.parser";
+
+    public static final String JSON_EVENT_PROCESSOR_CLASS = "org.ghotibeaun.json.event.processor";
+
+    public static final String JSON_EVENT_PROVIDER_CLASS = "org.ghotibeaun.json.event.provider";
+
+    public static final String JSON_JSON_CONVERTER_CLASS = "org.ghotibeaun.json.convert.jsonconverter";
+
+    public static final String JSON_CLASS_CONVERTER_CLASS = "org.ghotibeaun.json.convert.classconverter";
 
     /**
      * Key for the {@linkplain JSONSerializer} implementation
      */
-    public static final String JSON_SERIALIZER = "org.ghotibeaun.json.serializer";
+    public static final String JSON_SERIALIZER_CLASS = "org.ghotibeaun.json.serializer";
 
     /**
      * Key for the {@linkplain JSONObject} implementation
      */
-    public static final String JSON_OBJECT = "org.ghotibeaun.json.object";
+    public static final String JSON_OBJECT_CLASS = "org.ghotibeaun.json.object";
 
     /**
      * Key for the {@linkplain JSONArray} implementation
      */
-    public static final String JSON_ARRAY = "org.ghotibeaun.json.array";
+    public static final String JSON_ARRAY_CLASS = "org.ghotibeaun.json.array";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;JSONObject&gt;</code> instance)
      */
-    public static final String JSON_VALUE_OBJECT = "org.ghotibeaun.json.value.object";
+    public static final String JSON_VALUE_OBJECT_CLASS = "org.ghotibeaun.json.value.object";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;JSONArray&gt;</code> instance)
      */
-    public static final String JSON_VALUE_ARRAY = "org.ghotibeaun.json.value.array";
+    public static final String JSON_VALUE_ARRAY_CLASS = "org.ghotibeaun.json.value.array";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;Boolean&gt;</code> instance)
      */
-    public static final String JSON_VALUE_BOOLEAN = "org.ghotibeaun.json.value.boolean";
+    public static final String JSON_VALUE_BOOLEAN_CLASS = "org.ghotibeaun.json.value.boolean";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;Date&gt;</code> instance)
      */
-    public static final String JSON_VALUE_DATE = "org.ghotibeaun.json.value.date";
+    public static final String JSON_VALUE_DATE_CLASS = "org.ghotibeaun.json.value.date";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;NullObject&gt;</code> instance)
      */
-    public static final String JSON_VALUE_NULL = "org.ghotibeaun.json.value.null";
+    public static final String JSON_VALUE_NULL_CLASS = "org.ghotibeaun.json.value.null";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;Number&gt;</code> instance)
      */
-    public static final String JSON_VALUE_NUMBER = "org.ghotibeaun.json.value.number";
+    public static final String JSON_VALUE_NUMBER_CLASS = "org.ghotibeaun.json.value.number";
 
     /**
      * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;String&gt;</code> instance)
      */
-    public static final String JSON_VALUE_STRING = "org.ghotibeaun.json.value.string";
+    public static final String JSON_VALUE_STRING_CLASS = "org.ghotibeaun.json.value.string";
 
     /**
      * Key for the InputStream Character Set
@@ -109,14 +125,17 @@ public class FactorySettings extends Properties {
     /**
      * Key for the XML Serializer
      */
-    public static final String XML_SERIALIZER = "org.ghotibeaun.json.xmlserializer";
+    public static final String XML_SERIALIZER_CLASS = "org.ghotibeaun.json.xmlserializer";
 
 
     private static FactorySettings instance = null;
     private Properties defaults;
     private boolean useDefaultSettings;
+    private final FactoryClassCache cache;
 
     private FactorySettings() {
+        cache = new FactoryClassCache();
+        final String[] excludeFromCache = new String[] {JSON_DATE_FORMAT, JSON_INPUTSTREAM_CHARSET};
         try {
             super.load(this.getClass().getResourceAsStream("/org/ghotibeaun/json/factory/jsonlib.properties"));
             defaults = new Properties();
@@ -125,10 +144,17 @@ public class FactorySettings extends Properties {
                 final String ks = (String) k;
 
                 defaults.setProperty(ks, this.getProperty(ks));
+
+                final boolean isClass = !Arrays.stream(excludeFromCache).anyMatch(key -> key.equals(ks));
+
+                if (isClass) {
+                    cache.cacheClass(ks, this.getProperty(ks));
+                }
             }
 
             useDefaultSettings = false;
-        } catch (final IOException e) {
+
+        } catch (final IOException | ClassNotFoundException e) {
             throw new JSONRuntimeException(e);
         }
     }
@@ -139,6 +165,25 @@ public class FactorySettings extends Properties {
         }
 
         return instance;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T> T createFactoryClass(String key) throws JSONFactoryException {
+        final Optional<Class<?>> clazz = getInstance().getCache().getClassFromCache(key);
+        if (clazz.isPresent()) {
+            //System.out.println("** Create Instance [" + key + "] -- " + clazz.get().getName());
+            return (T)ClassUtils.createInstance(clazz.get());
+        } else {
+            throw new JSONFactoryException("No class found for key: " + key);
+        }
+    }
+
+    public static Optional<Class<?>> getFactoryClass(String key) {
+        return getInstance().getCache().getClassFromCache(key);
+    }
+
+    public FactoryClassCache getCache() {
+        return cache;
     }
 
     /**
@@ -220,12 +265,23 @@ public class FactorySettings extends Properties {
         return getInstance().useDefaultSettings;
     }
 
-    static class FactoryCache {
-        //private final Map<String, Class<?>> cache = new HashMap<>();
+    private class FactoryClassCache {
+        private final Map<String, Class<?>> cache = new HashMap<>();
 
-        public FactoryCache() {
+        public FactoryClassCache() {
 
         }
+
+        public void cacheClass(String key, String className) throws ClassNotFoundException {
+            final Class<?> clazz = Class.forName(className, true, this.getClass().getClassLoader());
+            //System.out.println("Caching class: [" + key + "] -- " + clazz.getName());
+            cache.put(key, clazz);
+        }
+
+        public Optional<Class<?>> getClassFromCache(String key) {
+            return Optional.ofNullable(cache.get(key));
+        }
+
 
 
     }

@@ -96,8 +96,12 @@ public abstract class BaseEventHandler extends EventHandler {
 
 
     private String getKeyValue() {
-        return objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
+        //return objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
+        final JSONValueType objectType = objectStack.peek();
+        return objectType != null ? objectType == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop() : null;
     }
+
+
 
 
 

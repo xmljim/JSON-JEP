@@ -43,9 +43,21 @@ public final class Converters {
      * @throws JSONConversionException thrown when an error occurs during conversion
      * @see JSONConverter#convertToList(Class, JSONArray, Optional)
      */
+    @Deprecated
     public static <T> List<T> convertToList(Class<T> targetClass, JSONArray jsonArray, Optional<ValueConverter<?>> valueConverter, Options...options) throws JSONConversionException {
         return AbstractJSONConverter.getJSONConverter(options).convertToList(targetClass, jsonArray, valueConverter);
     }
+
+    public static <T> List<T> convertToList(JSONArray array, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
+        return AbstractJSONConverter.getJSONConverter(options).convertToList(array, valueConverter, targetClass);
+    }
+
+    public static <T> T convertValue(JSONValue<?> value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
+        return AbstractJSONConverter.getJSONConverter(options).convertValue(value, valueConverter, targetClass);
+    }
+
+
+
     /**
      * Convert an object to a JSONNode
      * @param <T> The source type
@@ -80,39 +92,83 @@ public final class Converters {
      * @param options specifies JSON Conversion options to apply. Experimental - not fully implemented
      * @return A JSONObject. The Map's keys become the JSONObject keys. Values are converted to JSONValue instances based on type
      * @throws JSONConversionException thrown if a conversion error occurs
+     * @see ClassConverter#convertToJSONObject(Map)
      */
     public static JSONObject convertToJSONObject(Map<String, ?> source, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONObject(source);
     }
 
+    /**
+     * Convert a Map to a JSONObject. Map keys must be Strings.
+     * @param source The Map to convert
+     * @param converter the ValueConverter that will be applied to each element in the map
+     * @param options specifies JSON Conversion options to apply. Experimental - not fully implemented
+     * @return A JSONObject. The Map's keys become the JSONObject keys. Values are converted to JSONValue instances based on type
+     * @throws JSONConversionException thrown if a conversion error occurs
+     * @see ClassConverter#convertToJSONObject(Map, ValueConverter)
+     */
     public static JSONObject convertToJSONObject(Map<String, ?> source, ValueConverter<?> converter, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONObject(source, converter);
     }
 
+    /**
+     * Convert a Map to a JSONObject. Map keys must be Strings.
+     * @param source The Map to convert
+     * @param targetClass the targetClass to cast each element in the map
+     * @param options specifies JSON Conversion options to apply. Experimental - not fully implemented
+     * @return A JSONObject. The Map's keys become the JSONObject keys. Values are converted to JSONValue instances based on type
+     * @throws JSONConversionException thrown if a conversion error occurs
+     * @see ClassConverter#convertToJSONObject(Map, Class)
+     */
     public static JSONObject convertToJSONObject(Map<String, ?> source, Class<?> targetClass, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONObject(source, targetClass);
     }
 
+    /**
+     * Convert a Map to a JSONObject. Map keys must be Strings.
+     * @param source The Map to convert
+     * @param valueConverter the ValueConverter
+     * @param targetClass the targetClass to cast each element in the map
+     * @param options specifies JSON Conversion options to apply. Experimental - not fully implemented
+     * @return A JSONObject. The Map's keys become the JSONObject keys. Values are converted to JSONValue instances based on type
+     * @throws JSONConversionException thrown if a conversion error occurs
+     * @see ClassConverter#convertToJSONObject(Map, Optional, Optional)
+     */
     public static JSONObject convertToJSONObject(Map<String, ?> source, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONObject(source, valueConverter, targetClass);
     }
 
+    /**
+     * @see ClassConverter#convertToJSONArray(List)
+     */
     public static JSONArray convertToJSONArray(List<?> source, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONArray(source);
     }
 
+    /**
+     * @see ClassConverter#convertToJSONArray(List, Class)
+     */
     public static JSONArray convertToJSONArray(List<?> source, Class<?> targetClass, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONArray(source, targetClass);
     }
 
+    /**
+     * @see ClassConverter#convertToJSONArray(List, ValueConverter)
+     */
     public static JSONArray convertToJSONArray(List<?> source, ValueConverter<?> valueConverter, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONArray(source, valueConverter);
     }
 
+    /**
+     * @see ClassConverter#convertToJSONArray(List, Optional, Optional)
+     */
     public static JSONArray convertToJSONArray(List<?> source, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertToJSONArray(source, valueConverter, targetClass);
     }
 
+    /**
+     * @see ClassConverter#convertValue(Object, Optional, Optional)
+     */
     public static JSONValue<?> convertValue(Object value, Optional<ValueConverter<?>> valueConverter, Optional<Class<?>> targetClass, Options...options) throws JSONConversionException {
         return AbstractClassConverter.getClassConverter(options).convertValue(value, valueConverter, targetClass);
     }

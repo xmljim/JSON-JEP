@@ -14,7 +14,7 @@ public class JSONFactoryTest {
     public void testFactoryInstantiation() {
         final JSONFactory factory = JSONFactory.newFactory();
         assertNotNull(factory);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_FACTORY).equals(factory.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_FACTORY_CLASS).equals(factory.getClass().getName()));
     }
 
     @Test
@@ -22,7 +22,7 @@ public class JSONFactoryTest {
         final JSONFactory factory = JSONFactory.newFactory();
         final JSONParser parser = factory.newParser();
         assertNotNull(parser);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_PARSER).equals(parser.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_PARSER_CLASS).equals(parser.getClass().getName()));
     }
 
     @Test
@@ -30,7 +30,7 @@ public class JSONFactoryTest {
         final JSONFactory factory = JSONFactory.newFactory();
         final JSONSerializer serializer = factory.newSerializer();
         assertNotNull(serializer);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_SERIALIZER).equals(serializer.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_SERIALIZER_CLASS).equals(serializer.getClass().getName()));
     }
 
 }

@@ -1,12 +1,14 @@
 package org.ghotibeaun.json.factory;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
+import org.ghotibeaun.json.converters.Converters;
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
 abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, Iterable<JSONValue<?>> {
@@ -39,7 +41,7 @@ abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, 
     @Override
     public Number getNumber(int index) throws JSONInvalidValueTypeException {
         Number value = null;
-        if (get(index).getType() == JSONValueType.NUMBER) {
+        if (get(index).getType().isNumeric()) {
             final JSONValue<Number> v = (JSONValue<Number>) get(index);
             value = v.getValue();
         } else {
@@ -150,10 +152,10 @@ abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, 
     /* (non-Javadoc)
      * @see org.ghotibeaun.json.JSONListNode#toList()
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public <V> List<V> toList() {
-        // TODO Auto-generated method stub
-        return null;
+    public <V> List<V> toList(Class<?> targetClass) {
+        return (List<V>) Converters.convertToList(this, Optional.empty(), Optional.of(targetClass));  //Converters.convertToList(targetClass, this, Optional.empty());
     }
 
     /* (non-Javadoc)

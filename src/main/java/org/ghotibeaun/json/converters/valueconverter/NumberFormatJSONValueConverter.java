@@ -23,7 +23,7 @@ public class NumberFormatJSONValueConverter extends AbstractJSONValueConverter<S
     }
 
     @Override
-    public <V> String convertValue(V value) throws JSONConversionException {
+    public <V> String getConvertedValue(V value) throws JSONConversionException {
         if (!accept(value)) {
             throw new JSONConversionException(getInvalidMessage(value));
         }

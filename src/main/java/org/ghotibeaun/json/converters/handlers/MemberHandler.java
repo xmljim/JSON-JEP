@@ -59,7 +59,7 @@ public abstract class MemberHandler<M extends Member> {
         } else {
             final Class<?> targetClass = entry.getTargetClass();
             if (value.isArray()) {
-                returnValue = Converters.convertToList(targetClass, (JSONArray)value.getValue(), getValueConverter());
+                returnValue = Converters.convertToList((JSONArray)value.getValue(), Optional.empty(), Optional.of(targetClass));
             } else {
                 returnValue = Converters.convertToClass(targetClass, (JSONObject)value.getValue());
             }
