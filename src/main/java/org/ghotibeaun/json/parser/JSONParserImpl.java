@@ -18,6 +18,7 @@ import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.factory.FactorySettings;
 import org.ghotibeaun.json.factory.NodeFactory;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.jep.EventParser;
 import org.ghotibeaun.json.parser.jep.ParserConfiguration;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
@@ -30,7 +31,7 @@ class JSONParserImpl implements JSONParser {
 
     @Override
     public JSONNode parse(InputStream inputStream) throws JSONParserException {
-        return parse(inputStream, FactorySettings.getSetting(FactorySettings.JSON_INPUTSTREAM_CHARSET));
+        return parse(inputStream, FactorySettings.getSetting(Setting.INPUTSTREAM_CHARSET));
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.ghotibeaun.json.parser.jep.eventprovider;
 import java.nio.ByteBuffer;
 
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
 import org.ghotibeaun.json.parser.jep.eventhandler.JSONEventHandler;
 import org.ghotibeaun.json.parser.jep.eventhandler.event.JSONEvent;
@@ -32,7 +33,7 @@ public abstract class EventProvider implements JSONEventProvider {
 
     public static EventProvider newDefaultEventProvider() {
         //return new DefaultEventProvider();
-        return FactorySettings.createFactoryClass(FactorySettings.JSON_EVENT_PROVIDER_CLASS);
+        return FactorySettings.createFactoryClass(Setting.EVENT_PROVIDER_CLASS);
     }
 
 

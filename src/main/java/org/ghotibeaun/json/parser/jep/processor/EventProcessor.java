@@ -4,6 +4,7 @@ import java.io.InputStream;
 
 import org.ghotibeaun.json.exception.JSONEventParserException;
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
 import org.ghotibeaun.json.parser.jep.eventprovider.JSONEventProvider;
 
@@ -20,7 +21,7 @@ public abstract class EventProcessor implements JSONEventProcessor {
 
     public static EventProcessor newDefaultProcessor() {
         //return new JSONBufferedEventProcessor();
-        return FactorySettings.createFactoryClass(FactorySettings.JSON_EVENT_PROCESSOR_CLASS);
+        return FactorySettings.createFactoryClass(Setting.EVENT_PROCESSOR_CLASS);
     }
 
     @Override

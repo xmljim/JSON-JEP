@@ -19,6 +19,7 @@ import org.ghotibeaun.json.converters.utils.ClassUtils;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 
 /**
  * Base class for ClassConverters
@@ -35,7 +36,7 @@ public abstract class AbstractClassConverter extends AbstractConverter implement
      */
     public static ClassConverter getClassConverter(Options...option) {
         //return new ClassConverterImpl(option);
-        final Optional<Class<?>> converterClass = FactorySettings.getFactoryClass(FactorySettings.JSON_CLASS_CONVERTER_CLASS);
+        final Optional<Class<?>> converterClass = FactorySettings.getFactoryClass(Setting.CLASS_CONVERTER_CLASS);
         if (converterClass.isPresent()) {
             return (ClassConverter)ClassUtils.createConverter(converterClass.get(), option);
         } else {

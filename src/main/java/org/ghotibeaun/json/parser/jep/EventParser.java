@@ -7,11 +7,12 @@ import java.nio.file.Path;
 
 import org.ghotibeaun.json.exception.JSONEventParserException;
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 
 public abstract class EventParser implements JSONEventParser {
 
     public static EventParser newEventParser() {
-        return FactorySettings.createFactoryClass(FactorySettings.JSON_EVENT_PARSER_CLASS);
+        return FactorySettings.createFactoryClass(Setting.EVENT_PARSER_CLASS);
     }
 
     @Override

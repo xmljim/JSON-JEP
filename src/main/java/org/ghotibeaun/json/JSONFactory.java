@@ -5,6 +5,7 @@ import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.exception.JSONSerializationException;
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.JSONParser;
 import org.ghotibeaun.json.parser.csv.CSVSettings;
 import org.ghotibeaun.json.parser.csv.JSONCSVParser;
@@ -42,12 +43,7 @@ public abstract class JSONFactory {
         //JSONFactory impl = null;
 
         try {
-            /*
-            final Class<JSONFactory> clazz = (Class<JSONFactory>) JSONFactory.class.getClassLoader()
-                    .loadClass(FactorySettings.getSetting(FactorySettings.JSON_FACTORY_CLASS));
-            impl = ClassUtils.createInstance(clazz);
-             */
-            return FactorySettings.createFactoryClass(FactorySettings.JSON_FACTORY_CLASS);
+            return FactorySettings.createFactoryClass(Setting.FACTORY_CLASS);
         } catch (final JSONConversionException e) {
             throw new JSONFactoryException(e);
         }

@@ -1,6 +1,7 @@
 package org.ghotibeaun.json.parser;
 
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.csv.CSVSettings;
 import org.ghotibeaun.json.parser.csv.JSONCSVParser;
 import org.ghotibeaun.json.parser.csv.JSONCSVParserFactory;
@@ -12,7 +13,7 @@ public class ParserFactory {
     }
 
     public static JSONParser getParser() {
-        return FactorySettings.createFactoryClass(FactorySettings.JSON_PARSER_CLASS);
+        return FactorySettings.createFactoryClass(Setting.PARSER_CLASS);
     }
 
     public static JSONCSVParser getCsvParser(CSVSettings settings) {

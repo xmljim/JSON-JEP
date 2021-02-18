@@ -1,6 +1,7 @@
 package org.ghotibeaun.json.serializer;
 
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 
 public final class SerializationFactory {
 
@@ -21,7 +22,7 @@ public final class SerializationFactory {
 
         return serializer;
          */
-        return FactorySettings.createFactoryClass(FactorySettings.JSON_SERIALIZER_CLASS);
+        return FactorySettings.createFactoryClass(Setting.SERIALIZER_CLASS);
     }
 
     //@SuppressWarnings("unchecked")
@@ -38,6 +39,6 @@ public final class SerializationFactory {
 
         return serializer;
          */
-        return FactorySettings.createFactoryClass(FactorySettings.XML_SERIALIZER_CLASS);
+        return FactorySettings.createFactoryClass(Setting.XML_SERIALIZER_CLASS);
     }
 }

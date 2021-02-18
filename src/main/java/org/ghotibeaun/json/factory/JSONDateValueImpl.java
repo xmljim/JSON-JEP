@@ -38,7 +38,7 @@ class JSONDateValueImpl extends AbstractJSONValue<Date> {
     @Override
     public String toString() {
 
-        final SimpleDateFormat sdf = new SimpleDateFormat(FactorySettings.getSetting(FactorySettings.JSON_DATE_FORMAT));
+        final SimpleDateFormat sdf = new SimpleDateFormat(FactorySettings.getSetting(Setting.DATE_FORMAT));
         return "\"" + sdf.format(getValue()) + "\"";
     }
 

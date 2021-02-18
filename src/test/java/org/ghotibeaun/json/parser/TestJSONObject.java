@@ -15,6 +15,11 @@ import org.ghotibeaun.json.JSONValueType;
 
 public class TestJSONObject implements JSONObject {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 1L;
+
     public TestJSONObject() {
         // TODO Auto-generated constructor stub
     }
