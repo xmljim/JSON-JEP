@@ -1,9 +1,11 @@
 package org.ghotibeaun.json;
 
+import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.exception.JSONSerializationException;
 import org.ghotibeaun.json.factory.FactorySettings;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.JSONParser;
 import org.ghotibeaun.json.parser.csv.CSVSettings;
 import org.ghotibeaun.json.parser.csv.JSONCSVParser;
@@ -36,19 +38,17 @@ public abstract class JSONFactory {
      *
      * @return a new factory
      */
-    @SuppressWarnings("unchecked")
+    //@SuppressWarnings("unchecked")
     public static JSONFactory newFactory() throws JSONFactoryException {
-        JSONFactory impl = null;
+        //JSONFactory impl = null;
 
         try {
-            final Class<JSONFactory> clazz = (Class<JSONFactory>) JSONFactory.class.getClassLoader()
-                    .loadClass(FactorySettings.getSetting(FactorySettings.JSON_FACTORY));
-            impl = clazz.newInstance();
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+            return FactorySettings.createFactoryClass(Setting.FACTORY_CLASS);
+        } catch (final JSONConversionException e) {
             throw new JSONFactoryException(e);
         }
 
-        return impl;
+
     }
 
     public static JSONFactory newFactory(boolean useDefaultSettings) throws JSONFactoryException {
@@ -71,9 +71,9 @@ public abstract class JSONFactory {
      * @return the {@link JSONSerializer}
      */
     public abstract JSONSerializer newSerializer() throws JSONSerializationException;
-    
+
     public abstract JSONCSVParser newCsvParser(CSVSettings settings);
-    
+
     public abstract JSONCSVParser newCsvParser();
 
 

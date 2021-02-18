@@ -36,7 +36,7 @@ import java.util.List;
  *
  */
 public class ByteSequence {
-    
+
     ArrayList<CardinalityByteRange> sequence = new ArrayList<>();
 
     /**
@@ -45,7 +45,7 @@ public class ByteSequence {
     private  ByteSequence() {
         // TODO Auto-generated constructor stub
     }
-    
+
     /**
      * Creates a new ByteSequence with no sequence items
      * @return a new ByteSequence
@@ -54,7 +54,7 @@ public class ByteSequence {
         final ByteSequence newSequence = new ByteSequence();
         return newSequence;
     }
-    
+
     /**
      * Initializes a ByteSequence with the first sequence item as a single byte value
      * @param b the byte value to add to the first sequence item
@@ -65,7 +65,7 @@ public class ByteSequence {
         newSequence.add(ByteRange.startWith(b));
         return newSequence;
     }
-    
+
     /**
      * Initializes a new ByteSequence with each element in the byte array as
      * separate sequence items.  This is the equivalant to
@@ -80,7 +80,7 @@ public class ByteSequence {
         for (final byte b : byteSequence) {
             newSequence.add(b);
         }
-        
+
         return newSequence;
     }
 
@@ -106,7 +106,7 @@ public class ByteSequence {
         newSequence.add(range);
         return newSequence;
     }
-    
+
     /**
      * Initializesa new ByteSequence by creating a first sequence item containing byte values
      * starting from one value up to an end byte value, inclusive.  This is the equivalent
@@ -125,7 +125,7 @@ public class ByteSequence {
         newSequence.add(ByteRange.startWith(start, end));
         return newSequence;
     }
-    
+
     /**
      * Initializes a new ByteSequence containing a variable number of byte values
      * @param anyOf a variable number of byte values that will be included as a single ByteRange in
@@ -154,7 +154,7 @@ public class ByteSequence {
     public ByteSequence whichRepeatsMoreThan(int numberStart) {
 
     }*/
-    
+
 
     /**
      * Adds a new ByteRange sequence to an existing ByteSequence
@@ -196,7 +196,7 @@ public class ByteSequence {
         add(sequence);
         return this;
     }
-    
+
     /**
      * Adds a new ByteRange sequence to the existing ByteSequence
      * @param range The ByteRange
@@ -206,7 +206,7 @@ public class ByteSequence {
         add(range);
         return this;
     }
-    
+
     /**
      * Matches the byte against the current sequence
      * @param b the byte to match
@@ -214,9 +214,9 @@ public class ByteSequence {
      * sequence's ByteRange. Otherwise, it will return false
      */
     public boolean matches(byte b) {
-        return ((sequence.size() == 1) && byteIsInRange(b, 0));
+        return sequence.size() == 1 && byteIsInRange(b, 0);
     }
-    
+
     /**
      * Internal method to evaluate whether a given sequence's ByteRange contains the specified byte value
      * @param b the byte value to compare
@@ -243,12 +243,12 @@ public class ByteSequence {
             }
             i++;
         }
-        
+
         return match;
     }
 
 
-    
+
     /**
      * Protected method to allow other ByteSequences to be added to the current ByteSequence
      * @return
@@ -265,7 +265,7 @@ public class ByteSequence {
         add(ByteRange.startWith(b));
     }
 
-    
+
     /**
      * Adds a varargs of bytes to a ByteRange, and adds the ByteRange
      * as the next sequence
@@ -273,7 +273,7 @@ public class ByteSequence {
      */
     private void add(byte... anyOf) {
         final ByteRange range = ByteRange.empty();
-        
+
         for (final byte b : anyOf) {
             range.andAdd(b);
         }
@@ -306,7 +306,7 @@ public class ByteSequence {
     private void add(ByteSequence sequence) {
         this.sequence.addAll(sequence.getSequenceItems());
     }
-    
+
     /**
      * Adds a new sequence from a ByteRange
      * @param range
@@ -328,76 +328,21 @@ public class ByteSequence {
     }
 
     /**
-     * Class that holds the sequence's cardinality.  Not fully implemented
-     * @author Jim Earley (xml.jim@gmail.com)
-     *
-     */
-    private static class Cardinality {
-        private int minimum = 0;
-        private Number maximum;
-        
-        public Cardinality(int min, Number max) {
-            this.minimum = min;
-            this.maximum = max;
-        }
-        
-        public int getMinimum() {
-            return minimum;
-        }
-
-        public void setMinimum(int min) {
-            minimum = min;
-        }
-        
-        public Number getMaximum() {
-            return maximum;
-        }
-
-        public void setMaximum(Number max) {
-            maximum = max;
-        }
-
-
-        public static Cardinality defaultSingleInstance() {
-            return new Cardinality(1, 1);
-        }
-        
-        public static Cardinality oneOrMore() {
-            return new Cardinality(1, Double.POSITIVE_INFINITY);
-        }
-    }
-    
-    /**
      * Wrapper class that represents a sequence item. It contains the ByteRange and Cardinality
      * @author Jim Earley (xml.jim@gmail.com)
      *
      */
     private static class CardinalityByteRange {
         private final ByteRange range;
-        private Cardinality cardinality;
 
         public CardinalityByteRange(ByteRange range) {
             this.range = range;
-            this.cardinality = Cardinality.defaultSingleInstance();
-        }
-
-        public CardinalityByteRange(ByteRange range, Cardinality cardinality) {
-            this.range = range;
-            this.cardinality = cardinality;
         }
 
         public ByteRange getRange() {
             return range;
         }
-
-        public Cardinality getCardinality() {
-            return cardinality;
-        }
-
-        public void setCardinality(Cardinality cardinality) {
-            this.cardinality = cardinality;
-        }
     }
-    
-    
+
+
 }

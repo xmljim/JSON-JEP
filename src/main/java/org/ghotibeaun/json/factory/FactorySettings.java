@@ -1,16 +1,15 @@
 package org.ghotibeaun.json.factory;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
-import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONFactory;
-import org.ghotibeaun.json.JSONObject;
-import org.ghotibeaun.json.JSONValue;
+import org.ghotibeaun.json.converters.utils.ClassUtils;
+import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONRuntimeException;
-import org.ghotibeaun.json.parser.JSONParser;
-import org.ghotibeaun.json.serializer.JSONSerializer;
 
 /**
  * Holds all the various factories' settings for instantiation of various JSON objects. All keys defined have
@@ -36,87 +35,13 @@ public class FactorySettings extends Properties {
      */
     private static final long serialVersionUID = 1L;
 
-    /**
-     * Key for the {@link JSONFactory} implementation.
-     */
-    public static final String JSON_FACTORY = "org.ghotibeaun.json.factory";
-
-    /**
-     * Key for the {@linkplain JSONParser} implementation
-     */
-    public static final String JSON_PARSER = "org.ghotibeaun.json.parser";
-
-    /**
-     * Key for the {@linkplain JSONSerializer} implementation
-     */
-    public static final String JSON_SERIALIZER = "org.ghotibeaun.json.serializer";
-
-    /**
-     * Key for the {@linkplain JSONObject} implementation
-     */
-    public static final String JSON_OBJECT = "org.ghotibeaun.json.object";
-
-    /**
-     * Key for the {@linkplain JSONArray} implementation
-     */
-    public static final String JSON_ARRAY = "org.ghotibeaun.json.array";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;JSONObject&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_OBJECT = "org.ghotibeaun.json.value.object";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;JSONArray&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_ARRAY = "org.ghotibeaun.json.value.array";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;Boolean&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_BOOLEAN = "org.ghotibeaun.json.value.boolean";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;Date&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_DATE = "org.ghotibeaun.json.value.date";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;NullObject&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_NULL = "org.ghotibeaun.json.value.null";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;Number&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_NUMBER = "org.ghotibeaun.json.value.number";
-
-    /**
-     * Key for the {@linkplain JSONValue} implementation (specifically the <code>JSONValue&lt;String&gt;</code> instance)
-     */
-    public static final String JSON_VALUE_STRING = "org.ghotibeaun.json.value.string";
-
-    /**
-     * Key for the InputStream Character Set
-     */
-    public static final String JSON_INPUTSTREAM_CHARSET = "org.ghotibeaun.json.inputstream.charset";
-
-    /**
-     * Key for the Date format to apply to date objects, uses the {@linkplain SimpleDateFormat syntax}
-     */
-    public static final String JSON_DATE_FORMAT = "org.ghotibeaun.json.date.format";
-
-    /**
-     * Key for the XML Serializer
-     */
-    public static final String XML_SERIALIZER = "org.ghotibeaun.json.xmlserializer";
-
-
     private static FactorySettings instance = null;
     private Properties defaults;
     private boolean useDefaultSettings;
-
+    private final FactoryClassCache cache;
     private FactorySettings() {
+        cache = new FactoryClassCache();
+
         try {
             super.load(this.getClass().getResourceAsStream("/org/ghotibeaun/json/factory/jsonlib.properties"));
             defaults = new Properties();
@@ -125,10 +50,18 @@ public class FactorySettings extends Properties {
                 final String ks = (String) k;
 
                 defaults.setProperty(ks, this.getProperty(ks));
+
+                //final boolean isClass = !Arrays.stream(excludeFromCache).anyMatch(key -> key.equals(ks));
+
+                final Setting setting = Setting.fromPropertyName(ks);
+                if (setting != null && setting.isClassValue()) {
+                    cache.cacheClass(ks, this.getProperty(ks));
+                }
             }
 
             useDefaultSettings = false;
-        } catch (final IOException e) {
+
+        } catch (final IOException | ClassNotFoundException e) {
             throw new JSONRuntimeException(e);
         }
     }
@@ -141,6 +74,37 @@ public class FactorySettings extends Properties {
         return instance;
     }
 
+    public static <T> T createFactoryClass(Setting setting) throws JSONFactoryException {
+        if (setting.isClassValue()) {
+            return createFactoryClass(setting.getPropertyName());
+        } else {
+            throw new JSONFactoryException("Setting [" + setting.getPropertyName() + "] is not a cached class");
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T createFactoryClass(String key) throws JSONFactoryException {
+        final Optional<Class<?>> clazz = getInstance().getCache().getClassFromCache(key);
+        if (clazz.isPresent()) {
+            //System.out.println("** Create Instance [" + key + "] -- " + clazz.get().getName());
+            return (T)ClassUtils.createInstance(clazz.get());
+        } else {
+            throw new JSONFactoryException("No class found for key: " + key);
+        }
+    }
+
+    public static Optional<Class<?>> getFactoryClass(String key) {
+        return getInstance().getCache().getClassFromCache(key);
+    }
+
+    public static Optional<Class<?>> getFactoryClass(Setting setting) {
+        return getFactoryClass(setting.getPropertyName());
+    }
+
+    public FactoryClassCache getCache() {
+        return cache;
+    }
+
     /**
      * Applies a setting.  By default, this will configure change use from the default settings to your custom settings when you
      * call {@link #getSetting(String)}. If you wish to use the default again, you can override with {@link #getSetting(String, boolean)}, and
@@ -149,9 +113,29 @@ public class FactorySettings extends Properties {
      * @param name the setting key.  These are defined as constants
      * @param value the setting value
      */
-    public static void applySetting(String name, String value) {
+    public static void applySetting(String name, String value) throws JSONFactoryException {
         getInstance().setProperty(name, value);
+        final Setting setting = Setting.fromPropertyName(name);
+        if (setting != null && setting.isClassValue()) {
+            try {
+                getInstance().getCache().cacheClass(name, value);
+            } catch (final ClassNotFoundException e) {
+                throw new JSONFactoryException(e);
+            }
+        }
         setUseDefaultSettings(false);
+    }
+
+    public static void applySetting(Setting setting, String value) throws JSONFactoryException {
+        getInstance().setProperty(setting.getPropertyName(), value);
+        setUseDefaultSettings(false);
+        if (setting.isClassValue()) {
+            try {
+                getInstance().getCache().cacheClass(setting.getPropertyName(), value);
+            } catch (final ClassNotFoundException e) {
+                throw new JSONFactoryException(e);
+            }
+        }
     }
 
     /**
@@ -164,6 +148,10 @@ public class FactorySettings extends Properties {
      */
     public static String getSetting(String name) {
         return getSetting(name, getInstance().useDefaultSettings);
+    }
+
+    public static String getSetting(Setting setting) {
+        return getSetting(setting.getPropertyName());
     }
 
     /**
@@ -182,6 +170,10 @@ public class FactorySettings extends Properties {
         }
     }
 
+    public static String getSetting(Setting setting, boolean useDefault) {
+        return getSetting(setting.getPropertyName(), useDefault);
+    }
+
     /**
      * Return the default setting
      * @param name the Setting key
@@ -192,6 +184,10 @@ public class FactorySettings extends Properties {
         return getSetting(name, true);
     }
 
+    public static String getDefaultSetting(Setting setting) {
+        return getDefaultSetting(setting.getPropertyName());
+    }
+
     /**
      * Return the custom setting
      * @param name the Setting key
@@ -200,6 +196,10 @@ public class FactorySettings extends Properties {
      */
     public static String getCustomSetting(String name) {
         return getSetting(name, false);
+    }
+
+    public static String getCustomSetting(Setting setting) {
+        return getCustomSetting(setting.getPropertyName());
     }
 
     /**
@@ -220,4 +220,24 @@ public class FactorySettings extends Properties {
         return getInstance().useDefaultSettings;
     }
 
+    private class FactoryClassCache {
+        private final Map<String, Class<?>> cache = new HashMap<>();
+
+        public FactoryClassCache() {
+
+        }
+
+        public void cacheClass(String key, String className) throws ClassNotFoundException {
+            final Class<?> clazz = Class.forName(className, true, this.getClass().getClassLoader());
+            //System.out.println("Caching class: [" + key + "] -- " + clazz.getName());
+            cache.put(key, clazz);
+        }
+
+        public Optional<Class<?>> getClassFromCache(String key) {
+            return Optional.ofNullable(cache.get(key));
+        }
+
+
+
+    }
 }

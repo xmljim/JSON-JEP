@@ -2,15 +2,18 @@ package org.ghotibeaun.json.factory;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 import java.util.Set;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONMapNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
+import org.ghotibeaun.json.converters.Converters;
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
 abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
@@ -33,7 +36,7 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
 
     @Override
     public void put(String key, Object value) {
-        final JSONValue<?> v = NodeFactory.createFromObject(value);
+        final JSONValue<?> v = Converters.convertToJSONValue(value, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(value);
         if (v == null) {
             throw new JSONInvalidValueTypeException(value.getClass().getName() + " is not a valid value type");
         }
@@ -57,7 +60,7 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
     public void putAllRaw(Map<String, Object> map) {
         final Set<String> keys = map.keySet();
         for (final String key : keys) {
-            final JSONValue<?> v = NodeFactory.createFromObject(map.get(key));
+            final JSONValue<?> v = Converters.convertToJSONValue(map.get(key), Optional.empty(), Optional.empty()); //NodeFactory.createFromObject(map.get(key));
             put(key, v);
         }
 
@@ -82,6 +85,11 @@ abstract class AbstractMapNode extends AbstractJSONNode implements JSONMapNode {
     @Override
     public Iterable<String> keys() {
         return jsonMap.keySet();
+    }
+
+    @Override
+    public Iterator<String> keySet() {
+        return jsonMap.keySet().iterator();
     }
 
     @Override

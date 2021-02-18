@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ghotibeaun.json.JSONArray;
+import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.NullObject;
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
-class AbstractJSONObject extends AbstractMapNode implements JSONObject {
+abstract class AbstractJSONObject extends AbstractMapNode implements JSONObject {
 
     /**
      *
@@ -115,6 +116,8 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
             if (get(key).getType().isNumeric()) {
                 final JSONValue<Number> v = (JSONValue<Number>)get(key);
                 value = v.getValue();
+            } else {
+                throw new JSONInvalidValueTypeException("Cannot retrieve value as a number");
             }
         }
 
@@ -207,6 +210,52 @@ class AbstractJSONObject extends AbstractMapNode implements JSONObject {
         }
 
         return list;
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.ghotibeaun.json.factory.AbstractJSONObject#compareTo(org.ghotibeaun.json.JSONNode)
+     */
+    @Override
+    public int compareTo(JSONNode other) {
+        if (other.isObject()) {
+            final JSONObject compare = (JSONObject)other;
+
+            if (this.size() == compare.size()) {
+                int comp = 0;
+                for (final String key : keys()) {
+                    if (compare.containsKey(key)) {
+
+                        final JSONValue<?> val = get(key);
+                        final JSONValue<?> compValue = compare.get(key);
+
+                        if (val.getType().equals(compValue.getType())) {
+                            if (val.isPrimitive()) {
+                                if (val.getValue() == null && compValue.getValue() != null) {
+                                    comp += 1;
+                                } else if (val.getValue() != null && compValue.getValue() == null) {
+                                    comp += 1;
+                                } else if (val.getValue() == null && compValue.getValue() == null) {
+                                    // nothing to do
+                                } else {
+                                    comp += val.getValue().equals(compValue.getValue()) ? 0 : 1;
+                                }
+                            } else {
+                                comp += ((JSONNode)val.getValue()).compareTo((JSONNode)compValue.getValue());
+                            }
+                        } else {
+                            comp += 1;
+                        }
+                    }
+                }
+
+                return comp;
+            } else {
+                return 1;
+            }
+        } else {
+            return 1;
+        }
     }
 
 

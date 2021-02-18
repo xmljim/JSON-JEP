@@ -8,7 +8,7 @@ import java.io.Serializable;
  *
  * @param <T> the value type
  */
-public interface JSONValue<T> extends Serializable {
+public interface JSONValue<T> extends Serializable, Comparable<JSONValue<T>> {
     /**
      * Return the value
      * @return the value
@@ -56,6 +56,11 @@ public interface JSONValue<T> extends Serializable {
      */
     String prettyPrint();
 
+    /**
+     * Pretty print using a specified indent value
+     * @param indent the indent value
+     * @return a pretty-printed JSON structure
+     */
     String prettyPrint(int indent);
 
 

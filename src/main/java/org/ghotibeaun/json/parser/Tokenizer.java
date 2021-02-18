@@ -67,12 +67,12 @@ class Tokenizer {
 
     public Tokenizer(Reader reader) {
         this.reader = reader.markSupported() ? reader : new BufferedReader(reader);
-        this.eof = false;
-        this.usePrevious = false;
-        this.previous = 0;
-        this.index = 0;
-        this.character = 1;
-        this.line = 1;
+        eof = false;
+        usePrevious = false;
+        previous = 0;
+        index = 0;
+        character = 1;
+        line = 1;
     }
 
 
@@ -82,13 +82,13 @@ class Tokenizer {
      * the next number or identifier.
      */
     public void back() throws JSONParserException {
-        if (this.usePrevious || (this.index <= 0)) {
+        if (usePrevious || index <= 0) {
             throw new JSONParserException("Stepping back two steps is not supported");
         }
-        this.index -= 1;
-        this.character -= 1;
-        this.usePrevious = true;
-        this.eof = false;
+        index -= 1;
+        character -= 1;
+        usePrevious = true;
+        eof = false;
     }
 
 
@@ -99,20 +99,20 @@ class Tokenizer {
      * @return  An int between 0 and 15, or -1 if c was not a hex digit.
      */
     public static int dehexchar(char c) {
-        if ((c >= '0') && (c <= '9')) {
+        if (c >= '0' && c <= '9') {
             return c - '0';
         }
-        if ((c >= 'A') && (c <= 'F')) {
+        if (c >= 'A' && c <= 'F') {
             return c - ('A' - 10);
         }
-        if ((c >= 'a') && (c <= 'f')) {
+        if (c >= 'a' && c <= 'f') {
             return c - ('a' - 10);
         }
         return -1;
     }
 
     public boolean end() {
-        return this.eof && !this.usePrevious;
+        return eof && !usePrevious;
     }
 
 
@@ -138,33 +138,33 @@ class Tokenizer {
      */
     public char next() throws JSONParserException {
         int c;
-        if (this.usePrevious) {
-            this.usePrevious = false;
-            c = this.previous;
+        if (usePrevious) {
+            usePrevious = false;
+            c = previous;
         } else {
             try {
-                c = this.reader.read();
+                c = reader.read();
             } catch (final IOException exception) {
                 throw new JSONParserException(exception);
             }
 
             if (c <= 0) { // End of stream
-                this.eof = true;
+                eof = true;
                 c = 0;
             }
         }
-        this.index += 1;
-        if (this.previous == '\r') {
-            this.line += 1;
-            this.character = c == '\n' ? 0 : 1;
+        index += 1;
+        if (previous == '\r') {
+            line += 1;
+            character = c == '\n' ? 0 : 1;
         } else if (c == '\n') {
-            this.line += 1;
-            this.character = 0;
+            line += 1;
+            character = 0;
         } else {
-            this.character += 1;
+            character += 1;
         }
-        this.previous = (char) c;
-        return this.previous;
+        previous = (char) c;
+        return previous;
     }
 
 
@@ -221,7 +221,7 @@ class Tokenizer {
     public char nextClean() throws JSONParserException {
         for (;;) {
             final char c = this.next();
-            if ((c == 0) || (c > ' ')) {
+            if (c == 0 || c > ' ') {
                 return c;
             }
         }
@@ -245,46 +245,46 @@ class Tokenizer {
         for (;;) {
             c = this.next();
             switch (c) {
-            case 0:
-            case '\n':
-            case '\r':
-                throw this.syntaxError("Unterminated string");
-            case '\\':
-                c = this.next();
-                switch (c) {
-                case 'b':
-                    sb.append('\b');
-                    break;
-                case 't':
-                    sb.append('\t');
-                    break;
-                case 'n':
-                    sb.append('\n');
-                    break;
-                case 'f':
-                    sb.append('\f');
-                    break;
-                case 'r':
-                    sb.append('\r');
-                    break;
-                case 'u':
-                    sb.append((char)Integer.parseInt(this.next(4), 16));
-                    break;
-                case '"':
-                case '\'':
+                case 0:
+                case '\n':
+                case '\r':
+                    throw this.syntaxError("Unterminated string");
                 case '\\':
-                case '/':
-                    sb.append(c);
+                    c = this.next();
+                    switch (c) {
+                        case 'b':
+                            sb.append('\b');
+                            break;
+                        case 't':
+                            sb.append('\t');
+                            break;
+                        case 'n':
+                            sb.append('\n');
+                            break;
+                        case 'f':
+                            sb.append('\f');
+                            break;
+                        case 'r':
+                            sb.append('\r');
+                            break;
+                        case 'u':
+                            sb.append((char)Integer.parseInt(this.next(4), 16));
+                            break;
+                        case '"':
+                        case '\'':
+                        case '\\':
+                        case '/':
+                            sb.append(c);
+                            break;
+                        default:
+                            throw this.syntaxError("Illegal escape.");
+                    }
                     break;
                 default:
-                    throw this.syntaxError("Illegal escape.");
-                }
-                break;
-            default:
-                if (c == quote) {
-                    return sb.toString();
-                }
-                sb.append(c);
+                    if (c == quote) {
+                        return sb.toString();
+                    }
+                    sb.append(c);
             }
         }
     }
@@ -300,7 +300,7 @@ class Tokenizer {
         final StringBuffer sb = new StringBuffer();
         for (;;) {
             final char c = this.next();
-            if ((c == delimiter) || (c == 0) || (c == '\n') || (c == '\r')) {
+            if (c == delimiter || c == 0 || c == '\n' || c == '\r') {
                 if (c != 0) {
                     this.back();
                 }
@@ -322,8 +322,8 @@ class Tokenizer {
         final StringBuffer sb = new StringBuffer();
         for (;;) {
             c = this.next();
-            if ((delimiters.indexOf(c) >= 0) || (c == 0) ||
-                    (c == '\n') || (c == '\r')) {
+            if (delimiters.indexOf(c) >= 0 || c == 0 ||
+                    c == '\n' || c == '\r') {
                 if (c != 0) {
                     this.back();
                 }
@@ -346,15 +346,15 @@ class Tokenizer {
         String string;
 
         switch (c) {
-        case '"':
-        case '\'':
-            return this.nextString(c);
-        case '{':
-            this.back();
-            return new TokenMap(this);
-        case '[':
-            this.back();
-            return new TokenList(this);
+            case '"':
+            case '\'':
+                return this.nextString(c);
+            case '{':
+                this.back();
+                return new TokenMap(this);
+            case '[':
+                this.back();
+                return new TokenList(this);
         }
 
         /*
@@ -367,7 +367,7 @@ class Tokenizer {
          */
 
         final StringBuffer sb = new StringBuffer();
-        while ((c >= ' ') && (",:]}/\\\"[{;=#".indexOf(c) < 0)) {
+        while (c >= ' ' && ",:]}/\\\"[{;=#".indexOf(c) < 0) {
             sb.append(c);
             c = this.next();
         }
@@ -410,18 +410,18 @@ class Tokenizer {
          */
 
         final char b = string.charAt(0);
-        if (((b >= '0') && (b <= '9')) || (b == '.') || (b == '-') || (b == '+')) {
+        if (b >= '0' && b <= '9' || b == '.' || b == '-' || b == '+') {
             try {
-                if ((string.indexOf('.') > -1) ||
-                        (string.indexOf('e') > -1) || (string.indexOf('E') > -1)) {
+                if (string.indexOf('.') > -1 ||
+                        string.indexOf('e') > -1 || string.indexOf('E') > -1) {
                     d = Double.valueOf(string);
                     if (!d.isInfinite() && !d.isNaN()) {
                         return d;
                     }
                 } else {
-                    final Long myLong = new Long(string);
+                    final Long myLong = Long.valueOf(string);//new Long(string);
                     if (myLong.longValue() == myLong.intValue()) {
-                        return new Integer(myLong.intValue());
+                        return Integer.valueOf(string);//new Integer(myLong.intValue());
                     } else {
                         return myLong;
                     }
@@ -443,17 +443,17 @@ class Tokenizer {
     public char skipTo(char to) throws JSONParserException {
         char c;
         try {
-            final int startIndex = this.index;
-            final int startCharacter = this.character;
-            final int startLine = this.line;
-            this.reader.mark(Integer.MAX_VALUE);
+            final int startIndex = index;
+            final int startCharacter = character;
+            final int startLine = line;
+            reader.mark(Integer.MAX_VALUE);
             do {
                 c = this.next();
                 if (c == 0) {
-                    this.reader.reset();
-                    this.index = startIndex;
-                    this.character = startCharacter;
-                    this.line = startLine;
+                    reader.reset();
+                    index = startIndex;
+                    character = startCharacter;
+                    line = startLine;
                     return c;
                 }
             } while (c != to);
@@ -484,8 +484,8 @@ class Tokenizer {
      */
     @Override
     public String toString() {
-        return " at " + this.index + " [character " + this.character + " line " +
-                this.line + "]";
+        return " at " + index + " [character " + character + " line " +
+                line + "]";
     }
 
 }

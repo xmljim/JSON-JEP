@@ -1,8 +1,5 @@
 package org.ghotibeaun.json.factory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.ghotibeaun.json.JSONValue;
 
 class JSONArrayImpl extends AbstractJSONArray implements Iterable<JSONValue<?>> {
@@ -23,7 +20,7 @@ class JSONArrayImpl extends AbstractJSONArray implements Iterable<JSONValue<?>> 
 
         for (int i = 0; i < this.size(); i++) {
             builder.append(get(i).toString());
-            if (i < (size() - 1)) {
+            if (i < size() - 1) {
                 builder.append(",");
             }
         }
@@ -45,7 +42,7 @@ class JSONArrayImpl extends AbstractJSONArray implements Iterable<JSONValue<?>> 
     @Override
     public String prettyPrint(int indent) {
         final StringBuilder startStopIndent = new StringBuilder();
-        for (int a = 0; a < ((indent * 4)); a++) {
+        for (int a = 0; a < indent * 4; a++) {
             startStopIndent.append(" ");
         }
 
@@ -61,7 +58,7 @@ class JSONArrayImpl extends AbstractJSONArray implements Iterable<JSONValue<?>> 
             builder.append(startStopIndent.toString());
             builder.append(indentString);
             builder.append(get(i).prettyPrint(indent + 1));
-            if (pos < (size - 1)) {
+            if (pos < size - 1) {
                 builder.append(",");
             }
             pos++;
@@ -72,19 +69,6 @@ class JSONArrayImpl extends AbstractJSONArray implements Iterable<JSONValue<?>> 
 
         return builder.toString();
 
-    }
-
-    @Override
-    public <V> List<V> toList(){
-        final List<V> list = new ArrayList<>();
-        for (final JSONValue<?> val : getValues()) {
-            @SuppressWarnings("unchecked")
-            final
-            JSONValue<V> cast = (JSONValue<V>)val;
-            list.add(cast.getValue());
-        }
-
-        return list;
     }
 
 }

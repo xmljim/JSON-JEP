@@ -1,6 +1,7 @@
 package org.ghotibeaun.json;
 
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,6 +80,8 @@ public interface JSONMapNode extends JSONNode {
     <V> List<V> valueList();
 
     Iterable<String> keys();
+
+    Iterator<String> keySet();
 
     /**
      * Returns a value based on a specific key

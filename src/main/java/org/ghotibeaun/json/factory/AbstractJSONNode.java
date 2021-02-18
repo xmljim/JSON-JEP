@@ -24,8 +24,6 @@ abstract class AbstractJSONNode implements JSONNode {
     public abstract String prettyPrint();
 
     @Override
-    public int compareTo(JSONNode other) {
-        return this.toJSONString().compareTo(other.toJSONString());
-    }
+    public abstract int compareTo(JSONNode other);
 
 }

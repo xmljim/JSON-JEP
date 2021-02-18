@@ -1,10 +1,12 @@
 package org.ghotibeaun.json.jsonpath;
 
 import java.io.InputStream;
+import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONValue;
+import org.ghotibeaun.json.converters.Converters;
 import org.ghotibeaun.json.factory.NodeFactory;
 import org.ghotibeaun.json.parser.ParserFactory;
 
@@ -96,7 +98,7 @@ class JSONPathImpl implements JSONPath {
 
         } else {
             final Object o = JsonPath.using(configuration).parse(context).read(getJsonPath());
-            final JSONValue<?> val = NodeFactory.createFromObject(o);
+            final JSONValue<?> val = Converters.convertToJSONValue(o, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(o);
 
             if (!val.isArray()) {
                 final JSONArray array = NodeFactory.newJSONArray();

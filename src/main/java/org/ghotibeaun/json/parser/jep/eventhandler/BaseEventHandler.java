@@ -45,7 +45,7 @@ public abstract class BaseEventHandler extends EventHandler {
                 break;
             case OBJECT_END:
                 objectStack.pop();
-                final String objKey = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : (keyStack.size() > 0 ? keyStack.pop() : "$");
+                final String objKey = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.size() > 0 ? keyStack.pop() : "$";
                 jsonObjectEnd(objKey);
                 break;
             case STRING_START:
@@ -96,8 +96,12 @@ public abstract class BaseEventHandler extends EventHandler {
 
 
     private String getKeyValue() {
-        return objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
+        //return objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
+        final JSONValueType objectType = objectStack.peek();
+        return objectType != null ? objectType == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop() : null;
     }
+
+
 
 
 
@@ -148,21 +152,21 @@ public abstract class BaseEventHandler extends EventHandler {
         final String key = handleValue(event, JSONValueType.NUMBER);
 
         if (data.contains(".")) {
-        	
-        	switch (getParserSettings().getUseFloatingPointType()) {
-        	    case BIG_DECIMAL:
-        	        final BigDecimal bd = new BigDecimal(data);
+
+            switch (getParserSettings().getUseFloatingPointType()) {
+                case BIG_DECIMAL:
+                    final BigDecimal bd = new BigDecimal(data);
                     valueBigDecimal(key, bd);
                     break;
-        	    case DOUBLE:
-        	        final Double d = new Double(data);
-        	        valueDouble(key, d);
-        	        break;
-        	    case FLOAT:
-        	        final Float f = new Float(data);
-        	        valueFloat(key, f);
-        	        break;
-        	}
+                case DOUBLE:
+                    final Double d = Double.valueOf(data);//new Double(data);
+                    valueDouble(key, d);
+                    break;
+                case FLOAT:
+                    final Float f = Float.valueOf(data);// Float(data);
+                    valueFloat(key, f);
+                    break;
+            }
 
         } else {
             switch (getParserSettings().getUseNonFloatingPointType()) {
@@ -171,15 +175,15 @@ public abstract class BaseEventHandler extends EventHandler {
                     valueLong(key, bi.longValue());
                     break;
                 case INTEGER:
-                    final Integer i = new Integer(data);
-                    valueInt(key, i.intValue());
+                    final Integer i = Integer.valueOf(data);//ew Integer(data);
+                    valueInt(key, i);
                     break;
                 case LONG:
-                    final Long l = new Long(data);
+                    final Long l = Long.valueOf(data);// Long(data);
                     valueLong(key, l);
                     break;
             }
-            
+
         }
     }
 
@@ -193,7 +197,7 @@ public abstract class BaseEventHandler extends EventHandler {
             vt = JSONValueType.ARRAY;
         }
 
-        this.documentType = vt;
+        documentType = vt;
         objectStack.push(vt);
 
         //push the event to the appropriate method for consumers
@@ -201,16 +205,16 @@ public abstract class BaseEventHandler extends EventHandler {
     }
 
     private boolean isKey() {
-        return (getKeyBit() && awaitingKey &&
-                ((objectStack.peekFirst() != null) && (objectStack.peekFirst() == JSONValueType.OBJECT)));
+        return getKeyBit() && awaitingKey &&
+                objectStack.peekFirst() != null && objectStack.peekFirst() == JSONValueType.OBJECT;
     }
 
     private void setKeyBit(boolean bool) {
-        this.keyBit = bool;
+        keyBit = bool;
     }
 
     private boolean getKeyBit() {
-        return this.keyBit;
+        return keyBit;
     }
 
     private void throwError(JSONEvent event, String message) {

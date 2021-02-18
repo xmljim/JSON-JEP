@@ -1,8 +1,3 @@
-/*
- * Copyright (c) 2019, Flatirons Digital Innovations. All Rights Reserved.
- * This code may not be used without the express written permission
- * of the copyright holder, Flatirons Digital Innovations.
- */
 package org.ghotibeaun.json.jsonpath;
 
 import com.jayway.jsonpath.Criteria;
@@ -17,7 +12,7 @@ import com.jayway.jsonpath.Option;
 public abstract class JSONPathFactory {
 
     /**
-     *
+     * Factory for creating JSONPath queries
      */
     private JSONPathFactory() {
         // TODO Auto-generated constructor stub

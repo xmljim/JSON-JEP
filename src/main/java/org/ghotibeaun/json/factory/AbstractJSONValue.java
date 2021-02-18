@@ -10,7 +10,6 @@ abstract class AbstractJSONValue<T> implements JSONValue<T> {
      */
     private static final long serialVersionUID = -3400969671857411584L;
     private T _value;
-    private final String hint = null;
 
     public AbstractJSONValue() {
         // no-op
@@ -39,6 +38,17 @@ abstract class AbstractJSONValue<T> implements JSONValue<T> {
         _value = value;
 
     }
+
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public int compareTo(JSONValue<T> other) {
+        return ((Comparable<T>)getValue()).compareTo(other.getValue());
+    }
+
+
 
 
 }

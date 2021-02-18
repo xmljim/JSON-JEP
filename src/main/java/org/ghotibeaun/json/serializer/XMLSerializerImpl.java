@@ -86,10 +86,10 @@ class XMLSerializerImpl implements XMLSerializer {
 
             switch (value.getType()) {
                 case ARRAY:
-                    handleJsonArray((JSONArray)value, newElement);
+                    handleJsonArray((JSONArray)value.getValue(), newElement);
                     break;
                 case OBJECT:
-                    handleJsonObject((JSONObject)value, newElement);
+                    handleJsonObject((JSONObject)value.getValue(), newElement);
                     break;
                 default:
                     newElement.setTextContent(value.toString());

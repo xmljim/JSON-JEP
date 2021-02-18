@@ -5,17 +5,17 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.NullObject;
+import org.ghotibeaun.json.converters.Converters;
 import org.junit.Test;
 
 public class NodeFactoryTest {
@@ -24,14 +24,14 @@ public class NodeFactoryTest {
     public void testNewJSONObject() {
         final JSONObject obj = NodeFactory.newJSONObject();
         assertNotNull(obj);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_OBJECT).equals(obj.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(Setting.OBJECT_CLASS).equals(obj.getClass().getName()));
     }
 
     @Test
     public void testNewJSONArray() {
         final JSONArray arr = NodeFactory.newJSONArray();
         assertNotNull(arr);
-        assertTrue(FactorySettings.getSetting(FactorySettings.JSON_ARRAY).equals(arr.getClass().getName()));
+        assertTrue(FactorySettings.getSetting(Setting.ARRAY_CLASS).equals(arr.getClass().getName()));
     }
 
     @Test
@@ -43,7 +43,6 @@ public class NodeFactoryTest {
         testMap.put("longKey", 1000L);
         testMap.put("decimalKey", 3.1415927D);
         testMap.put("floatKey", 1.610339887F);
-        testMap.put("dateKey", Calendar.getInstance().getTime());
         testMap.put("nullValue", null);
 
 
@@ -107,14 +106,6 @@ public class NodeFactoryTest {
     }
 
     @Test
-    public void testNewDateValue() {
-        final Date d = Calendar.getInstance().getTime();
-
-        final JSONValue<Date> v = NodeFactory.newDateValue(d);
-        assertTrue(d.getTime() == v.getValue().getTime());
-    }
-
-    @Test
     public void testNewJSONObjectValue() {
         final Map<String, Object> testMap = new HashMap<>();
         testMap.put("stringKey", "StringValue");
@@ -122,7 +113,6 @@ public class NodeFactoryTest {
         testMap.put("longKey", 1000L);
         testMap.put("decimalKey", 3.1415927D);
         testMap.put("floatKey", 1.610339887F);
-        testMap.put("dateKey", Calendar.getInstance().getTime());
         testMap.put("nullValue", null);
 
         final JSONObject o = NodeFactory.newJSONObject(testMap);
@@ -163,11 +153,11 @@ public class NodeFactoryTest {
     @SuppressWarnings("unchecked")
     @Test
     public void testCreateFromObject() {
-        final JSONValue<?> bool = NodeFactory.createFromObject(Boolean.TRUE);
+        final JSONValue<?> bool = Converters.convertToJSONValue(Boolean.TRUE, Optional.empty(), Optional.empty());//NodeFactory.createFromObject(Boolean.TRUE);
         assertTrue(bool.getType() == JSONValueType.BOOLEAN);
         assertTrue(((JSONValue<Boolean>)bool).getValue() == true);
 
-        final JSONValue<?> nul = NodeFactory.createFromObject(null);
+        final JSONValue<?> nul = Converters.convertToJSONValue(null, Optional.empty(), Optional.empty());
         assertTrue(nul.getType() == JSONValueType.NULL);
         assertTrue(((JSONValue<NullObject>)nul).getValue() == null);
     }

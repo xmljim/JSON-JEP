@@ -1,9 +1,14 @@
 package org.ghotibeaun.json.factory;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.ghotibeaun.json.JSONArray;
+import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
+import org.ghotibeaun.json.converters.Converters;
 import org.ghotibeaun.json.exception.JSONInvalidValueTypeException;
 
 abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, Iterable<JSONValue<?>> {
@@ -36,7 +41,7 @@ abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, 
     @Override
     public Number getNumber(int index) throws JSONInvalidValueTypeException {
         Number value = null;
-        if (get(index).getType() == JSONValueType.NUMBER) {
+        if (get(index).getType().isNumeric()) {
             final JSONValue<Number> v = (JSONValue<Number>) get(index);
             value = v.getValue();
         } else {
@@ -63,7 +68,7 @@ abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, 
         Boolean value = null;
         if (get(index).getType() == JSONValueType.BOOLEAN) {
             final JSONValue<Boolean> v = (JSONValue<Boolean>) get(index);
-            value = v.getValue().booleanValue();
+            value = v.getValue();
         } else {
             throw new JSONInvalidValueTypeException(
                     JSONInvalidValueTypeException.getMessage(JSONValueType.BOOLEAN, get(index).getType()));
@@ -143,4 +148,59 @@ abstract class AbstractJSONArray extends AbstractListNode implements JSONArray, 
 
     @Override
     public abstract String toJSONString();
+
+    /* (non-Javadoc)
+     * @see org.ghotibeaun.json.JSONListNode#toList()
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public <V> List<V> toList(Class<?> targetClass) {
+        return (List<V>) Converters.convertToList(this, Optional.empty(), Optional.of(targetClass));  //Converters.convertToList(targetClass, this, Optional.empty());
+    }
+
+    /* (non-Javadoc)
+     * @see org.ghotibeaun.json.JSONNode#prettyPrint(int)
+     */
+    @Override
+    public abstract String prettyPrint(int indent);
+
+    /* (non-Javadoc)
+     * @see org.ghotibeaun.json.factory.AbstractJSONNode#compareTo(org.ghotibeaun.json.JSONNode)
+     */
+    @Override
+    public int compareTo(JSONNode other) {
+        if (other.isArray()) {
+            final JSONArray compare = (JSONArray)other;
+            int comp = 0;
+
+            for (int i = 0; i < size(); i++) {
+                final JSONValue<?> val = get(i);
+                final JSONValue<?> compValue = compare.get(i);
+
+                if (val.getType().equals(compValue.getType())) {
+                    if (val.isPrimitive()) {
+                        if (val.getValue() == null && compValue.getValue() != null) {
+                            comp += 1;
+                        } else if (val.getValue() != null && compValue.getValue() == null) {
+                            comp += 1;
+                        } else if (val.getValue() == null && compValue.getValue() == null) {
+                            // nothing to do
+                        } else {
+                            comp += val.getValue().equals(compValue.getValue()) ? 0 : 1;
+                        }
+                    } else {
+                        comp += ((JSONNode)val.getValue()).compareTo((JSONNode)compValue.getValue());
+                    }
+                } else {
+                    comp += 1;
+                }
+            }
+
+            return comp;
+        } else {
+            return 1;
+        }
+    }
+
+
 }
