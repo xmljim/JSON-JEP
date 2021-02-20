@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.util;
 
 import java.util.Arrays;
@@ -21,17 +39,19 @@ import java.util.Arrays;
  * byte b = 0x32;
  * boolean matches = hexRange.contains(b);
  * System.out.println(matches);
+ * //prints true
  *
  * byte[] byteArray = new byte[]{0x33, 0x34, 0x66, 0x62};
  * matches = hexRange.containsAll(byteArray);
  * System.out.println(matches);
+ * //prints true
  * </pre>
  * @author Jim Earley (xml.jim@gmail.com)
  *
  */
 public class ByteRange {
 
-    
+
     private byte[] rangeData;
     private int size;
     private int cursor = 0;
@@ -51,7 +71,7 @@ public class ByteRange {
         final ByteRange newInstance = new ByteRange();
         return newInstance;
     }
-    
+
     /**
      * Initializes a ByteRange with an array of byte values.
      * @param byteArray the array of bytes to add to the range
@@ -122,7 +142,7 @@ public class ByteRange {
         addToArray(addByte);
         return this;
     }
-    
+
     /**
      * Append an array of bytes to an existing ByteRange
      * @param byteArray the array of bytes to add
@@ -133,7 +153,7 @@ public class ByteRange {
         addToArray(byteArray);
         return this;
     }
-    
+
     /**
      * Evaluates if a given byte value is contained in the ByteRange
      * @param b the byte value to evaluate
@@ -171,7 +191,7 @@ public class ByteRange {
     public boolean containsSome(byte[] array) {
         return containsCount(array) != 0;
     }
-    
+
     /**
      * Gets a count of the number of bytes that match the values in the ByteRange
      * @param array the array of bytes to evaluate
@@ -179,13 +199,13 @@ public class ByteRange {
      */
     public int containsCount(byte[] array) {
         int count = 0;
-        
+
         for (final byte b : array) {
             if (contains(b)) {
                 count++;
             }
         }
-        
+
         return count;
     }
 
@@ -209,7 +229,7 @@ public class ByteRange {
 
         return posArray;
     }
-    
+
     /**
      * Creates a byte array of values that match any of the byte values in the ByteRange
      * @param array the byte array to evaluate
@@ -217,15 +237,15 @@ public class ByteRange {
      */
     public byte[] getMatchingByteValues(byte[] array) {
         final byte[] byteArray = new byte[containsCount(array)];
-        
+
         int index = 0;
-        
+
         for (final byte b : array) {
             if (contains(b)) {
                 byteArray[index++] = b;
             }
         }
-        
+
         return byteArray;
     }
 
@@ -235,12 +255,12 @@ public class ByteRange {
         rangeData = Arrays.copyOf(rangeData, newSize);
         size = rangeData.length;
     }
-    
+
     private void addToArray(byte start, byte end) {
         if (start > end) {
             throw new NegativeArraySizeException("The end byte value must be larger than the starting byte");
         }
-        final int len = (end - start) + 1;
+        final int len = end - start + 1;
         growArray(len);
         for (int i = start; i <= end; i++) {
             final byte add = (byte)i;
@@ -248,7 +268,7 @@ public class ByteRange {
         }
         Arrays.sort(rangeData);
     }
-    
+
     private void addToArray(byte newByte) {
         growArray(1);
         rangeData[cursor++] = newByte;
@@ -265,7 +285,7 @@ public class ByteRange {
     }
 
     private boolean isInRangeLocal(byte b) {
-        
+
         return Arrays.binarySearch(rangeData, b) >= 0;
     }
 

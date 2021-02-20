@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.parser;
 
 import java.math.BigDecimal;
@@ -38,11 +56,11 @@ class NativeEventHandler extends BaseEventHandler {
         stack.push(result);
         currentNode = result;
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
-    
+
     private void appendToCurrent(String key, JSONArray array) {
-        
+
         final long s = System.nanoTime();
         if (currentNode instanceof JSONArray) {
             ((JSONArray)currentNode).add(array);
@@ -53,9 +71,9 @@ class NativeEventHandler extends BaseEventHandler {
         stack.push(array);
         currentNode = array;
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
-    
+
     private void appendToCurrent(String key, JSONObject obj) {
         final long s = System.nanoTime();
 
@@ -69,9 +87,9 @@ class NativeEventHandler extends BaseEventHandler {
         currentNode = obj;
 
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
-    
+
     private void appendToCurrent(String key, JSONValue<?> value) {
         final long s = System.nanoTime();
         if (currentNode instanceof JSONArray) {
@@ -81,13 +99,13 @@ class NativeEventHandler extends BaseEventHandler {
         }
         entities++;
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
 
     @Override
     public void documentEnd() {
         System.out.println("Total Entities: " + entities);
-        System.out.println("Time: " + (totalAssemblyTime * .000000001f));
+        System.out.println("Time: " + totalAssemblyTime * .000000001f);
 
     }
 
@@ -96,7 +114,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s= System.nanoTime();
         appendToCurrent(key, NodeFactory.newJSONArray());
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
 
     @Override
@@ -105,7 +123,7 @@ class NativeEventHandler extends BaseEventHandler {
         stack.pop();
         currentNode = stack.peek();
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
 
     }
 
@@ -114,7 +132,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newJSONObject());
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
 
     @Override
@@ -123,7 +141,7 @@ class NativeEventHandler extends BaseEventHandler {
         stack.pop();
         currentNode = stack.peek();
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
 
     @Override
@@ -131,7 +149,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newStringValue(value));
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
     }
 
     @Override
@@ -139,7 +157,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newNumberValue(value));
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
 
     }
 
@@ -148,7 +166,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newNumberValue(value));
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
 
     }
 
@@ -157,24 +175,24 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newNumberValue(value));
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
 
     }
-    
+
     @Override
     public void valueDouble(String key, Double value) {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newNumberValue(value));
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);    
+        totalAssemblyTime += e-s;    
     }
-    
-   @Override
+
+    @Override
     public void valueFloat(String key, Float value) {
-       final long s = System.nanoTime();
-       appendToCurrent(key, NodeFactory.newNumberValue(value));
-       final long e = System.nanoTime();
-       totalAssemblyTime += (e-s);         
+        final long s = System.nanoTime();
+        appendToCurrent(key, NodeFactory.newNumberValue(value));
+        final long e = System.nanoTime();
+        totalAssemblyTime += e-s;         
     }
 
     @Override
@@ -182,7 +200,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newBooleanValue(value));
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
 
     }
 
@@ -191,7 +209,7 @@ class NativeEventHandler extends BaseEventHandler {
         final long s = System.nanoTime();
         appendToCurrent(key, NodeFactory.newJSONNullValue());
         final long e = System.nanoTime();
-        totalAssemblyTime += (e-s);
+        totalAssemblyTime += e-s;
 
     }
 

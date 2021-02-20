@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.parser.jep;
 
 import org.ghotibeaun.json.parser.jep.eventhandler.JSONEventHandler;
@@ -24,11 +42,11 @@ public class ParserConfiguration {
     public JSONEventHandler getEventHandler() {
         return handler;
     }
-    
+
     private void setEventProvider(JSONEventProvider provider) {
         this.provider = provider;
     }
-    
+
     public JSONEventProvider getEventProvider() {
         return provider;
     }
@@ -40,7 +58,7 @@ public class ParserConfiguration {
     public JSONEventProcessor getEventProcessor() {
         return processor;
     }
-    
+
 
     public static ParserConfiguration newConfiguration(JSONEventHandler eventHandler) {
         final ParserConfiguration pc = new ParserConfiguration();
@@ -49,8 +67,8 @@ public class ParserConfiguration {
         pc.setEventProcessor(getDefaultEventProcessor());
         return pc;
     }
-    
-    
+
+
     public static ParserConfiguration newConfiguration(JSONEventHandler eventHandler, JSONEventProvider provider) {
         final ParserConfiguration pc = new ParserConfiguration();
         pc.setEventHandler(eventHandler);
@@ -58,7 +76,7 @@ public class ParserConfiguration {
         pc.setEventProcessor(getDefaultEventProcessor());
         return pc;
     }
-    
+
     public static ParserConfiguration newConfiguration(JSONEventHandler eventHandler, JSONEventProcessor processor, JSONEventProvider provider) {
         final ParserConfiguration pc = new ParserConfiguration();
         pc.setEventHandler(eventHandler);
@@ -69,16 +87,16 @@ public class ParserConfiguration {
 
 
     private static JSONEventProcessor getDefaultEventProcessor() {
-        
+
         return EventProcessor.newDefaultProcessor();
     }
-    
+
     private static JSONEventProvider getDefaultEventProvider() {
         return EventProvider.newDefaultEventProvider();
     }
-    
+
     public void init() {
-        
+
     }
-    
+
 }

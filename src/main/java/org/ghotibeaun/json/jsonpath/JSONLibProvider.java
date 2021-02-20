@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.jsonpath;
 
 import java.io.InputStream;
@@ -20,12 +38,12 @@ import com.jayway.jsonpath.InvalidJsonException;
 import com.jayway.jsonpath.spi.json.AbstractJsonProvider;
 
 class JSONLibProvider extends AbstractJsonProvider {
-    
+
     @Override
     public Object getArrayIndex(Object obj, int idx) {
         return toJSONArray(obj).get(idx).getValue();
     }
-    
+
     @Override
     public Object getMapValue(Object obj, String key) {
         if (obj instanceof JSONObject) {
@@ -38,16 +56,16 @@ class JSONLibProvider extends AbstractJsonProvider {
             } else {
                 return null;
             }
-            
+
         } else {
             return obj;
         }
     }
-    
+
     @Override
     public Collection<String> getPropertyKeys(Object obj) {
         final ArrayList<String> keys = new ArrayList<>();
-        
+
         if (obj instanceof JSONObject) {
             for (final String key : toJSONObject(obj).keys()) {
                 keys.add(key);
@@ -61,35 +79,35 @@ class JSONLibProvider extends AbstractJsonProvider {
         }
         return keys;
     }
-    
+
     @Override
     public boolean isArray(Object obj) {
         boolean isArray = false;
-        isArray = (obj instanceof JSONArray) || (obj instanceof List);
-        
+        isArray = obj instanceof JSONArray || obj instanceof List;
+
         if (!isArray) {
             if (obj instanceof JSONValue) {
                 isArray = toJSONValue(obj).getType() == JSONValueType.ARRAY;
             }
         }
-        
+
         return isArray;
     }
-    
+
     @Override
     public boolean isMap(Object obj) {
         boolean isMap = false;
-        isMap = (obj instanceof JSONObject) || (obj instanceof Map);
-        
+        isMap = obj instanceof JSONObject || obj instanceof Map;
+
         if (!isMap) {
             if (obj instanceof JSONValue) {
                 isMap = toJSONValue(obj).getType() == JSONValueType.OBJECT;
             }
         }
-        
+
         return isMap;
     }
-    
+
     @Override
     public int length(Object obj) {
         if (isArray(obj)) {
@@ -102,34 +120,34 @@ class JSONLibProvider extends AbstractJsonProvider {
             return 1;
         }
     }
-    
+
     @Override
     public void removeProperty(Object arg0, Object arg1) {
         // TODO Auto-generated method stub
         super.removeProperty(arg0, arg1);
     }
-    
+
     @Override
     public void setArrayIndex(Object source, int index, Object value) {
         ((JSONArray) source).insert(index, value);
     }
-    
+
     @Override
     public void setProperty(Object source, Object key, Object value) {
         ((JSONObject) source).put(key.toString(), value);
     }
-    
+
     @Override
     public Iterable<? extends Object> toIterable(Object obj) {
         if (obj instanceof JSONObject) {
             return ((JSONObject) obj).elements();
         } else if (obj instanceof JSONArray) {
-            return ((JSONArray) obj);
+            return (JSONArray) obj;
         } else {
             return null;
         }
     }
-    
+
     @Override
     public Object unwrap(Object obj) {
         if (obj instanceof JSONValue) {
@@ -138,30 +156,30 @@ class JSONLibProvider extends AbstractJsonProvider {
             return obj;
         }
     }
-    
+
     public JSONLibProvider() {
         // TODO Auto-generated constructor stub
     }
-    
+
     @Override
     public Object createArray() {
         return NodeFactory.newJSONArray();
     }
-    
+
     @Override
     public Object createMap() {
         return NodeFactory.newJSONObject();
     }
-    
+
     @Override
     public Object parse(String data) throws InvalidJsonException {
         return JSONFactory.newFactory().newParser().parse(data);
     }
-    
+
     @Override
     public Object parse(InputStream inputStream, String charSet) throws InvalidJsonException {
         JSONNode result = null;
-        
+
         try {
             result = JSONFactory.newFactory().newParser().parse(inputStream, charSet);
         } catch (final JSONParserException e) {
@@ -171,19 +189,19 @@ class JSONLibProvider extends AbstractJsonProvider {
                 throw new InvalidJsonException(e1);
             }
         }
-        
+
         return result;
     }
-    
+
     @Override
     public String toJson(Object o) {
         return ((JSONNode) o).toJSONString();
     }
-    
+
     @SuppressWarnings("unchecked")
     private JSONArray toJSONArray(Object o) {
         JSONArray jsonArray = null;
-        
+
         if (o instanceof JSONArray) {
             jsonArray = (JSONArray) o;
         } else if (o instanceof JSONValue) {
@@ -194,13 +212,13 @@ class JSONLibProvider extends AbstractJsonProvider {
         }
         return jsonArray;
     }
-    
+
     private JSONObject toJSONObject(Object o) {
         return (JSONObject) o;
     }
-    
+
     private JSONValue<?> toJSONValue(Object o) {
         return (JSONValue<?>) o;
     }
-    
+
 }

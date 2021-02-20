@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.parser.jep.eventprovider;
 
 import java.math.BigDecimal;
@@ -17,9 +35,9 @@ import org.ghotibeaun.json.parser.jep.eventhandler.event.JSONEvent;
  *
  */
 class DirectEventProviderImpl extends EventProvider {
-    
+
     private JSONValueType documentType = null;
-    
+
     private final Deque<JSONValueType> objectStack = new ArrayDeque<>();
     private final Deque<String> keyStack = new ArrayDeque<>();
     private boolean keyBit = false;
@@ -33,7 +51,7 @@ class DirectEventProviderImpl extends EventProvider {
 
     @Override
     public void notifyDocumentStart(ByteBuffer c) {
-        
+
         if (getEventHandler() != null) {
             JSONValueType vt = null;
             if (c.getChar() == '{') {
@@ -43,16 +61,16 @@ class DirectEventProviderImpl extends EventProvider {
             } else if (c.getChar() == '[') {
                 vt = JSONValueType.ARRAY;
             }
-            
-            this.documentType = vt;
+
+            documentType = vt;
             objectStack.push(vt);
-            getEventHandler().documentStart(this.documentType);
+            getEventHandler().documentStart(documentType);
         }
 
     }
-    
+
     public JSONValueType getDocumentType() {
-        return this.documentType;
+        return documentType;
     }
 
     @Override
@@ -84,7 +102,7 @@ class DirectEventProviderImpl extends EventProvider {
             try {
                 lastKey = keyStack.peek();
                 final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
-                
+
                 if (getEventHandler() != null) {
                     getEventHandler().valueString(key, stringValue);
                     lastValue = stringValue;
@@ -99,8 +117,8 @@ class DirectEventProviderImpl extends EventProvider {
             awaitingKey = true;
             setKeyBit(true);
         }
-        
-        
+
+
     }
 
     @Override
@@ -113,9 +131,9 @@ class DirectEventProviderImpl extends EventProvider {
         if (objectStack.pop() != JSONValueType.BOOLEAN) {
             //TODO: ERROR should match;
         }
-        
+
         final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
-        
+
         if (getEventHandler() != null) {
             final String boolValue = new String(tokenValue.asCharBuffer().array());
             getEventHandler().valueBoolean(key, Boolean.getBoolean(boolValue));
@@ -133,13 +151,13 @@ class DirectEventProviderImpl extends EventProvider {
     @Override
     public void notifyNumberTokenEnd(ByteBuffer tokenValue) {
         if (getEventHandler() != null) {
-            
+
             if (objectStack.pop() != JSONValueType.NUMBER) {
                 //TODO: Error should match;
             }
 
             final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
-            
+
             final String numberValue = new String(tokenValue.asCharBuffer().array());
             if (numberValue.contains(".") || numberValue.contains("e")) {
                 final BigDecimal bd = new BigDecimal(numberValue);
@@ -148,9 +166,9 @@ class DirectEventProviderImpl extends EventProvider {
                 final BigInteger bi = new BigInteger(numberValue);
                 getEventHandler().valueLong(key, bi.longValue());
             }
-            
+
         }
-        
+
         awaitingKey = true;
         setKeyBit(true);
 
@@ -168,7 +186,7 @@ class DirectEventProviderImpl extends EventProvider {
         }
 
         final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.pop();
-        
+
         if (getEventHandler() != null) {
             getEventHandler().valueNull(key);
         }
@@ -193,12 +211,12 @@ class DirectEventProviderImpl extends EventProvider {
         if (objectStack.pop() != JSONValueType.OBJECT) {
             //TODO: Error should be object
         }
-        final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : (keyStack.size() > 0 ? keyStack.pop() : "$");
+        final String key = objectStack.peek() == JSONValueType.ARRAY ? keyStack.peek() : keyStack.size() > 0 ? keyStack.pop() : "$";
         if (getEventHandler() != null) {
             getEventHandler().jsonObjectEnd(key);
         }
-        
-        
+
+
     }
 
     @Override
@@ -228,7 +246,7 @@ class DirectEventProviderImpl extends EventProvider {
             setKeyBit(true);
         }
     }
-    
+
     @Override
     public void notifyKeyEnd() {
         awaitingKey = false;
@@ -236,25 +254,25 @@ class DirectEventProviderImpl extends EventProvider {
     }
 
 
-    
-    
+
+
     private boolean isKey() {
-        return (getKeyBit() && awaitingKey &&
-                ((objectStack.peekFirst() != null) && (objectStack.peekFirst() == JSONValueType.OBJECT)));
+        return getKeyBit() && awaitingKey &&
+                objectStack.peekFirst() != null && objectStack.peekFirst() == JSONValueType.OBJECT;
     }
 
     private void setKeyBit(boolean bool) {
-        this.keyBit = bool;
+        keyBit = bool;
     }
-    
+
     private boolean getKeyBit() {
-        return this.keyBit;
+        return keyBit;
     }
 
     @Override
     public void notifyEvent(JSONEvent event) {
         // TODO Auto-generated method stub
-        
+
     }
 
 }
