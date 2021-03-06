@@ -1,4 +1,7 @@
+
 # JSON-JEP - An Event-Driven JSON Processor
+
+<img src="./api-guide/jep-icon.png" height="175"/>
 
 JSON is a well established [international standard](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)
 for data interchange using Javascript Object Notation. There are numerous 
