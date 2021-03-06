@@ -1,6 +1,6 @@
 # JEP API GUIDE
 
-<img src="./api-guide/jep-icon.png"/>
+<img src="./jep-icon.png"/>
 
 * [Overview](overview.html)
 * [Getting Started](getting-started.html)
