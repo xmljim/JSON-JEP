@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.util;
 
 import java.io.IOException;
@@ -23,8 +41,8 @@ public class ResizableByteBuffer {
     private int position = -1;
 
     private transient byte[] byteArray = new byte[] {};
-    
-    
+
+
     /**
      * Default constructor
      */
@@ -33,7 +51,7 @@ public class ResizableByteBuffer {
         size = 0;
 
     }
-    
+
     /**
      * Constructor
      * @param allocateSize the size to allocate to the backing array
@@ -41,7 +59,7 @@ public class ResizableByteBuffer {
     public ResizableByteBuffer(int allocateSize) {
         grow(allocateSize);
     }
-    
+
     /**
      * Constructor that is initialized with a starting array of bytes
      * @param initialByteArray the initial array of bytes
@@ -49,38 +67,38 @@ public class ResizableByteBuffer {
     public ResizableByteBuffer(byte[] initialByteArray) {
         add(initialByteArray);
     }
-    
+
     public static ResizableByteBuffer fromStream(InputStream inputStream) {
-        ResizableByteBuffer buffer = new ResizableByteBuffer();
-        byte[] bytes = new byte[DEFAULT_CAPACITY];
+        final ResizableByteBuffer buffer = new ResizableByteBuffer();
+        final byte[] bytes = new byte[DEFAULT_CAPACITY];
         try {
             inputStream.read(bytes);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
         buffer.add(bytes);
         return buffer;
     }
-    
+
     public static ResizableByteBuffer fromStream(InputStream inputStream, int allocateSize) {
-        ResizableByteBuffer buffer = new ResizableByteBuffer(DEFAULT_CAPACITY);
-        byte[] bytes = new byte[allocateSize];
+        final ResizableByteBuffer buffer = new ResizableByteBuffer(DEFAULT_CAPACITY);
+        final byte[] bytes = new byte[allocateSize];
         try {
-            int result = inputStream.read(bytes);
+            final int result = inputStream.read(bytes);
             LOGGER.debug("Byte Count: {}", result);
             if (result != -1) {
                 buffer.add(bytes);
                 buffer.trim();
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         return buffer;
     }
-    
+
     /**
      * Add a new byte to the buffer
      * @param b the byte
@@ -90,7 +108,7 @@ public class ResizableByteBuffer {
         byteArray[size] = b;
         size++;
     }
-    
+
     /**
      * Append an array of bytes to the existing buffer.  The values will be inserted after the
      * last item previously inserted into the buffer.
@@ -108,21 +126,21 @@ public class ResizableByteBuffer {
     public void rewind() {
         position = 0;
     }
-    
+
     /**
      * Returns the next byte based on the internal cursor position, and moves the cursor to the
      * next item
      * @return the next byte
      */
     public byte get() {
-        if (position >= (size - 1)) {
+        if (position >= size - 1) {
             return 0x0;
         } else {
             position++;
             return byteArray[position];
         }
     }
-    
+
     /**
      * Return the full size of the buffer
      * @return the full size of the buffer;
@@ -130,7 +148,7 @@ public class ResizableByteBuffer {
     public int size() {
         return size;
     }
-    
+
     /**
      * returns the current cursor position in the buffer
      * @return the current cursor position in the buffer
@@ -155,7 +173,7 @@ public class ResizableByteBuffer {
     public boolean hasRemaining() {
         return getRemaining() > 0;
     }
-    
+
     /**
      * Retrieves the next byte following the current cursor's position, without updating the cursor position
      * @return the next byte
@@ -163,7 +181,7 @@ public class ResizableByteBuffer {
     public byte peek() {
         return peek(1);
     }
-    
+
     /**
      * Retrieves the last byte in the buffer, without updating the cursor position
      * @return the last byte in the buffer or a null byte (<code>0x0</code>) if the buffer is empty
@@ -172,11 +190,11 @@ public class ResizableByteBuffer {
         if (size == 0) {
             return 0x0;
         }
-        
+
         return byteArray[size - 1];
     }
 
-    
+
     /**
      * Retrieves the first byte in the buffer, without updating the cursor position
      * @return the first byte in the buffer or a null byte (<code>0x0</code>) if the buffer is empty
@@ -196,7 +214,7 @@ public class ResizableByteBuffer {
      * @throws IndexOutOfBoundsException if the lookAhead value exceeds the size of the buffer
      */
     public byte peek(int lookAhead) {
-        if ((size - (position + lookAhead))  < 0) {
+        if (size - (position + lookAhead)  < 0) {
             throw new IndexOutOfBoundsException();
         }
 
@@ -211,7 +229,7 @@ public class ResizableByteBuffer {
     public byte previous() {
         return previous(1);
     }
-    
+
     /**
      * Retrieves the byte at the specified number of bytes behind the current cursor, without moving the cursor
      * @param lookBehind the number of bytes behind the cursor position
@@ -219,13 +237,13 @@ public class ResizableByteBuffer {
      * @throws IndexOutOfBoundsException if the buffer is empty, or the cursor is at the start position (0)
      */
     public byte previous(int lookBehind) {
-        if ((lookBehind - 1) > position) {
+        if (lookBehind - 1 > position) {
             throw new IndexOutOfBoundsException("Cannot look behind beyond the starting position of the buffer");
         }
 
         return byteArray[position - lookBehind];
     }
-    
+
     /**
      * Converts the buffer to a {@link ByteBuffer}
      * @return a new ByteBuffer instance
@@ -267,7 +285,7 @@ public class ResizableByteBuffer {
      * @throws IndexOutOfBoundsException if the offset and/or length exceed the length of the buffer
      */
     private byte[] slice(int offset, int length) {
-        if ((offset + length) > size) {
+        if (offset + length > size) {
             throw new IndexOutOfBoundsException("Combination of offset and length exceed size of buffer");
         }
         final byte[] target = new byte[length];
@@ -286,28 +304,28 @@ public class ResizableByteBuffer {
 
         return slice(0, size);
     }
-    
+
     /**
      * Make sure the array has enough space for one more item.
      */
     private void ensureByteCapacity() {
         ensureByteCapacity(size + 1);
     }
-    
+
     /**
      * Make sure the array has enough space for the minimum number of items to be added.  Typically this will continue to add
      * at least 50% more space than what was asked for to avoid repeated resizing.
      * @param minimumCapacity
      */
     private void ensureByteCapacity(int minimumCapacity) {
-        if ((byteArray.length - (size + minimumCapacity)) <= 0) {
-            int newCapacity = ((byteArray.length + minimumCapacity) >> 1);
-            
-            if ((newCapacity - byteArray.length) < DEFAULT_CAPACITY) {
-                newCapacity = byteArray.length + DEFAULT_CAPACITY;
-            }
-            
-            grow(newCapacity);
+        if (byteArray.length - (size + minimumCapacity) <= 0) {
+            int newCapacity = byteArray.length + minimumCapacity >> 1;
+
+        if (newCapacity - byteArray.length < DEFAULT_CAPACITY) {
+            newCapacity = byteArray.length + DEFAULT_CAPACITY;
+        }
+
+        grow(newCapacity);
         }
     }
 

@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.converters;
 
 import java.lang.reflect.Field;
@@ -13,7 +31,7 @@ import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.NullObject;
 import org.ghotibeaun.json.converters.handlers.MemberHandler;
-import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.options.ConverterOption;
 import org.ghotibeaun.json.converters.utils.AnnotationUtils;
 import org.ghotibeaun.json.converters.utils.ClassScanner;
 import org.ghotibeaun.json.converters.utils.ScannerEntry;
@@ -23,7 +41,7 @@ import org.ghotibeaun.json.factory.NodeFactory;
 
 class ClassConverterImpl extends AbstractClassConverter {
 
-    public ClassConverterImpl(Options... option) {
+    public ClassConverterImpl(ConverterOption<?>... option) {
         super(option);
         // TODO Auto-generated constructor stub
     }
@@ -42,7 +60,7 @@ class ClassConverterImpl extends AbstractClassConverter {
 
     @Override
     public <T> JSONObject convertToJSONObject(T source) throws JSONConversionException {
-        final ClassScanner scanner = new ClassScanner(source.getClass());
+        final ClassScanner scanner = new ClassScanner(source.getClass(), getConverterOptions());
         final JSONObject json = NodeFactory.newJSONObject();
         processClass(scanner, source, json);
         return json;

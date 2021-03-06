@@ -24,14 +24,12 @@ public class NodeFactoryTest {
     public void testNewJSONObject() {
         final JSONObject obj = NodeFactory.newJSONObject();
         assertNotNull(obj);
-        assertTrue(FactorySettings.getSetting(Setting.OBJECT_CLASS).equals(obj.getClass().getName()));
     }
 
     @Test
     public void testNewJSONArray() {
         final JSONArray arr = NodeFactory.newJSONArray();
         assertNotNull(arr);
-        assertTrue(FactorySettings.getSetting(Setting.ARRAY_CLASS).equals(arr.getClass().getName()));
     }
 
     @Test
