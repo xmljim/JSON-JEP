@@ -26,7 +26,8 @@ import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
-import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.options.ConverterOption;
+import org.ghotibeaun.json.converters.options.OptionsBuilder;
 import org.ghotibeaun.json.converters.utils.ClassUtils;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
@@ -39,6 +40,12 @@ import org.ghotibeaun.json.factory.Setting;
  *
  */
 public abstract class AbstractClassConverter extends AbstractConverter implements ClassConverter {
+    /**
+     * Constructor
+     */
+    public AbstractClassConverter(ConverterOption<?>... option) {
+        super(option.length == 0 ? OptionsBuilder.defaultOptions() : option);
+    }
 
     /**
      * Returns the ClassConverter implementation. The implementation class is specified using the 
@@ -46,7 +53,7 @@ public abstract class AbstractClassConverter extends AbstractConverter implement
      * @param option Any converter options to set on the Converter
      * @return the ClassConverter instance
      */
-    public static ClassConverter getClassConverter(Options...option) {
+    public static ClassConverter getClassConverter(ConverterOption<?>...option) {
         //return new ClassConverterImpl(option);
         final Optional<Class<?>> converterClass = FactorySettings.getFactoryClass(Setting.CLASS_CONVERTER_CLASS);
         if (converterClass.isPresent()) {
@@ -55,12 +62,7 @@ public abstract class AbstractClassConverter extends AbstractConverter implement
             throw new JSONConversionException("No Class Converter class found");
         }
     }
-    /**
-     * Constructor
-     */
-    public AbstractClassConverter(Options... option) {
-        super(option);
-    }
+
 
     /* (non-Javadoc)
      * @see org.ghotibeaun.json.converters.ClassConverter#convertToJSON(java.lang.Object)

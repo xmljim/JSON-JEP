@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.ghotibeaun.json.JSONObject;
+import org.ghotibeaun.json.converters.ConverterOptions;
 import org.ghotibeaun.json.factory.NodeFactory;
 
 public class ScannerList {
@@ -33,8 +34,8 @@ public class ScannerList {
         // TODO Auto-generated constructor stub
     }
 
-    public void addEntry(Class<?> clazz, Field field) {
-        final ScannerEntry entry = new ScannerEntry(clazz, field);
+    public void addEntry(Class<?> clazz, Field field, ConverterOptions options) {
+        final ScannerEntry entry = new ScannerEntry(clazz, field, options);
         if (!entries.containsKey(entry.getJsonKey())) {
             entries.put(entry.getJsonKey(), entry);
         }

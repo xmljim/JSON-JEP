@@ -48,5 +48,5 @@ public @interface JSONValueConverter {
      */
     Class<? extends ValueConverter<?>> converter();
 
-    String[] args();
+    String[] args() default {};
 }

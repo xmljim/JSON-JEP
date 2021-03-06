@@ -24,7 +24,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import org.ghotibeaun.json.converters.Converter;
-import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.options.ConverterOption;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
 
@@ -84,12 +84,13 @@ public final class ClassUtils {
 
     }
 
-    public static Converter createConverter(Class<?> converterClass, Options...option) throws JSONConversionException {
+    public static Converter createConverter(Class<?> converterClass, ConverterOption<?>...option) throws JSONConversionException {
         try {
-            final Constructor<?> constructor = converterClass.getConstructor(Options[].class);
+            final Constructor<?> constructor = converterClass.getConstructor(ConverterOption[].class);
             constructor.setAccessible(true);
             return (Converter)constructor.newInstance((Object)option);
         } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            e.printStackTrace();
             throw new JSONConversionException("Error creating class: " + converterClass + ": " + e.getMessage(), e);
         }
     }

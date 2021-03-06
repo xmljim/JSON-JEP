@@ -23,9 +23,20 @@ import java.util.Optional;
 
 import org.ghotibeaun.json.exception.JSONConversionException;
 
+/**
+ * Abstract implementation for the {@link ValueConverter} interface.
+ * Contains utility methods to validate the incoming value type before converting the value
+ * @author Jim Earley (xml.jim@gmail.com)
+ *
+ * @param <T>
+ */
 public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T> {
     private final String[] args;
 
+    /**
+     * Constructor
+     * @param args vararg array of argument strings
+     */
     public AbstractJSONValueConverter(String...args) {
         this.args = args;
     }
@@ -33,6 +44,10 @@ public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T>
     @Override
     public abstract Class<?>[] accepts();
 
+    /**
+     * Converts the {@link #accepts()} class array to a printable string
+     * @return
+     */
     public String getAcceptedClassList() {
         final StringBuilder builder = new StringBuilder();
         builder.append("[");
@@ -45,21 +60,42 @@ public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T>
         return builder.toString();
     }
 
+    /**
+     * Return a formatted invalid type message
+     * @param <V> the value type
+     * @param value the value
+     * @return the formatted invalid message
+     */
     public <V> String getInvalidMessage(V value) {
         return "INVALID VALUE TYPE CONVERSION: Current value type {" 
                 + value.getClass().getName() + "} is not supported by this converter. This converter accepts: "
                 + getAcceptedClassList();
     }
 
+    /**
+     * Returns the arguments passed into the concrete ValueConverter instance
+     */
     @Override
     public String[] getArgs() {
         return args;
     }
 
+    /**
+     * Return the indexed argument
+     * @param index the index position
+     * @return the value at the specified index
+     * @throws ArrayIndexOutOfBoundsException if the index value does not exist
+     */
     public String getArg(int index) {
         return getArgs()[index];
     }
 
+    /**
+     * Evaluates the value type against the ValueConverter's accepted value types
+     * @param <V> the value type
+     * @param value the value
+     * @return true if the value type matches one of types in the {@link #accepts()} array; false otherwise
+     */
     public <V> boolean accept(V value) {
         if (accepts().length == 0) {
             return true;
@@ -71,6 +107,7 @@ public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T>
         }
     }
 
+
     @Override
     public <V> T convertValue(V value) throws JSONConversionException {
         if (accept(value)) {
@@ -80,6 +117,13 @@ public abstract class AbstractJSONValueConverter<T> implements ValueConverter<T>
         }
     }
 
+    /**
+     * perform the value conversion and return the result
+     * @param <V> the value type
+     * @param value the value
+     * @return the converted value
+     * @throws JSONConversionException thrown if a conversion error occurs
+     */
     public abstract <V> T getConvertedValue(V value) throws JSONConversionException;
 
 }

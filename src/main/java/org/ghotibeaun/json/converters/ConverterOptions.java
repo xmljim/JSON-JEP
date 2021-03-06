@@ -22,33 +22,43 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.ghotibeaun.json.converters.options.Option;
-import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.options.ConverterOption;
+import org.ghotibeaun.json.converters.options.OptionKey;
 
 public class ConverterOptions {
-    Map<Options, Option<?>> optionMap = new HashMap<>();
+    Map<OptionKey, ConverterOption<?>> optionMap = new HashMap<>();
 
     public ConverterOptions() {
         // TODO Auto-generated constructor stub
     }
 
-    public void set(Options option) {
-        optionMap.put(option, option.getOption());
+    public void set(ConverterOption<?> option) {
+        optionMap.put(option.getKey(), option);
     }
 
-    public Optional<Option<?>> get(Options option) {
-        return Optional.of(optionMap.getOrDefault(option, option.getOption()));
+    public Optional<ConverterOption<?>> get(OptionKey option) {
+        return Optional.of(optionMap.getOrDefault(option, null));
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T getValue(Options option) {
+    public <T> T getValue(OptionKey option) {
         return (T) get(option).get().getValue();
     }
 
-    public Options[] getAll() {
-        final Options[] opts = null;
+    public ConverterOption<?>[] getAll() {
+        final ConverterOption<?>[] opts = {};
 
         return optionMap.keySet().toArray(opts);
+    }
+
+    public <V> boolean matches(OptionKey key, V value) {
+        boolean result = false;
+
+        if (get(key).isPresent()) {
+            result = get(key).get().matchesValue(value);
+        }
+
+        return result;
     }
 
 }

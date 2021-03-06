@@ -25,19 +25,20 @@ import java.util.List;
 import java.util.Optional;
 
 import org.ghotibeaun.json.JSONObject;
+import org.ghotibeaun.json.converters.ConverterOptions;
+import org.ghotibeaun.json.converters.options.OptionKey;
+import org.ghotibeaun.json.converters.options.ScannerValidationOption;
 
 
 public class ClassScanner {
     private Class<?> targetClass = null;
     private final ScannerList scannerList = new ScannerList();
+    private final ConverterOptions options;
 
-    public ClassScanner() {
-        // TODO Auto-generated constructor stub
-    }
-
-    public ClassScanner(Class<?> clazz) {
+    public ClassScanner(Class<?> clazz, ConverterOptions options) {
+        this.options = options;
         setTargetClass(clazz);
-        scanClass(clazz);
+        scanClass(clazz, options);
     }
 
     public ScannerList getScannerList() {
@@ -59,16 +60,22 @@ public class ClassScanner {
 
         for (final String key : referenceJSON.keys()) {
             if (!getScannerList().hasEntry(key)) {
-                final String missingScan = "Missing key in ClassScanner: " + key;
-                errors.add(missingScan);
+                if (options.getValue(OptionKey.VALIDATION) == ScannerValidationOption.STRICT) {
+                    final String missingScan = "Missing key in ClassScanner: " + key;
+                    errors.add(missingScan);
+                }
+
             }
         }
 
         for (final String sKey : getScannerList().keys()) {
             if (!referenceJSON.containsKey(sKey)) {
                 if (!getScannerList().getEntry(sKey).get().isIgnore()) {
-                    final String missingKey = "missingKey in reference JSON object: " + sKey;
-                    errors.add(missingKey);
+                    if (options.getValue(OptionKey.VALIDATION) == ScannerValidationOption.STRICT) {
+                        final String missingKey = "missingKey in reference JSON object: " + sKey;
+                        errors.add(missingKey);
+                    }
+
                 }
             }
         }
@@ -77,12 +84,12 @@ public class ClassScanner {
         return validation;
     }
 
-    public void scanClass(Class<?> clazz) {
+    public void scanClass(Class<?> clazz, ConverterOptions options) {
         setTargetClass(clazz);
-        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> addEntry(clazz,field));
+        Arrays.stream(clazz.getDeclaredFields()).forEach(field -> addEntry(clazz, field, options));
         final Optional<Class<?>> optionalSuper = getSuperclass(clazz);
         if (optionalSuper.isPresent()) {
-            scanClass(optionalSuper.get());
+            scanClass(optionalSuper.get(), options);
         }
     }
 
@@ -94,12 +101,12 @@ public class ClassScanner {
         return Optional.ofNullable(willSend);
     }
 
-    private void addEntry(Class<?> clazz, Field field) {
+    private void addEntry(Class<?> clazz, Field field, ConverterOptions options) {
         //final String key = AnnotationUtils.findJSONElementKey(field).orElse(field.getName());
         //System.out.println("   * [" + key + "]: "+ field.getName() + ": " + field.getType().toString() + ": " 
         //        + field.trySetAccessible());
 
-        getScannerList().addEntry(clazz, field);
+        getScannerList().addEntry(clazz, field, options);
     }
 
     public Optional<ScannerEntry> get(String key) {

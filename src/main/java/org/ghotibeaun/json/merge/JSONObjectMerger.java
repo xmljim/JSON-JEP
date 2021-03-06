@@ -30,7 +30,6 @@ class JSONObjectMerger extends AbstractJSONObjectMerger {
 
     @Override
     public JSONObject merge(JSONObject primary, JSONObject secondary) {
-        // TODO Auto-generated method stub
         if (primary.isEquivalent(secondary)) {
             return primary;
         } else {

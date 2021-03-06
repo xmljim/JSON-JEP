@@ -20,10 +20,25 @@ package org.ghotibeaun.json.factory;
 
 import java.util.Arrays;
 
+import org.ghotibeaun.json.JSONFactory;
+import org.ghotibeaun.json.parser.JSONParser;
+import org.ghotibeaun.json.parser.jep.EventParser;
+
+
 public enum Setting {
+    /**
+     * Specifies the property for the {@link JSONFactory} implementation class
+     */
     FACTORY_CLASS("org.ghotibeaun.json.factory", true),
+    /**
+     * Specifies the property for the {@link JSONParser} implementation class
+     */
     PARSER_CLASS("org.ghotibeaun.json.parser", true),
+    /**
+     * Specifies the property for the {@link EventParser} implementation class
+     */
     EVENT_PARSER_CLASS("org.ghotibeaun.json.event.parser", true),
+
     EVENT_PROCESSOR_CLASS("org.ghotibeaun.json.event.processor", true),
     EVENT_PROVIDER_CLASS("org.ghotibeaun.json.event.provider", true),
     JSON_CONVERTER_CLASS("org.ghotibeaun.json.convert.jsonconverter", true),
@@ -35,7 +50,10 @@ public enum Setting {
     JSONPATH_PROVIDER_CLASS("org.ghotibeaun.json.jsonpath.jsonprovider", true),
     JSONPATH_MAPPING_PROVIDER_CLASS("org.ghotibeaun.json.jsonpath.mappingprovider", true),
     XML_SERIALIZER_CLASS("org.ghotibeaun.json.xmlserializer", true),
-    MERGE_APPEND_KEY("org.ghotibeaun.json.merge.appendkey", false)
+    MERGE_APPEND_KEY("org.ghotibeaun.json.merge.appendkey", false),
+    CONVERTER_JSON_KEY_CASE("org.ghotibeaun.json.converter.option.keycase", false),
+    CONVERTER_IGNORE_KEYS("org.ghotibeaun.json.converter.option.ignorekeys", false),
+    CONVERTER_VALIDATION("org.ghotibeaun.json.converter.option.validation", false)
     ;
     private String property;
     private boolean classValue;

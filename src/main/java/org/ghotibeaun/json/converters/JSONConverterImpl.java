@@ -28,7 +28,7 @@ import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.converters.handlers.MemberHandler;
-import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.options.ConverterOption;
 import org.ghotibeaun.json.converters.utils.AnnotationUtils;
 import org.ghotibeaun.json.converters.utils.ClassScanner;
 import org.ghotibeaun.json.converters.utils.ClassUtils;
@@ -38,14 +38,14 @@ import org.ghotibeaun.json.exception.JSONConversionException;
 
 class JSONConverterImpl extends AbstractJSONConverter {
 
-    public JSONConverterImpl(Options... option) {
+    public JSONConverterImpl(ConverterOption<?>... option) {
         super(option);
 
     }
 
     @Override
     public <T> T convertToClass(Class<T> targetClass, JSONObject json) throws JSONConversionException {
-        final ClassScanner scanner = new ClassScanner(targetClass);
+        final ClassScanner scanner = new ClassScanner(targetClass, getConverterOptions());
         final ClassScanner.Validation validation = scanner.validate(json);
 
         if (!validation.isValid()) {

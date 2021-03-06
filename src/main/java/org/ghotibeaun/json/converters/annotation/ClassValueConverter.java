@@ -39,5 +39,5 @@ public @interface ClassValueConverter {
      */
     Class<? extends ValueConverter<?>> converter();
 
-    String[] args();
+    String[] args() default {};
 }

@@ -24,7 +24,8 @@ import java.util.Optional;
 import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
-import org.ghotibeaun.json.converters.options.Options;
+import org.ghotibeaun.json.converters.options.ConverterOption;
+import org.ghotibeaun.json.converters.options.OptionsBuilder;
 import org.ghotibeaun.json.converters.utils.ClassUtils;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
@@ -33,11 +34,11 @@ import org.ghotibeaun.json.factory.Setting;
 
 public abstract class AbstractJSONConverter extends AbstractConverter implements JSONConverter {
 
-    public AbstractJSONConverter(Options... option) {
-        super(option);
+    public AbstractJSONConverter(ConverterOption<?>... option) {
+        super(option.length == 0 ? OptionsBuilder.defaultOptions() : option);
     }
 
-    public static JSONConverter getJSONConverter(Options... options) {
+    public static JSONConverter getJSONConverter(ConverterOption<?>... options) {
         //return new ClassConverterImpl(option);
         final Optional<Class<?>> converterClass = FactorySettings.getFactoryClass(Setting.JSON_CONVERTER_CLASS);
         if (converterClass.isPresent()) {
