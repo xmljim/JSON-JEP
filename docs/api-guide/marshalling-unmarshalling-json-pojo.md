@@ -5,48 +5,27 @@
 ## Contents
 
 * [Overview](#overview)
-    
     * [Basic Rules and Assumptions](#basic-rules-and-assumptions)
-
 * [Basic Example](#basic-example)
-
 * [Parsing JSON to a POJO](#parsing-json-to-a-pojo)
-
 * [Converting a POJO to JSON](#converting-a-pojo-to-json)
-
 * [Working with Interfaces and Abstract Classes](#working-with-interfaces-and-abstract-classes)
-
 * [Working with Lists](#working-with-lists)
-
 * [Working with Objects](#working-with-objects)
-  
     * [List of Objects](#list-of-objects)
-  
     * [Nested Objects](#nested-objects)
-
 * [Annotations](#annotations)
-
     * [@TargetClass](#targetclass)
-  
     * [@JSONIgnore](#jsonignore)
-  
     * [@JSONElement](#jsonelement)
-  
     * [@JSONValueConverter](#jsonvalueconverter)
-  
     * [@ClassValueConverter](#classvalueconverter)
 * [ValueConverters](#valueconverters)
-  
     * [AbstractValueConverter](#abstractvalueconverter)
-  
     * [Example](#example)
-    
         * [JSONValueToLocalDateTime](#jsonvaluetolocaldatetime)
-    
         * [LocalDateTimeToLong](#localdatetimetolong)
-        
         * [Putting It All Together](#putting-it-all-together)
-    
     * [Using a ValueConverter with Converters Methods](#using-a-valueconverter-with-converters-methods)
 
 ## Overview
@@ -59,14 +38,14 @@ JSON lends itself ready for mapping to plain old Java objects (POJOs) that can b
 
 - state persistence: Save and/or load application state to JSON and from Java to a persistence store
 
-The [org.ghotibeaun.json.converters](..javadocs/org/ghotibeaun/json/converters/package-summary.html) contains three core interfaces to 
+The [org.ghotibeaun.json.converters](../javadocs/org/ghotibeaun/json/converters/package-summary.html) contains three core interfaces to 
 marshal and unmarshal to and from JSON and POJOs:
 
-- [Converter](..javadocs/org/ghotibeaun/json/converters/Converter.html) - this is the main interface for all converters
-- [JSONConverter](javadocs/org/ghotibeaun/json/converters/JSONConverter.html) - contains methods to unmarshal JSON to a POJO class instance
-- [ClassConverter](javadocs/org/ghotibeaun/json/converters/ClassConverter.html) - contains methods to marshal a POJO class instance to JSON
+- [Converter](../javadocs/org/ghotibeaun/json/converters/Converter.html) - this is the main interface for all converters
+- [JSONConverter](../javadocs/org/ghotibeaun/json/converters/JSONConverter.html) - contains methods to unmarshal JSON to a POJO class instance
+- [ClassConverter](../javadocs/org/ghotibeaun/json/converters/ClassConverter.html) - contains methods to marshal a POJO class instance to JSON
 
-In addition to these interfaces, the [Converters](javadocs/org/ghotibeaun/json/converters/Converters.html) class is repsonsible for
+In addition to these interfaces, the [Converters](../javadocs/org/ghotibeaun/json/converters/Converters.html) class is repsonsible for
 instantiating concrete implementations of these interfaces and contains static methods mapped to all of the interface methods.
 
 ### Basic Rules and Assumptions
@@ -681,7 +660,7 @@ parts of your POJO.
 
 ### @TargetClass
 
-The [`@TargetClass`](javadocs/org/ghotibeaun/json/converters/annotation/TargetClass.html) annotation allows you 
+The [`@TargetClass`](../javadocs/org/ghotibeaun/json/converters/annotation/TargetClass.html) annotation allows you 
 to specify a concrete class to use for a given JSON property containing either a List of objects, or another JSONObject. 
 This is particularly useful if you wish to use a particular concrete class implementation that overrides the designated
 field type, or if the field type is an interface or abstract class.  
@@ -745,7 +724,7 @@ private Team team;
 ### @JSONIgnore
 
 There may be cases where you do not wish to map a POJO field to a JSON property. In this case you can use the 
-[`@JSONIgnore`](javadocs/org/ghotibeaun/json/converters/annotation/JSONIgnore.html) annotation.
+[`@JSONIgnore`](../javadocs/org/ghotibeaun/json/converters/annotation/JSONIgnore.html) annotation.
 
 ```java
 @JSONIgnore
@@ -762,7 +741,7 @@ private String teamName;
 
 ### @JSONElement
 
-The [`JSONElement`](javadocs/org/ghotibeaun/json/converters/annotation/JSONElement.html) annotation is used for
+The [`JSONElement`](../javadocs/org/ghotibeaun/json/converters/annotation/JSONElement.html) annotation is used for
 mapping JSON properties to a specific property name and/or to a specific setter or getter method in your POJO.
 There are three optional fields:
 
@@ -803,7 +782,7 @@ public List<Team> getTeamList() {...}
 ```
 
 ### @JSONValueConverter
-The [`@JSONValueConverter`](javadocs/org/ghotibeaun/json/converters/annotation/JSONValueConverter.html) annotation can used 
+The [`@JSONValueConverter`](../javadocs/org/ghotibeaun/json/converters/annotation/JSONValueConverter.html) annotation can used 
 on a field or method that defines a [`ValueConverter`](#valueconverters) to be applied to a JSON property value before it is
 set to a POJO field. **This is only applied when unmarshalling a JSON instance to a POJO**. There is a sibling annotation that
 is used for converting a Class value into a JSON value: [`@ClassValueConverter](#classvalueconverter)
@@ -959,7 +938,7 @@ private LocalDateTime dateTime;
 
 ### Using a ValueConverter with Converters Methods
 
-We've already discuss the [Converters](..javadocs/org/ghotibeaun/json/converters/Converters.html) class, which provides static methods
+We've already discuss the [Converters](../javadocs/org/ghotibeaun/json/converters/Converters.html) class, which provides static methods
 to marshal and unmarshal JSON and POJOs. Another common scenario for applying a ValueConverter is converting lists of values to JSONArrays,
 and vice versa. Let's start with an example that is a JSONArray of long values that represent time stamps. We want to convert it to a 
 `List<LocalDateTime>`. 

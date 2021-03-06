@@ -5,29 +5,17 @@
 ## Contents
 
 * [Overview](#overview)
-
 * [Setting Up The Class](#setting-up-the-class)
-
     * [Understanding The JSON Event Model](#understanding-the-json-event-model)
-
     * [documentStart](#documentstart)
-
     * [documentEnd](#documentend)
-
     * [newKey](#newkey)
-
     * [jsonArrayStart](#jsonarraystart)
-
     * [jsonArrayEnd](#jsonarrayend)
-
     * [jsonObjectStart](#jsonobjectstart)
-
     * [value* Events](#value-events)
-
 * [Putting It All Together](#putting-it-all-together)
-
 * [Using Our Event Handler](#using-our-event-handler)
-
 * [Some Additional Thoughts and Conclusion](#some-additional-thoughts-and-conclusion)
 
 ## Overview
@@ -35,9 +23,9 @@ Event Handlers are an effective way of extracting, filtering and even transformi
 and you only care about a slice of it; it could be that you only care about slices of data `within` the data objects themselves. Whatever the 
 case, you can implement an Event Handler to address specific needs.
 
-All Event Handlers must implement the [`JSONEventHandler`](javadocs/org/ghotibeaun/json/parser/jep/eventhandler/JSONEventHandler.html)  interface. Generally speaking,
+All Event Handlers must implement the [`JSONEventHandler`](../javadocs/org/ghotibeaun/json/parser/jep/eventhandler/JSONEventHandler.html)  interface. Generally speaking,
 this is a low-level interface and should not be implemented directly. Instead, it's recommended to extend the 
-[EventHandler](javadocs/org/ghotibeaun/json/parser/jep/eventhandler/EventHandler.html) abstract class, or one of the built-in abstract class that
+[EventHandler](../javadocs/org/ghotibeaun/json/parser/jep/eventhandler/EventHandler.html) abstract class, or one of the built-in abstract class that
 inherit from it. 
 
 In this example, we'll use a scenario of a massive JSON file that stores aggregated time-series data, updated daily, containing information about COVID-19 cases
@@ -73,13 +61,13 @@ nationally. Each record contains a date field (stored as a ISO-8601 date-time st
 ```
 
 ## Setting up the Class
-We'll create our class to extend the [StackEventHandler](javadocs/org/ghotibeaun/json/parser/jep/eventhandler/StackEventHandler.html) abstract class.
+We'll create our class to extend the [StackEventHandler](../javadocs/org/ghotibeaun/json/parser/jep/eventhandler/StackEventHandler.html) abstract class.
 This class does a lot of the heavy lifting of processing the data coming from the `JSONEventProvider` and `JSONEventProcessor` to fire the appropriate
 entity event. It also includes some nice little features that allow you to interrogate where you are in context of both keys and object/array types. 
 
 > **NOTE**: The `StackEventHandler` class does not have any method or variable to hold our collected data, we need to include on in our class. 
 > For our purposes, we're collecting data as a list, so we'll implement ours as a `JSONArray`. We _could_ initialize our data on the
-> [documentStart](javadoc/org/ghotibeaun/json/parser/jep/eventhandler/StackEventHandler.html#documentStart(org.ghotibeaun.json.JSONValueType)) method, but since 
+> [documentStart](../javadocs/org/ghotibeaun/json/parser/jep/eventhandler/StackEventHandler.html#documentStart(org.ghotibeaun.json.JSONValueType)) method, but since 
 > we're aggregating a known set, it's just as easy to initialize right away.  We'll also need a public method to return the data.
 
 We'll set up the class with three parameters
@@ -180,7 +168,7 @@ public class CovidEventHandler extends StackEventHandler {
 ### Understanding the JSON Event Model
 
 Now that we've set up the class we need to implement its abstract methods inherited from the `JSONEventHandler` interface.  These methods are fired by a 
-[JSONEventProvider](javadocs/org/ghotibeaun/json/parser/jep/eventprovider/JSONEventProvider.html) and initially processed by the `EventHandler`, and then
+[JSONEventProvider](../javadocs/org/ghotibeaun/json/parser/jep/eventprovider/JSONEventProvider.html) and initially processed by the `EventHandler`, and then
 subsequently fired to the appropriate event method. 
 
 Now that we've set up the class and constructor, we need to implement the `JSONEventHandler` event methods:
