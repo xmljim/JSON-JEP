@@ -292,6 +292,11 @@ we handle non-equivalencies and conflicts.
     * The values (`JSONValue`) at each index position are equivalent
     * The order of the elements in the array _does_ matter
     * Example: `[1, 3, 5] == [1, 3, 5]`. However, `[1, 3, 5] != [1, 5, 3]`
+    
+> **IMPORTANT**: Equivalency in JSONObjects and JSONArrays is recursive. This means that the _entire_
+> structure of each of the JSONNodes compared must be equivalent using the conditions set out above.
+> If any of these conditions at any point in the structure is not true, then the entire structure
+> is not equivalent.
 
 ## Managing Conflicts
 

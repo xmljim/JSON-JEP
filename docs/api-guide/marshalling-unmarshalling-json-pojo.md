@@ -973,6 +973,8 @@ JSONArray timestampArray = Converters.convertToJSONArray(list, Optional.of(dateT
 
 [\[Back to Top\]](#contents)
 
+**Next**: [Merging JSON Data](merging)
+
 ---
 <a name="footnote-1">[\[1\]](#ref-footnote-1) Of course, there _are_ other ways to express date/time values in JSON, but these are the most common
 </a>
