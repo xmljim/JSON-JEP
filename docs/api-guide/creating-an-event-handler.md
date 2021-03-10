@@ -1,4 +1,4 @@
-[JEP API Guide](index.html) >> [Getting Started](getting-started.html) >> Creating an Event Handler
+[JEP API Guide](./index) >> [Getting Started](./getting-started) >> Creating an Event Handler
 
 # Creating an Event Handler
 

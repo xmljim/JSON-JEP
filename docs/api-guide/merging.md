@@ -1,4 +1,4 @@
-[JEP API Guide](index.html) >> Merging JSON Data
+[JEP API Guide](./index) >> Merging JSON Data
 
 # Merging JSON Data
 

@@ -40,6 +40,7 @@ import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.jep.EventParser;
 import org.ghotibeaun.json.parser.jep.ParserConfiguration;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
+import org.ghotibeaun.json.parser.jep.eventhandler.EventHandler;
 
 class JSONParserImpl implements JSONParser {
 
@@ -54,8 +55,9 @@ class JSONParserImpl implements JSONParser {
 
     @Override
     public JSONNode parse(InputStream inputStream, String charSet) throws JSONParserException {
+        final EventHandler handler = FactorySettings.createFactoryClass(Setting.EVENT_HANDLER_CLASS);
+        //final NativeEventHandler handler = new NativeEventHandler();
 
-        final NativeEventHandler handler = new NativeEventHandler();
         final ParserSettings settings = new ParserSettings(ParserConfiguration.newConfiguration(handler));
         settings.setCharSet(charSet);
 

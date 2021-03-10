@@ -2,9 +2,10 @@
 
 <img src="./jep-icon.png"/>
 
-* [Overview](overview.html)
-* [Getting Started](getting-started.html)
-    * [Creating an Event Handler](creating-an-event-handler.html)
-    * [Working with the JEP Object Model](working-with-jep-objects.html)
-* [Marshalling and Unmarshalling JSON and POJOs](marshalling-unmarshalling-json-pojo.html)
+* [Overview](./overview)
+* [Getting Started](./getting-started)
+    * [Creating an Event Handler](./creating-an-event-handler)
+    * [Working with the JEP Object Model](./working-with-jep-objects)
+    * [Factory Settings](./factory-settings)
+* [Marshalling and Unmarshalling JSON and POJOs](./marshalling-unmarshalling-json-pojo)
 * [Merging JSON instances](./merging)

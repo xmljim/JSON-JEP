@@ -26,6 +26,7 @@ import org.ghotibeaun.json.parser.csv.CSVSettings;
 import org.ghotibeaun.json.parser.csv.JSONCSVParser;
 import org.ghotibeaun.json.serializer.JSONSerializer;
 import org.ghotibeaun.json.serializer.SerializationFactory;
+import org.ghotibeaun.json.serializer.XMLSerializer;
 
 class JSONFactoryImpl extends JSONFactory {
 
@@ -40,6 +41,11 @@ class JSONFactoryImpl extends JSONFactory {
     @Override
     public JSONSerializer newSerializer() throws JSONSerializationException {
         return SerializationFactory.getSerializer();
+    }
+
+    @Override
+    public XMLSerializer newXMLSerializer() throws JSONSerializationException {
+        return SerializationFactory.getXmlSerializer();
     }
 
     @Override

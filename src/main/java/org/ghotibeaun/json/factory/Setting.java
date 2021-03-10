@@ -41,6 +41,7 @@ public enum Setting {
 
     EVENT_PROCESSOR_CLASS("org.ghotibeaun.json.event.processor", true),
     EVENT_PROVIDER_CLASS("org.ghotibeaun.json.event.provider", true),
+    EVENT_HANDLER_CLASS("org.ghotibeaun.json.event.handler", true),
     JSON_CONVERTER_CLASS("org.ghotibeaun.json.convert.jsonconverter", true),
     CLASS_CONVERTER_CLASS("org.ghotibeaun.json.convert.classconverter", true),
     SERIALIZER_CLASS("org.ghotibeaun.json.serializer", true),

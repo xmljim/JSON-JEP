@@ -48,4 +48,6 @@ public abstract class EventParser implements JSONEventParser {
     @Override
     public abstract void parse(URL url, ParserSettings settings) throws JSONEventParserException;
 
+
+
 }

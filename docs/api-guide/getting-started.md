@@ -1,4 +1,4 @@
-[JEP API Guide](index.html) >> Getting Started
+[JEP API Guide](index) >> Getting Started
 
 # Getting Started 
 
@@ -57,10 +57,10 @@ if (json.isObject()) {
 
 **Sub-topics**: 
 
-* [Creating an Event Handler](creating-an-event-handler.html)
-* [Working with the JEP Object Model](working-with-jep-objects.html)
+* [Creating an Event Handler](./creating-an-event-handler)
+* [Working with the JEP Object Model](./working-with-jep-objects)
 
-**Next**: [Marshalling and Unmarshalling JSON and POJOs](marshalling-unmarshalling-json-pojo.html)
+**Next**: [Marshalling and Unmarshalling JSON and POJOs](./marshalling-unmarshalling-json-pojo)
 
 
 

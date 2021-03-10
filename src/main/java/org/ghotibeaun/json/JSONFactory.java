@@ -18,16 +18,27 @@
  */
 package org.ghotibeaun.json;
 
+import org.ghotibeaun.json.converters.AbstractClassConverter;
+import org.ghotibeaun.json.converters.AbstractJSONConverter;
+import org.ghotibeaun.json.converters.ClassConverter;
+import org.ghotibeaun.json.converters.JSONConverter;
+import org.ghotibeaun.json.converters.options.ConverterOption;
 import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONParserException;
 import org.ghotibeaun.json.exception.JSONSerializationException;
 import org.ghotibeaun.json.factory.FactorySettings;
 import org.ghotibeaun.json.factory.Setting;
+import org.ghotibeaun.json.jsonpath.JSONPath;
+import org.ghotibeaun.json.jsonpath.JSONPathFactory;
 import org.ghotibeaun.json.parser.JSONParser;
 import org.ghotibeaun.json.parser.csv.CSVSettings;
 import org.ghotibeaun.json.parser.csv.JSONCSVParser;
 import org.ghotibeaun.json.serializer.JSONSerializer;
+import org.ghotibeaun.json.serializer.XMLSerializer;
+
+import com.jayway.jsonpath.Option;
+
 
 /**
  * Factory class used to instantiate a new {@link JSONParser}. For anyone
@@ -90,9 +101,23 @@ public abstract class JSONFactory {
      */
     public abstract JSONSerializer newSerializer() throws JSONSerializationException;
 
+    public abstract XMLSerializer newXMLSerializer() throws JSONSerializationException;
+
     public abstract JSONCSVParser newCsvParser(CSVSettings settings);
 
     public abstract JSONCSVParser newCsvParser();
+
+    public JSONConverter newJSONConverter(ConverterOption<?>... options) {
+        return AbstractJSONConverter.getJSONConverter(options);
+    }
+
+    public ClassConverter newClassConverter(ConverterOption<?>... options) {
+        return AbstractClassConverter.getClassConverter(options);
+    }
+
+    public JSONPath newJSONPath(String jsonPath, Option...options) {
+        return JSONPathFactory.compile(jsonPath, options);
+    }
 
 
 }

@@ -20,6 +20,7 @@ package org.ghotibeaun.json.parser.jep.eventhandler;
 
 import java.math.BigDecimal;
 
+import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.parser.jep.eventhandler.event.JSONEvent;
 
@@ -161,5 +162,9 @@ public class ConsoleEventHandler extends EventHandler {
 
     }
 
+    @Override
+    public JSONNode getResult() {
+        return null;
+    }
 
 }

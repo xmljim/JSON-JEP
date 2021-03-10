@@ -25,7 +25,9 @@ import org.ghotibeaun.json.JSONArray;
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.converters.Converters;
+import org.ghotibeaun.json.factory.FactorySettings;
 import org.ghotibeaun.json.factory.NodeFactory;
+import org.ghotibeaun.json.factory.Setting;
 import org.ghotibeaun.json.parser.ParserFactory;
 
 import com.jayway.jsonpath.Configuration;
@@ -64,8 +66,8 @@ class JSONPathImpl implements JSONPath {
 
     private void initConfiguration(Option...options) {
         configuration = Configuration.builder()
-                .jsonProvider(new JSONLibProvider())
-                .mappingProvider(new JSONLibMappingProvider())
+                .jsonProvider(FactorySettings.createFactoryClass(Setting.JSONPATH_PROVIDER_CLASS))
+                .mappingProvider(FactorySettings.createFactoryClass(Setting.JSONPATH_MAPPING_PROVIDER_CLASS))
                 .build();
 
         if (options.length > 0) {

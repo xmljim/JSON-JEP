@@ -1,4 +1,4 @@
-[JEP API Guide](index.html) >> Marshalling and Unmarshalling JSON and POJOs
+[JEP API Guide](index) >> Marshalling and Unmarshalling JSON and POJOs
 
 # Marshalling and Unmarshalling JSON and POJOs
 

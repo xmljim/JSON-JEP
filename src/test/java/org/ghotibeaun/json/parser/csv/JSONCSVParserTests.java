@@ -9,6 +9,7 @@ import java.net.URL;
 
 import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.parser.ParserFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class JSONCSVParserTests {
@@ -92,7 +93,7 @@ public class JSONCSVParserTests {
         }       
     }
 
-    @Test //@Ignore
+    @Test @Ignore
     public void testFromUrl() {
         final String url = "https://raw.githubusercontent.com/nytimes/covid-19-data/master/us-counties.csv";
         try {
@@ -128,7 +129,7 @@ public class JSONCSVParserTests {
         }
     }
 
-    @Test
+    @Test @Ignore
     public void testJHConfirmedUrl() {
         final String url = "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv";
         try {

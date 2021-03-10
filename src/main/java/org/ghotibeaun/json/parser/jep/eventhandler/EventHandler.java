@@ -21,6 +21,7 @@ package org.ghotibeaun.json.parser.jep.eventhandler;
 import java.math.BigDecimal;
 import java.nio.charset.Charset;
 
+import org.ghotibeaun.json.JSONNode;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.exception.JSONEventParserException;
 import org.ghotibeaun.json.parser.jep.ParserSettings;
@@ -112,11 +113,10 @@ public abstract class EventHandler implements JSONEventHandler {
             } catch (final Exception e) {
                 throw new JSONEventParserException(e);
             }
-
-
         }
 
         return dataVal;
     }
 
+    public abstract JSONNode getResult();
 }
