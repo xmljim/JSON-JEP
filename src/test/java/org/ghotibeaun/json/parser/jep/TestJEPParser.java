@@ -17,22 +17,17 @@ public class TestJEPParser {
         final String data = "{\"format\": \"yyyy-MM-dd'T'HH:mm:ss.SSSZ\", \"isTrue\": false}";
         final JSONEventParserImpl impl = new JSONEventParserImpl();
 
-
-
         final double start = System.nanoTime();
         impl.parse(data, ParserSettings.newSettings(new TestHandler()));
         final double end = System.nanoTime();
 
-
-
-
-        final double time = ((end-start) * .000000001f);
+        final double time = (end-start) * .000000001f;
         System.out.println(time);
         final double dataSize = data.length();
 
-        final double mbSec = ((dataSize/time)/Math.pow(2,20));
-        System.out.println("MB/sec: " + (mbSec ));
-        System.out.println("GB/hr: " + ((mbSec * 3600)/Math.pow(2, 10)));
+        final double mbSec = dataSize/time/Math.pow(2,20);
+        System.out.println("MB/sec: " + mbSec);
+        System.out.println("GB/hr: " + mbSec * 3600/Math.pow(2, 10));
         System.out.println("Data Size: " + dataSize + " bytes");
         System.out.println("----------------------");
     }
@@ -48,13 +43,13 @@ public class TestJEPParser {
         final double start = System.nanoTime();
         impl.parse(i, ParserSettings.newSettings(new TestHandler()).setUseStrict(false));
         final double end = System.nanoTime();
-        final double time = ((end-start) * .000000001f);
+        final double time = (end-start) * .000000001f;
         System.out.println(time);
         final Long dataSize = (Long) Files.getAttribute(Paths.get("src/test/resources/observation-fhir.json"), "size");
 
-        final double mbSec = ((dataSize/time)/Math.pow(2,20));
-        System.out.println("MB/sec: " + (mbSec ));
-        System.out.println("GB/hr: " + ((mbSec * 3600)/Math.pow(2, 10)));
+        final double mbSec = dataSize/time/Math.pow(2,20);
+        System.out.println("MB/sec: " + mbSec);
+        System.out.println("GB/hr: " + mbSec * 3600/Math.pow(2, 10));
         System.out.println("Data Size: " + dataSize + " bytes");
         System.out.println("----------------------");
     }
@@ -73,12 +68,12 @@ public class TestJEPParser {
         final double start = System.nanoTime();
         impl.parse(f, ParserSettings.newSettings(new TestHandler()).setUseStrict(false).setBlockSize(1024));
         final double end = System.nanoTime();
-        final double time = ((end-start) * .000000001f);
+        final double time = (end-start) * .000000001f;
         System.out.println(time);
 
-        final double mbSec = ((dataSize/time)/Math.pow(2,20));
-        System.out.println("MB/sec: " + (mbSec ));
-        System.out.println("GB/hr: " + ((mbSec * 3600)/Math.pow(2, 10)));
+        final double mbSec = dataSize/time/Math.pow(2,20);
+        System.out.println("MB/sec: " + mbSec);
+        System.out.println("GB/hr: " + mbSec * 3600/Math.pow(2, 10));
         System.out.println("Data Size: " + dataSize + " bytes");
         System.out.println("----------------------");
     }
@@ -98,12 +93,12 @@ public class TestJEPParser {
         final double start = System.nanoTime();
         impl.parse(p, settings);
         final double end = System.nanoTime();
-        final double time = ((end-start) * .000000001f);
+        final double time = (end-start) * .000000001f;
         System.out.println(time);
 
-        final double mbSec = ((dataSize/time)/Math.pow(2,20));
-        System.out.println("MB/sec: " + (mbSec ));
-        System.out.println("GB/hr: " + ((mbSec * 3600)/Math.pow(2, 10)));
+        final double mbSec = dataSize/time/Math.pow(2,20);
+        System.out.println("MB/sec: " + mbSec);
+        System.out.println("GB/hr: " + mbSec * 3600/Math.pow(2, 10));
         System.out.println("Data Size: " + dataSize + " bytes");
         System.out.println("----------------------");
     }

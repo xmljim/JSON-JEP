@@ -1,7 +1,25 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.util;
 
 public class ByteConstants {
-    
+
     public static final byte NULL = 0x0;
     public static final byte SOH = 0x1;
     public static final byte STX = 0x2;
@@ -122,17 +140,17 @@ public class ByteConstants {
     public static final byte x = 0x78;
     public static final byte y = 0x79;
     public static final byte z = 0x7a;
-    
-    
+
+
     public static final byte START_MAP = 0x7b;
     public static final byte END_MAP = 0x7d;
-    
-    
-    
+
+
+
     public static final byte START_ARRAY = LEFT_SQUARE_BRACKET;
     public static final byte END_ARRAY = RIGHT_SQUARE_BRACKET;
     private ByteConstants() {
         // TODO Auto-generated constructor stub
     }
-    
+
 }

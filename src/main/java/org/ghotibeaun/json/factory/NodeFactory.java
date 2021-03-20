@@ -1,3 +1,21 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.factory;
 
 import java.util.List;
@@ -15,13 +33,11 @@ public final class NodeFactory {
 
 
     public static JSONObject newJSONObject() {
-        //return new JSONObjectImpl();
-        return FactorySettings.createFactoryClass(Setting.OBJECT_CLASS);
+        return new JSONObjectImpl();
     }
 
     public static JSONArray newJSONArray() {
-        //return new JSONArrayImpl();
-        return FactorySettings.createFactoryClass(Setting.ARRAY_CLASS);
+        return new JSONArrayImpl();
     }
 
     public static JSONObject newJSONObject(Map<String, ?> map) {
@@ -34,49 +50,29 @@ public final class NodeFactory {
 
 
     public static JSONValue<String> newStringValue(String value) {
-        final JSONValue<String> jsonValue = FactorySettings.createFactoryClass(Setting.VALUE_STRING_CLASS);
-        jsonValue.setValue(value);
-        return jsonValue;
-
-        //return new JSONStringValueImpl(value);
+        return new JSONStringValueImpl(value);
     }
 
     public static JSONValue<Number> newNumberValue(Number value) {
-        final JSONValue<Number> jsonValue = FactorySettings.createFactoryClass(Setting.VALUE_NUMBER_CLASS);
-        jsonValue.setValue(value);
-        return jsonValue;
-        //return new JSONNumberValueImpl(value);
+        return new JSONNumberValueImpl(value);
     }
 
-
-
     public static JSONValue<Boolean> newBooleanValue(boolean value) {
-        final JSONValue<Boolean> jsonValue = FactorySettings.createFactoryClass(Setting.VALUE_BOOLEAN_CLASS);
-        jsonValue.setValue(value);
-        return jsonValue;
-        //return new JSONBooleanValueImpl(value);
+        return new JSONBooleanValueImpl(value);
     }
 
     public static JSONValue<JSONObject> newJSONObjectValue(JSONObject value) {
-        final JSONValue<JSONObject> jsonValue = FactorySettings.createFactoryClass(Setting.VALUE_OBJECT_CLASS);
-        jsonValue.setValue(value);
-        return jsonValue;
-        //return new JSONObjectValueImpl(value);
+        return new JSONObjectValueImpl(value);
     }
 
 
     public static JSONValue<JSONArray> newJSONArrayValue(JSONArray value) {
-        final JSONValue<JSONArray> jsonValue = FactorySettings.createFactoryClass(Setting.VALUE_ARRAY_CLASS);
-        jsonValue.setValue(value);
-        return jsonValue;
-        //return new JSONArrayValueImpl(value);
+        return new JSONArrayValueImpl(value);
     }
 
 
     public static JSONValue<NullObject> newJSONNullValue() {
-        return FactorySettings.createFactoryClass(Setting.VALUE_NULL_CLASS);
-
-        //return new JSONNullValueImpl();
+        return new JSONNullValueImpl();
     }
 
     public static JSONNode parse(String data) {

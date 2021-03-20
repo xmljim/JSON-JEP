@@ -9,9 +9,9 @@ import org.ghotibeaun.json.JSONObject;
 import org.ghotibeaun.json.JSONValue;
 import org.ghotibeaun.json.JSONValueType;
 import org.ghotibeaun.json.factory.NodeFactory;
-import org.ghotibeaun.json.parser.jep.eventhandler.BaseEventHandler;
+import org.ghotibeaun.json.parser.jep.eventhandler.StackEventHandler;
 
-public class TestHandler extends BaseEventHandler {
+public class TestHandler extends StackEventHandler {
     
     private JSONNode result;
     private JSONNode currentNode;

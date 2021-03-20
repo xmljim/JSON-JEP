@@ -1,8 +1,25 @@
+/*
+ *
+ * # Released under MIT License
+ *
+ * Copyright (c) 2016-2021 Jim Earley.
+ *
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), 
+ * to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+ * and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS 
+ * IN THE SOFTWARE.
+ */
 package org.ghotibeaun.json.factory;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumMap;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -10,6 +27,9 @@ import org.ghotibeaun.json.JSONFactory;
 import org.ghotibeaun.json.converters.utils.ClassUtils;
 import org.ghotibeaun.json.exception.JSONFactoryException;
 import org.ghotibeaun.json.exception.JSONRuntimeException;
+import org.ghotibeaun.json.factory.setting.ClassSetting;
+import org.ghotibeaun.json.factory.setting.FactorySetting;
+import org.ghotibeaun.json.factory.setting.StringSetting;
 
 /**
  * Holds all the various factories' settings for instantiation of various JSON objects. All keys defined have
@@ -20,7 +40,7 @@ import org.ghotibeaun.json.exception.JSONRuntimeException;
  * classname of your new implementation
  *
  * <pre>
- * FactorySettings.applySetting(FactorySettings.JSON_FACTORY, "com.example.MyJsonFactory");
+ * FactorySettings.applySetting(Setting.FACTORY_CLASS, "com.example.MyJsonFactory");
  * </pre>
  *
  * By default, this will change the settings from the default settings to your modified configuration. However, if you wanted to go back to the
@@ -36,11 +56,14 @@ public class FactorySettings extends Properties {
     private static final long serialVersionUID = 1L;
 
     private static FactorySettings instance = null;
-    private Properties defaults;
+    //private Properties defaults;
     private boolean useDefaultSettings;
-    private final FactoryClassCache cache;
+    //private final FactoryClassCache defaultCache;
+    //private final FactoryClassCache customCache;
+
+    private final EnumMap<Setting, FactorySetting<?>> settingMap = new EnumMap<>(Setting.class);
+
     private FactorySettings() {
-        cache = new FactoryClassCache();
 
         try {
             super.load(this.getClass().getResourceAsStream("/org/ghotibeaun/json/factory/jsonlib.properties"));
@@ -48,14 +71,18 @@ public class FactorySettings extends Properties {
 
             for (final Object k : this.keySet()) {
                 final String ks = (String) k;
-
                 defaults.setProperty(ks, this.getProperty(ks));
 
                 //final boolean isClass = !Arrays.stream(excludeFromCache).anyMatch(key -> key.equals(ks));
 
                 final Setting setting = Setting.fromPropertyName(ks);
-                if (setting != null && setting.isClassValue()) {
-                    cache.cacheClass(ks, this.getProperty(ks));
+
+                if (setting != null) {
+                    if (setting.isClassValue()) {
+                        settingMap.put(setting, new ClassSetting(this.getProperty(ks)));
+                    } else {
+                        settingMap.put(setting, new StringSetting(this.getProperty(ks)));
+                    }
                 }
             }
 
@@ -74,35 +101,34 @@ public class FactorySettings extends Properties {
         return instance;
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T createFactoryClass(Setting setting) throws JSONFactoryException {
-        if (setting.isClassValue()) {
-            return createFactoryClass(setting.getPropertyName());
+        final Optional<Class<?>> clazz = getFactoryClass(setting);
+
+        if (clazz.isPresent()) {
+            return (T)ClassUtils.createInstance(clazz.get());
         } else {
             throw new JSONFactoryException("Setting [" + setting.getPropertyName() + "] is not a cached class");
         }
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T> T createFactoryClass(String key) throws JSONFactoryException {
-        final Optional<Class<?>> clazz = getInstance().getCache().getClassFromCache(key);
-        if (clazz.isPresent()) {
-            //System.out.println("** Create Instance [" + key + "] -- " + clazz.get().getName());
-            return (T)ClassUtils.createInstance(clazz.get());
-        } else {
-            throw new JSONFactoryException("No class found for key: " + key);
-        }
-    }
 
     public static Optional<Class<?>> getFactoryClass(String key) {
-        return getInstance().getCache().getClassFromCache(key);
+        final Setting classSetting = Setting.fromPropertyName(key);
+
+        return getFactoryClass(classSetting);
     }
 
     public static Optional<Class<?>> getFactoryClass(Setting setting) {
-        return getFactoryClass(setting.getPropertyName());
-    }
+        if (setting == null) {
+            return Optional.of(null);
+        } else if (setting.isClassValue()) {
+            final ClassSetting classSetting = (ClassSetting)getInstance().settingMap.get(setting);
 
-    public FactoryClassCache getCache() {
-        return cache;
+            return Optional.of(getUseDefaultSettings() ? classSetting.getDefaultValue() :  classSetting.getValue());
+        } else {
+            return Optional.ofNullable(null);
+        }
     }
 
     /**
@@ -114,27 +140,44 @@ public class FactorySettings extends Properties {
      * @param value the setting value
      */
     public static void applySetting(String name, String value) throws JSONFactoryException {
-        getInstance().setProperty(name, value);
         final Setting setting = Setting.fromPropertyName(name);
-        if (setting != null && setting.isClassValue()) {
-            try {
-                getInstance().getCache().cacheClass(name, value);
-            } catch (final ClassNotFoundException e) {
-                throw new JSONFactoryException(e);
-            }
-        }
+        applySetting(setting, value);
+
         setUseDefaultSettings(false);
     }
 
     public static void applySetting(Setting setting, String value) throws JSONFactoryException {
         getInstance().setProperty(setting.getPropertyName(), value);
         setUseDefaultSettings(false);
-        if (setting.isClassValue()) {
-            try {
-                getInstance().getCache().cacheClass(setting.getPropertyName(), value);
-            } catch (final ClassNotFoundException e) {
-                throw new JSONFactoryException(e);
+
+        if (setting != null) {
+            if (setting.isClassValue()) {
+                final ClassSetting classSetting = (ClassSetting)getInstance().settingMap.get(setting);
+                try {
+                    classSetting.setValue(Class.forName(value));
+                } catch (final ClassNotFoundException e) {
+                    throw new JSONFactoryException(e.getMessage(), e);
+                }
+            } else {
+                final StringSetting stringSetting = (StringSetting)getInstance().settingMap.get(setting);
+                stringSetting.setValue(value);
             }
+        }
+
+    }
+
+    public static void applySetting(Setting setting, Class<?> clazz) {
+        final ClassSetting classSetting = (ClassSetting)getInstance().settingMap.get(setting);
+        classSetting.setValue(clazz);
+    }
+
+    public static Class<?> getClassSetting(Setting setting) {
+        final ClassSetting classSetting = (ClassSetting)getInstance().settingMap.get(setting);
+
+        if (classSetting != null) {
+            return classSetting.getValue();
+        } else {
+            return null;
         }
     }
 
@@ -147,11 +190,35 @@ public class FactorySettings extends Properties {
      * settings will be the same, until changed.
      */
     public static String getSetting(String name) {
-        return getSetting(name, getInstance().useDefaultSettings);
+        final Setting setting = Setting.fromPropertyName(name);
+
+        if (setting != null) {
+            return getSetting(setting);
+        } else {
+            return getInstance().getProperty(name);
+        }
     }
 
     public static String getSetting(Setting setting) {
-        return getSetting(setting.getPropertyName());
+        if (setting != null) {
+            if (setting.isClassValue()) {
+                final ClassSetting classSetting = (ClassSetting)getInstance().settingMap.get(setting);
+                if (classSetting != null) {
+                    return classSetting.toString();
+                } else {
+                    return null;
+                }
+            } else {
+                final StringSetting stringSetting = (StringSetting)getInstance().settingMap.get(setting);
+                if (stringSetting != null) {
+                    return stringSetting.toString();
+                } else {
+                    return null;
+                }
+            }
+        } else {
+            return null;
+        }
     }
 
     /**
@@ -163,15 +230,24 @@ public class FactorySettings extends Properties {
      * change the "global" flag to use either the default or custom settings</em>
      */
     public static String getSetting(String name, boolean useDefault) {
+
+
         if (useDefault == true) {
-            return getInstance().defaults.getProperty(name);
+            final Setting setting = Setting.fromPropertyName(name);
+            return getSetting(setting, useDefault);
         } else {
             return getInstance().getProperty(name);
         }
     }
 
     public static String getSetting(Setting setting, boolean useDefault) {
-        return getSetting(setting.getPropertyName(), useDefault);
+        final FactorySetting<?> factorySetting = getInstance().settingMap.get(setting);
+
+        if (useDefault) {
+            return factorySetting.toDefaultString();
+        } else {
+            return factorySetting.toString();
+        }
     }
 
     /**
@@ -185,7 +261,7 @@ public class FactorySettings extends Properties {
     }
 
     public static String getDefaultSetting(Setting setting) {
-        return getDefaultSetting(setting.getPropertyName());
+        return getSetting(setting, true);
     }
 
     /**
@@ -199,7 +275,7 @@ public class FactorySettings extends Properties {
     }
 
     public static String getCustomSetting(Setting setting) {
-        return getCustomSetting(setting.getPropertyName());
+        return getSetting(setting, false);
     }
 
     /**
@@ -220,24 +296,4 @@ public class FactorySettings extends Properties {
         return getInstance().useDefaultSettings;
     }
 
-    private class FactoryClassCache {
-        private final Map<String, Class<?>> cache = new HashMap<>();
-
-        public FactoryClassCache() {
-
-        }
-
-        public void cacheClass(String key, String className) throws ClassNotFoundException {
-            final Class<?> clazz = Class.forName(className, true, this.getClass().getClassLoader());
-            //System.out.println("Caching class: [" + key + "] -- " + clazz.getName());
-            cache.put(key, clazz);
-        }
-
-        public Optional<Class<?>> getClassFromCache(String key) {
-            return Optional.ofNullable(cache.get(key));
-        }
-
-
-
-    }
 }

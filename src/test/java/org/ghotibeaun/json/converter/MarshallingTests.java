@@ -23,7 +23,6 @@ import org.ghotibeaun.json.converter.classes.ConvertLocalDateTimeToLong;
 import org.ghotibeaun.json.converter.classes.ConvertLongToLocalDateTime;
 import org.ghotibeaun.json.converter.classes.MarshallingTest2;
 import org.ghotibeaun.json.converters.Converters;
-import org.ghotibeaun.json.converters.utils.ClassScanner;
 import org.ghotibeaun.json.converters.valueconverter.ValueConverter;
 import org.ghotibeaun.json.exception.JSONConversionException;
 import org.ghotibeaun.json.factory.NodeFactory;
@@ -198,14 +197,6 @@ public class MarshallingTests {
         final JSONArray converted = Converters.convertToJSONArray(dateList, Optional.of(toLongConverter), Optional.empty());
 
         assertTrue(converted.isEquivalent(converted));
-    }
-
-
-    @Test
-    public void testScanner() {
-        final ClassScanner scanner = new ClassScanner();
-        scanner.scanClass(MarshallingTest2.class);
-        //System.out.println(scanner);
     }
 
 
