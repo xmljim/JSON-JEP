@@ -94,7 +94,7 @@
 		<dependencySet>
 			<outputDirectory></outputDirectory>
 			<includes>
-				<include>org.ghotibeaun.json:JSON-JEP</include>
+				<include>org.ghotibeaun:JSON-JEP</include>
 			</includes>
 			<useProjectArtifact>true</useProjectArtifact>
 			<scope>runtime</scope>

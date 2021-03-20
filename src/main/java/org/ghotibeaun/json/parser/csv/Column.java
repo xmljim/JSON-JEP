@@ -27,6 +27,10 @@ public class Column {
     private int columnPosition;
     private boolean nullable;
 
+    public Column() {
+
+    }
+
     /**
      * Create a column definition. By default, it sets `nullable` to `true`, and
      * the `type` to `UNKNOWN`

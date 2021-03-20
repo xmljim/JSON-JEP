@@ -32,7 +32,7 @@ public enum JSONValueType {
     NULL(false),
     UNKNOWN(false); //only used by csv processor
 
-    boolean isNumeric;
+    private boolean isNumeric;
 
     private JSONValueType(boolean numeric) {
         isNumeric = numeric;

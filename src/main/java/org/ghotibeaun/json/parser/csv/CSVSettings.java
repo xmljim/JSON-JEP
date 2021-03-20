@@ -47,7 +47,7 @@ public class CSVSettings implements Iterator<Column> {
     private boolean defaultSettings;
     private int index = -1;
 
-    private CSVSettings() {
+    public CSVSettings() {
 
     }
 
